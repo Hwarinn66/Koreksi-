@@ -69,6 +69,7 @@ buat_dataset.py           perusak + pelabel: kalimat bersih -> pasangan salah/be
 saring_korpus.py          penyaring kalimat korpus agar hanya yang sesuai EYD yang dipakai
 jalankan_semua.sh         unduh korpus, saring, buat dataset, lalu gabungkan (satu perintah)
 gabung_dataset.py         menyatukan output/ dan data_uji_asli/ menjadi dataset/
+notebook/latih_model.ipynb  notebook Colab untuk melatih dan menguji model
 dataset/                  DATASET GABUNGAN (lihat bagian di atas)
 data_uji_asli/            1.120 kalimat skripsi asli + koreksi manual + alat untuk menambah
 output/
@@ -150,29 +151,21 @@ menandai kalimat yang sudah benar.
 | `GABUNG` | harus digabung dengan token berikutnya | *di lakukan*, *antar muka*, *sub bab* |
 | `FORMAT_ANGKA` | format angka | *0.05* → *0,05*, *Rp12,500* → *Rp12.500* |
 
-## Melatih IndoBERT (token classification)
+## Melatih model
 
-```python
-import json
-from transformers import AutoTokenizer
+Buka `notebook/latih_model.ipynb` di Google Colab (Runtime → T4 GPU) lalu jalankan semua sel.
+Notebook itu menyiapkan data, melatih model klasifikasi token, mengevaluasi di `test_sintetis`
+dan `test_asli`, menyimpan model ke Google Drive, dan menyediakan fungsi `periksa(teks)`.
 
-labels = json.load(open("output/label.json"))["labels"]
-label2id = {l: i for i, l in enumerate(labels)}
-tok = AutoTokenizer.from_pretrained("indobenchmark/indobert-base-p1")
+Model yang dipakai **harus cased**. IndoBERT dari IndoNLU (`indobenchmark/indobert-*`) bersifat
+uncased (semua huruf dijadikan kecil), sehingga tidak bisa mendeteksi kesalahan huruf kapital.
+Bawaan notebook adalah `xlm-roberta-base`, dan notebook menolak tokenizer uncased secara otomatis.
 
-def encode(contoh):
-    enc = tok(contoh["tokens"], is_split_into_words=True, truncation=True)
-    word_ids, prev, y = enc.word_ids(), None, []
-    for w in word_ids:
-        y.append(-100 if w is None or w == prev else label2id[contoh["labels"][w]])
-        prev = w
-    enc["labels"] = y
-    return enc
-```
+Ukur dengan presisi, recall, dan F0.5 per label (abaikan label `O`). Untuk melihat kinerja pada
+gaya skripsi, perhatikan skor `test_asli` dan skor per skripsi.
 
-Lanjutkan dengan `AutoModelForTokenClassification` dan `Trainer` seperti biasa. Ukur dengan
-presisi, recall, dan F0.5 per label (abaikan label `O`). Untuk melihat kinerja pada gaya
-skripsi, hitung juga metrik khusus contoh dengan `sumber` = `kalimat_bersih` atau `tambahan_skripsi`.
+Notebook dibangun dari `notebook/buat_notebook.py` (`pip install nbformat`, lalu
+`python notebook/buat_notebook.py`) supaya isinya mudah ditinjau di Git.
 
 ## Lisensi sumber
 
