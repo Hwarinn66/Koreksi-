@@ -8,7 +8,7 @@ Jangan masukkan kalimat dari folder ini ke data latih.
 
 | ID | Bidang | Kalimat | Berkesalahan | Token salah | Ragu |
 |---|---|---|---|---|---|
-| skripsi01 | Tadris IPS (pendidikan sosial), UIN Jakarta | 427 | 182 | 321 | 7 |
+| skripsi01 | Tadris IPS (pendidikan sosial), UIN Jakarta | 427 | 182 | 388 | 7 |
 | skripsi02 | Sistem Informasi, UIN Jakarta | 176 | 48 | 66 | 2 |
 | skripsi04 | Sistem Informasi, UIN Suska Riau (Bab IV tidak tersedia) | 112 | 51 | 78 | 3 |
 | skripsi05 | Sistem Informasi, ITS | 144 | 44 | 66 | 4 |
@@ -16,14 +16,15 @@ Jangan masukkan kalimat dari folder ini ke data latih.
 | skripsi07 | Ilmu Perpustakaan, UIN Jakarta (hanya Bab I–II) | 123 | 47 | 75 | 8 |
 | skripsi08 | Ilmu Hukum (perdata), Univ. Muhammadiyah Mataram (Bab I–III) | 128 | 60 | 92 | 1 |
 | skripsi09 | Ilmu Hukum (pidana), UIN Suska Riau (Bab I–III, V) | 108 | 53 | 83 | 5 |
-| **Total** | | **1.356** | **567** | **908** | **36** |
+| **Total** | | **1.356** | **567** | **975** | **36** |
 
-Token per label: TYPO 176, TIDAK_BAKU 167, TAMBAH_KOMA 131, PISAH 96, KAPITAL 88, HURUF_KECIL 87, HAPUS 59, GANTI_TITIK 44, GABUNG 40, LAIN 25, TAMBAH_TITIK 4, FORMAT_ANGKA 2.
+Token per label: TYPO 176, TIDAK_BAKU 167, TAMBAH_KOMA 130, KAPITAL 122, PISAH 96, HURUF_KECIL 87, GANTI_TITIK 77, HAPUS 59, GABUNG 40, LAIN 25, TAMBAH_TITIK 5, FORMAT_ANGKA 2.
 
 skripsi03 (hasil pindai) tidak diproses karena OCR akan menambahkan typo palsu.
 
 Revisi anotasi (setelah analisis kesalahan model pertama): koma pemerincian, koma sebelum
-*tetapi*, dan koma setelah ungkapan penghubung (*Artinya,*) yang terlewat ditambahkan; koma
+*tetapi*, dan koma setelah ungkapan penghubung (*Artinya,*) yang terlewat ditambahkan; kalimat yang disambung
+koma (*..., hal tersebut menunjukkan*) dipecah secara konsisten di seluruh skripsi01; koma
 opsional setelah keterangan di awal kalimat yang sempat ditambahkan di beberapa skripsi dihapus
 agar konsisten. Kata yang ada di `kamus_baku.py` (mis. *menunjukan, presentase*) kini berlabel
 `TIDAK_BAKU`.
