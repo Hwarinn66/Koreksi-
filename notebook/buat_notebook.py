@@ -39,7 +39,8 @@ md("""
 ## 1. Siapkan data
 
 **Opsi A (disarankan):** unggah `dataset_ejaan_final.zip` ke Google Drive (folder `MyDrive`),
-lalu jalankan sel ini. Zip itu sudah berisi data uji asli dari 6 skripsi.
+lalu jalankan sel ini. Zip itu sudah berisi data uji asli dari 8 skripsi. Zip selalu diekstrak
+ulang, jadi zip baru di Drive langsung terpakai.
 
 **Opsi B:** jika zip tidak ada, sel ini akan meng-clone repo dan membangun data sintetis saja
 (tanpa `test_asli`).
@@ -52,21 +53,26 @@ from pathlib import Path
 DATA_PATH = Path("dataset-ejaan/dataset/dataset_lengkap.jsonl")
 ZIP_DI_DRIVE = "/content/drive/MyDrive/dataset_ejaan_final.zip"
 
-if not DATA_PATH.exists():
-    try:
-        from google.colab import drive
-        drive.mount("/content/drive")
-    except Exception as e:
-        print("Google Drive tidak terpasang:", e)
-    if os.path.exists(ZIP_DI_DRIVE):
-        subprocess.run(["unzip", "-q", "-o", ZIP_DI_DRIVE], check=True)
-    else:
-        print("Zip tidak ditemukan di Drive, membangun data sintetis dari repo...")
-        subprocess.run(["git", "clone", "-q", "https://github.com/Hwarinn66/Koreksi-.git", "dataset-ejaan"], check=True)
-        subprocess.run(["pip", "-q", "install", "Sastrawi"], check=True)
-        subprocess.run(["bash", "jalankan_semua.sh"], cwd="dataset-ejaan", check=True)
+try:
+    from google.colab import drive
+    drive.mount("/content/drive")
+except Exception as e:
+    print("Google Drive tidak terpasang:", e)
+if os.path.exists(ZIP_DI_DRIVE):
+    subprocess.run(["unzip", "-q", "-o", ZIP_DI_DRIVE], check=True)
+elif not DATA_PATH.exists():
+    print("Zip tidak ditemukan di Drive, membangun data sintetis dari repo...")
+    subprocess.run(["git", "clone", "-q", "https://github.com/Hwarinn66/Koreksi-.git", "dataset-ejaan"], check=True)
+    subprocess.run(["pip", "-q", "install", "Sastrawi"], check=True)
+    subprocess.run(["bash", "jalankan_semua.sh"], cwd="dataset-ejaan", check=True)
 
 print("Data:", DATA_PATH, DATA_PATH.exists())
+
+# Kamus kata tidak baku dipakai sebagai pascaproses (lihat bagian 6 dan 8).
+import sys
+sys.path.insert(0, str(DATA_PATH.parent.parent))
+from kamus_baku import KAMUS_PERIKSA
+print("Kamus tidak baku:", len(KAMUS_PERIKSA), "kata")
 """, tag="setup")
 
 md("""
@@ -157,10 +163,10 @@ def ke_dataset(isi):
     ds = Dataset.from_list([{"tokens": b["tokens"], "labels": b["labels"]} for b in isi])
     return ds.map(encode, batched=True, remove_columns=["tokens", "labels"])
 
-data = {s: ke_dataset(isi) for s, isi in split.items() if isi}
-data["test_asli_pasti"] = ke_dataset([b for b in split["test_asli"] if b["status"] == "pasti"]) if split["test_asli"] else None
-surat = [b for b in split["test_sintetis"] if b["sumber"] == "kalimat_surat"]
-data["test_surat"] = ke_dataset(surat) if surat else None  # bagian surat dari test_sintetis
+mentah = dict(split)
+mentah["test_asli_pasti"] = [b for b in split["test_asli"] if b["status"] == "pasti"]
+mentah["test_surat"] = [b for b in split["test_sintetis"] if b["sumber"] == "kalimat_surat"]
+data = {s: ke_dataset(isi) for s, isi in mentah.items() if isi}
 print({k: (len(v) if v else 0) for k, v in data.items()})
 """)
 
@@ -270,22 +276,47 @@ md("""
 Bandingkan skor `test_sintetis` dengan `test_asli`. Selisih yang besar berarti kesalahan buatan
 generator belum mirip dengan kesalahan manusia. Yang perlu diperbaiki dalam kasus itu adalah
 `buat_dataset.py`, bukan modelnya.
+
+**+ kamus:** kata tidak baku adalah daftar tertutup, jadi lebih andal dicek dengan kamus
+(`kamus_baku.py`) daripada ditebak model. Baris "+ kamus" menunjukkan skor jika setiap kata yang
+ada di kamus langsung ditandai `TIDAK_BAKU`. Pakai cara yang sama saat model dipakai sungguhan.
 """)
 
 code("""
-def evaluasi(nama):
-    ds = data.get(nama)
-    if not ds:
+def pakai_kamus(isi, pred):
+    \"\"\"Tandai TIDAK_BAKU pada sub-token pertama setiap kata yang ada di kamus.\"\"\"
+    pred = pred.copy()
+    for i, b in enumerate(isi):
+        wid = tokenizer(b["tokens"], is_split_into_words=True, truncation=True, max_length=MAX_LEN).word_ids()
+        prev = None
+        for pos, w in enumerate(wid):
+            if w is not None and w != prev and pos < pred.shape[1]:
+                t = b["tokens"][w]
+                if t.lower() in KAMUS_PERIKSA and not t.isupper():
+                    pred[i, pos] = label2id["TIDAK_BAKU"]
+            prev = w
+    return pred
+
+def prediksi(nama, kamus=False):
+    out = trainer.predict(data[nama])
+    pred = np.argmax(out.predictions, -1)
+    if kamus:
+        pred = pakai_kamus(mentah[nama], pred)
+    return pred, out.label_ids
+
+def evaluasi(nama, kamus=False):
+    if not data.get(nama):
         print(f"[{nama}] tidak tersedia"); return
-    out = trainer.predict(ds)
-    pred, gold = np.argmax(out.predictions, -1).ravel(), out.label_ids.ravel()
-    print(f"\\n===== {nama} =====")
-    for k, v in hitung_metrik(pred, gold).items():
+    pred, gold = prediksi(nama, kamus)
+    print(f"\\n===== {nama}{' + kamus' if kamus else ''} =====")
+    for k, v in hitung_metrik(pred.ravel(), gold.ravel()).items():
         print(f"{k:16} {v:.3f}")
-    per_label(pred, gold)
+    per_label(pred.ravel(), gold.ravel())
 
 for nama in ("test_sintetis", "test_surat", "test_asli", "test_asli_pasti"):
     evaluasi(nama)
+for nama in ("test_asli", "test_asli_pasti"):
+    evaluasi(nama, kamus=True)
 """)
 
 code("""
@@ -296,8 +327,41 @@ if split["test_asli"]:
         per_sumber.setdefault(b["sumber"].split("/")[0], []).append(b)
     for nama, isi in sorted(per_sumber.items()):
         out = trainer.predict(ke_dataset(isi))
-        m = hitung_metrik(np.argmax(out.predictions, -1).ravel(), out.label_ids.ravel())
-        print(f"{nama}: deteksi F0.5 {m['deteksi_f05']:.3f} | label F0.5 {m['label_f05']:.3f} | {len(isi)} kalimat")
+        pred = np.argmax(out.predictions, -1)
+        m = hitung_metrik(pred.ravel(), out.label_ids.ravel())
+        mk = hitung_metrik(pakai_kamus(isi, pred).ravel(), out.label_ids.ravel())
+        print(f"{nama}: deteksi F0.5 {m['deteksi_f05']:.3f} (+ kamus {mk['deteksi_f05']:.3f}) | "
+              f"label F0.5 {m['label_f05']:.3f} (+ kamus {mk['label_f05']:.3f}) | {len(isi)} kalimat")
+""")
+
+code("""
+# Simpan prediksi pada test_asli ke Drive (hasil_test_asli.csv) untuk analisis kesalahan.
+import csv
+if split["test_asli"]:
+    isi = split["test_asli"]
+    pred, _ = prediksi("test_asli")
+    pred_k = pakai_kamus(isi, pred)
+    baris_csv = []
+    for n, b in enumerate(isi):
+        wid = tokenizer(b["tokens"], is_split_into_words=True, truncation=True, max_length=MAX_LEN).word_ids()
+        tebak, tebak_k, prev = {}, {}, None
+        for pos, w in enumerate(wid):
+            if w is not None and w != prev:
+                tebak[w] = id2label[int(pred[n, pos])]; tebak_k[w] = id2label[int(pred_k[n, pos])]
+            prev = w
+        for i, t in enumerate(b["tokens"]):
+            emas, pr = b["labels"][i], tebak.get(i, "-")
+            if emas != "O" or pr not in ("O", "-") or tebak_k.get(i) != pr:
+                baris_csv.append([b["id"].removeprefix("asli-"), b["sumber"], b["status"], i, t, emas,
+                                  b["perbaikan"][i] or "", pr, tebak_k.get(i, "-"),
+                                  " ".join(b["tokens"][max(0, i - 6):i + 7])])
+    tujuan = "/content/drive/MyDrive/hasil_test_asli.csv" if os.path.exists("/content/drive/MyDrive") else "hasil_test_asli.csv"
+    with open(tujuan, "w", encoding="utf-8-sig", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["id", "sumber", "status", "posisi", "token", "label_benar", "perbaikan",
+                    "prediksi", "prediksi_kamus", "konteks"])
+        w.writerows(baris_csv)
+    print(len(baris_csv), "baris disimpan ke", tujuan)
 """)
 
 md("""
@@ -310,7 +374,8 @@ code("""
 import shutil
 trainer.save_model(OUTPUT_DIR); tokenizer.save_pretrained(OUTPUT_DIR)
 if os.path.exists("/content/drive/MyDrive"):
-    shutil.copytree(OUTPUT_DIR, f"/content/drive/MyDrive/{OUTPUT_DIR}", dirs_exist_ok=True)
+    shutil.copytree(OUTPUT_DIR, f"/content/drive/MyDrive/{OUTPUT_DIR}", dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns("checkpoint-*"))   # checkpoint tidak perlu disalin
     print("Tersimpan di Drive:", f"/content/drive/MyDrive/{OUTPUT_DIR}")
 """, tag="simpan")
 
@@ -326,6 +391,7 @@ PENJELASAN = {
     "TAMBAH_TITIK": "perlu titik setelah kata ini", "HAPUS": "tanda baca ini sebaiknya dihapus",
     "PISAH": "seharusnya ditulis terpisah", "GABUNG": "seharusnya digabung dengan kata berikutnya",
     "FORMAT_ANGKA": "format angka (desimal pakai koma, ribuan pakai titik)",
+    "GANTI_TITIK": "koma ini seharusnya titik (dua kalimat disambung koma)",
 }
 
 def pecah_token(teks):
@@ -355,14 +421,18 @@ def periksa(teks, model_dir=None):
             if w is not None and w != prev:
                 label_kata[w] = mdl.config.id2label[pred[pos]]
             prev = w
-        temuan = [(kata[i], l) for i, l in label_kata.items() if l != "O"]
+        for i, k in enumerate(kata):   # kamus kata tidak baku
+            if k.lower() in KAMUS_PERIKSA and not k.isupper():
+                label_kata[i] = "TIDAK_BAKU"
+        temuan = [(kata[i], l) for i, l in sorted(label_kata.items()) if l != "O"]
         print("•", kalimat)
         for k, l in temuan:
-            print(f"    - '{k}': {PENJELASAN.get(l, l)}")
+            saran = f" (seharusnya: {KAMUS_PERIKSA[k.lower()]})" if l == "TIDAK_BAKU" and k.lower() in KAMUS_PERIKSA else ""
+            print(f"    - '{k}': {PENJELASAN.get(l, l)}{saran}")
         if not temuan:
             print("    (tidak ada kesalahan terdeteksi)")
 
-periksa("Penelitian ini bertujuan untuk menganalisa pengaruh media sosial terhadap mahasiswa. "
+periksa("Penelitian ini bertujuan untuk menganalisa pengaruh media sosial terhadap mahasiswa, "
         "oleh karena itu peneliti mengumpulkan data dari 120 responden dikampus. "
         "Data di analisis menggunakan SPSS, sehingga hasilnya dapat di pertanggung jawabkan")
 """)

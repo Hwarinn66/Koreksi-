@@ -12,7 +12,8 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from buat_dataset import BAKU, gabung_token, tokenisasi  # noqa: E402
+from buat_dataset import BAKU_SEMUA, gabung_token, tokenisasi  # noqa: E402
+from kamus_baku import TIDAK_BAKU as KAMUS_TIDAK_BAKU  # noqa: E402
 
 folder, sumber = Path(sys.argv[1]), sys.argv[2]
 
@@ -20,7 +21,7 @@ folder, sumber = Path(sys.argv[1]), sys.argv[2]
 TIDAK_BAKU_EKSTRA = {"presentase", "negative", "popular", "trend", "hoax", "kerjasama",
                      "prakteknya", "merubah", "audience", "bahwasannya", "linier", "subyek",
                      "sample", "variable", "merespon", "ibukota", "creatore", "atau pun"}
-TIDAK_BAKU = set(BAKU.values()) | TIDAK_BAKU_EKSTRA
+TIDAK_BAKU = {x for v in BAKU_SEMUA.values() for x in v} | set(KAMUS_TIDAK_BAKU) | TIDAK_BAKU_EKSTRA
 
 
 def normalisasi_artefak(s):

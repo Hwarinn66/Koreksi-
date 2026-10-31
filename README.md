@@ -6,20 +6,24 @@ Dataset untuk melatih model yang mendeteksi kesalahan penulisan pada skripsi, la
 
 ## Ringkasan
 
-63.611 contoh (train 50.858, valid 6.379, test 6.374) dari 7.111 kalimat bersih:
+69.590 contoh (train 55.754, valid 6.907, test 6.929) dari 7.248 kalimat bersih dan 1.268 pasangan
+kalimat (dua kalimat berurutan yang digabung, untuk melatih kesalahan di batas kalimat):
 
 | Sumber | Kalimat | Contoh | Varian per kalimat |
 |---|---|---|---|
-| `kalimat_bersih` (gaya skripsi/laporan) | 473 | 4.792 | 10 |
-| `tambahan_skripsi` (gaya skripsi, berbagai bidang) | 671 | 6.830 | 10 |
-| `kalimat_surat` (surat dan surel resmi) | 426 | 4.908 | 12 |
-| `korpus_ud` (UD Indonesian, disaring) | 3.331 | 28.266 | 8 |
-| `korpus_idn` (IDN Tagged Corpus, disaring) | 2.210 | 18.815 | 8 |
+| `kalimat_bersih` (gaya skripsi/laporan) | 473 | 5.055 | 10 |
+| `tambahan_skripsi` (gaya skripsi, berbagai bidang) | 671 | 7.234 | 10 |
+| `tambahan_istilah` (istilah TI/hukum, merek, nama lembaga) | 137 | 1.502 | 10 |
+| `kalimat_surat` (surat dan surel resmi) | 426 | 5.071 | 12 |
+| `korpus_ud` (UD Indonesian, disaring) | 3.331 | 30.377 | 8 |
+| `korpus_idn` (IDN Tagged Corpus, disaring) | 2.210 | 20.351 | 8 |
 
-Jumlah token per label: TYPO 31.502, KAPITAL 21.848, HURUF_KECIL 14.274, TAMBAH_TITIK 10.136,
-TAMBAH_KOMA 8.845, HAPUS 4.936, GABUNG 4.908, PISAH 2.758, TIDAK_BAKU 1.689, FORMAT_ANGKA 604,
-GANTI_TITIK 356. Data uji berisi minimal sekitar 150 contoh untuk setiap jenis kesalahan, kecuali
-FORMAT_ANGKA (50) dan GANTI_TITIK (14).
+Jumlah contoh sudah termasuk pasangan kalimat (3 varian per pasangan).
+
+Jumlah token per label: TYPO 31.680, KAPITAL 23.879, HURUF_KECIL 14.216, TAMBAH_TITIK 11.022,
+TAMBAH_KOMA 8.820, HAPUS 4.981, GABUNG 4.804, TIDAK_BAKU 4.751, PISAH 2.723, GANTI_TITIK 2.154,
+FORMAT_ANGKA 655. Data uji berisi minimal sekitar 200 contoh untuk setiap jenis kesalahan, kecuali
+FORMAT_ANGKA (52).
 
 Pembagian train/valid/test dilakukan **per kalimat asal**, jadi kalimat yang sama tidak
 pernah muncul di dua split.
@@ -43,9 +47,9 @@ disertakan. Tanpa folder itu, `gabung_dataset.py` tetap berjalan dan hanya memak
 
 | split | Isi | Contoh |
 |---|---|---|
-| `train` | data sintetis untuk pelatihan | 50.858 |
-| `valid` | data sintetis untuk validasi | 6.379 |
-| `test_sintetis` | data sintetis untuk uji (432 di antaranya dari surat) | 6.374 |
+| `train` | data sintetis untuk pelatihan | 55.754 |
+| `valid` | data sintetis untuk validasi | 6.907 |
+| `test_sintetis` | data sintetis untuk uji (471 di antaranya dari surat) | 6.929 |
 | `test_asli` | kalimat skripsi asli yang dikoreksi manual (lihat `data_uji_asli/`) | 1.356 |
 
 Setiap baris: `id, split, jenis_data, sumber, salah, benar, kesalahan, tokens, labels, perbaikan,
@@ -66,11 +70,14 @@ test_asli = ds.filter(lambda x: x["split"] == "test_asli" and x["status"] == "pa
 data/
   kalimat_bersih.txt      kalimat bergaya skripsi/laporan, ditulis sesuai EYD V
   tambahan_skripsi.txt    kalimat bergaya skripsi dari berbagai bidang ilmu
+  tambahan_istilah.txt    kalimat dengan istilah asing berhuruf kecil (state, flowchart), istilah
+                          hukum (wanprestasi, perikatan), nama merek (TikTok), dan nama lembaga
   kalimat_surat.txt       baris surat: lamaran, izin, cuti, undangan, permohonan, surat dinas,
                           keterangan, pernyataan, kuasa, balasan, dan surel ke dosen
   korpus_ud.txt           kalimat dari UD Indonesian GSD, CSUI, PUD (sudah disaring)
   korpus_idn.txt          kalimat dari IDN Tagged Corpus (sudah disaring)
 buat_dataset.py           perusak + pelabel: kalimat bersih -> pasangan salah/benar
+kamus_baku.py             kamus kata tidak baku (dipakai generator dan pemeriksaan kamus)
 saring_korpus.py          penyaring kalimat korpus agar hanya yang sesuai EYD yang dipakai
 jalankan_semua.sh         unduh korpus, saring, buat dataset, lalu gabungkan (satu perintah)
 gabung_dataset.py         menyatukan output/ dan data_uji_asli/ menjadi dataset/
@@ -175,6 +182,23 @@ instansi, dan alamat adalah rekaan. Kesalahan yang khas surat ikut dibuat:
 
 Bagian surat dievaluasi terpisah di notebook (`test_surat`).
 
+## Kesalahan tambahan (versi 2)
+
+Ditambahkan setelah analisis kesalahan model pertama pada `test_asli`:
+
+- **Kamus tidak baku** (`kamus_baku.py`, 200+ kata). Selain untuk membuat kesalahan sintetis, kamus ini
+  dipakai sebagai pascaproses: kata yang ada di kamus langsung ditandai `TIDAK_BAKU`. Kata tidak baku
+  adalah daftar tertutup, jadi kamus lebih andal daripada tebakan model. Jumlah contoh per kata
+  dibatasi agar kata yang sangat sering (*karena, persen*) tidak mendominasi.
+- **Kesalahan imbuhan**: meN- yang tidak luluh (*mempengaruhi, mengkonsumsi, mensosialisasikan*),
+  huruf *k* yang hilang atau berlebih (*menunjukan, penegakkan*). Dibuat dengan stemmer Sastrawi.
+- **Pasangan kalimat**: dua kalimat berurutan digabung, lalu dirusak menjadi kalimat yang disambung
+  koma (`GANTI_TITIK` + `KAPITAL`) atau titik yang hilang di antara kalimat (`TAMBAH_TITIK`).
+- **Koma opsional**: setiap kalimat yang punya koma opsional (setelah keterangan di awal kalimat,
+  atau sebelum *baik ... maupun*) juga diberi versi bersih tanpa koma itu, supaya model tidak
+  menganggap ketiadaannya sebagai kesalahan.
+- **Nama merek**: *TikTok* juga dirusak menjadi *Tiktok*, bukan hanya *tiktok*.
+
 ## Melatih model
 
 Buka `notebook/latih_model.ipynb` di Google Colab (Runtime → T4 GPU) lalu jalankan semua sel.
@@ -186,7 +210,9 @@ uncased (semua huruf dijadikan kecil), sehingga tidak bisa mendeteksi kesalahan 
 Bawaan notebook adalah `xlm-roberta-base`, dan notebook menolak tokenizer uncased secara otomatis.
 
 Ukur dengan presisi, recall, dan F0.5 per label (abaikan label `O`). Untuk melihat kinerja pada
-gaya skripsi, perhatikan skor `test_asli` dan skor per skripsi.
+gaya skripsi, perhatikan skor `test_asli` dan skor per skripsi. Notebook juga menampilkan skor
+"+ kamus" (model + pemeriksaan kamus tidak baku) dan menyimpan prediksi `test_asli` ke
+`hasil_test_asli.csv` di Drive untuk analisis kesalahan.
 
 Notebook dibangun dari `notebook/buat_notebook.py` (`pip install nbformat`, lalu
 `python notebook/buat_notebook.py`) supaya isinya mudah ditinjau di Git.

@@ -91,6 +91,18 @@ BAKU = {
     "menyukseskan": "mensukseskan", "senin": "senen", "legalisasi": "legalisir",
 }
 
+# Kamus tidak baku yang lebih lengkap (kamus_baku.py). BAKU_SEMUA: bentuk baku -> semua
+# bentuk tidak bakunya; BAKU tetap dipertahankan (satu bentuk) untuk kompatibilitas.
+from kamus_baku import BAKU_KE_TIDAK_BAKU  # noqa: E402
+
+BAKU_SEMUA = {b: list(v) for b, v in BAKU_KE_TIDAK_BAKU.items()}
+for _b, _s in BAKU.items():
+    BAKU_SEMUA.setdefault(_b, [])
+    if _s not in BAKU_SEMUA[_b]:
+        BAKU_SEMUA[_b].append(_s)
+for _b, _v in BAKU_SEMUA.items():
+    BAKU.setdefault(_b, _v[0])
+
 # Kata yang diawali "di" tetapi BUKAN awalan di-.
 DI_BUKAN_AWALAN = {
     "dia", "diri", "dirinya", "dimensi", "digital", "digitalisasi", "diagram",
@@ -163,7 +175,7 @@ PEMBUKA_KOMA_OPSIONAL = {
 SAPAAN = {"Bapak", "Ibu", "Bapak/Ibu", "Pak", "Bu", "Saudara", "Saudari", "Anda"}
 # Koma sebelum kata ini tidak dihapus (penggunaannya bervariasi).
 KOMA_DILINDUNGI_SEBELUM = {"yaitu", "yakni", "seperti", "misalnya", "termasuk",
-                           "terutama", "khususnya", "kecuali"}
+                           "terutama", "khususnya", "kecuali", "baik"}
 # Sisipan koma yang salah sebelum kata ini.
 KOMA_SALAH_SEBELUM = {"bahwa", "sehingga", "agar", "supaya", "karena",
                       "dan", "atau", "adalah", "merupakan", "bertujuan"}
@@ -298,6 +310,20 @@ def koma_dilindungi(tokens):
     return lindung
 
 
+def koma_opsional(tokens):
+    """Indeks koma yang boleh ada atau tidak ada: setelah keterangan di awal kalimat,
+    atau sebelum 'baik' (baik ... maupun). Dipakai untuk membuat varian bersih tanpa koma."""
+    hasil = []
+    if len(tokens) > 1:
+        awal_opsional = (tokens[0] in PEMBUKA_KOMA_OPSIONAL
+                         and not (tokens[0] == "Dengan" and tokens[1] in {"demikian", "hormat"}))
+        if awal_opsional and "," in tokens:
+            hasil.append(tokens.index(","))
+    hasil += [i for i, t in enumerate(tokens)
+              if t == "," and i + 1 < len(tokens) and tokens[i + 1] == "baik"]
+    return hasil
+
+
 # ---------------------------------------------------------------------------
 # Operasi perusak. Masing-masing mengembalikan True jika berhasil diterapkan.
 # ---------------------------------------------------------------------------
@@ -319,14 +345,113 @@ def op_typo(W, rng, ctx):
     return True
 
 
+# Batas jumlah contoh per kata agar kata yang sangat sering (karena, persen, akhir) tidak
+# mendominasi kesalahan TIDAK_BAKU.
+BATAS_PER_KATA = 120
+HITUNG_KATA = Counter()
+
+
 def op_tidak_baku(W, rng, ctx):
-    calon = [i for i, t in enumerate(W) if bebas(t) and t["teks"].lower() in BAKU]
+    calon = [i for i, t in enumerate(W) if bebas(t) and t["teks"].lower() in BAKU_SEMUA
+             and not (t["teks"][0].isupper() and i > 0)  # lewati nama diri (System Usability Scale)
+             and HITUNG_KATA[t["teks"].lower()] < BATAS_PER_KATA]
     if not calon:
         return False
     i = rng.choice(calon)
     asli = W[i]["teks"]
-    W[i].update(perbaikan=asli, teks=samakan_bentuk(BAKU[asli.lower()], asli),
-                label="TIDAK_BAKU", kunci=True)
+    salah = rng.choice(BAKU_SEMUA[asli.lower()])
+    HITUNG_KATA[asli.lower()] += 1
+    W[i].update(perbaikan=asli, teks=samakan_bentuk(salah, asli), label="TIDAK_BAKU", kunci=True)
+    return True
+
+
+# Kesalahan imbuhan: meN- yang tidak luluh (memengaruhi -> mempengaruhi) dan -k- ganda/hilang
+# (menunjukkan -> menunjukan, penegakan -> penegakkan). Memakai stemmer Sastrawi jika ada.
+def _buat_stemmer():
+    try:
+        from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
+        return StemmerFactory().create_stemmer()
+    except Exception:
+        return None
+
+
+_STEMMER = _buat_stemmer()
+
+
+def _kata_dasar():
+    try:
+        import Sastrawi
+        p = Path(Sastrawi.__file__).parent / "Stemmer" / "data" / "kata-dasar.txt"
+        return {w.strip().lower() for w in p.read_text(encoding="utf-8").splitlines() if w.strip()}
+    except Exception:
+        return set()
+
+
+KATA_DASAR = _kata_dasar()
+_CACHE_AKAR = {}
+VOKAL = set("aiueo")
+# Akar yang sering salah diberi meN- tanpa peluluhan (kebanyakan kata serapan atau akar berawalan
+# "pe" yang dikira awalan). Akar asli yang sangat umum (tingkat, kata, kena) jarang salah, jadi
+# tidak dipakai agar kesalahannya realistis.
+AKAR_RAWAN = {
+    "pengaruh", "percaya", "pesona", "populer", "publikasi", "parkir", "pedoman", "peduli",
+    "perkosa", "pertahan", "konsumsi", "konfirmasi", "komunikasi", "kontrol", "koordinasi",
+    "konversi", "kategori", "kalkulasi", "kombinasi", "konfigurasi", "kualifikasi", "kompilasi",
+    "kompres", "koreksi", "kontribusi", "konsultasi", "kampanye", "kelola", "kaji", "kritik",
+    "sosialisasi", "supervisi", "survei", "sukses", "sinkron", "simulasi", "sortir", "suplai",
+    "sinergi", "subsidi", "sponsor", "target", "terjemah", "tertib", "telepon", "teliti",
+    "tanggap", "transformasi",
+}
+
+
+def akar_kata(w):
+    if _STEMMER is None:
+        return None
+    if w not in _CACHE_AKAR:
+        _CACHE_AKAR[w] = _STEMMER.stem(w)
+    return _CACHE_AKAR[w]
+
+
+def imbuhan_salah(w):
+    """Bentuk imbuhan yang salah untuk kata bersih w (huruf kecil). Mengembalikan daftar."""
+    hasil = []
+    akar = akar_kata(w)
+    if akar in AKAR_RAWAN and akar != w and akar[1] in VOKAL:
+        sisa = akar[1:]
+        if akar[0] == "p" and w.startswith("mem") and w[3:].startswith(sisa):
+            hasil.append("memp" + w[3:])                       # memengaruhi -> mempengaruhi
+        elif akar[0] == "t" and w.startswith("men") and not w.startswith("meny") and w[3:].startswith(sisa):
+            hasil.append("ment" + w[3:])                       # menerjemahkan -> menterjemahkan
+        elif akar[0] == "k" and w.startswith("meng") and w[4:].startswith(sisa):
+            hasil.append("mengk" + w[4:])                      # mengonsumsi -> mengkonsumsi
+        elif akar[0] == "s" and w.startswith("meny") and w[4:].startswith(sisa):
+            hasil.append("mens" + w[4:])                       # menyukseskan -> mensukseskan
+    if akar and akar.endswith("k") and len(akar) >= 4 and w.endswith(akar[1:] + "kan"):
+        hasil.append(w[:-3] + "an")                            # menunjukkan -> menunjukan
+    if w.startswith(("pe", "ke")) and w.endswith("kan") and not w.endswith("kkan"):  # kata benda pe-/ke-an
+        akar_an = akar_kata(w[:-2])
+        if (akar_an and akar_an in KATA_DASAR and akar_an.endswith("k") and len(akar_an) >= 4
+                and w[:-2].endswith(akar_an[1:])):
+            hasil.append(w[:-2] + "kan")                       # penegakan -> penegakkan
+    return hasil
+
+
+def op_imbuhan(W, rng, ctx):
+    calon = []
+    for i, t in enumerate(W):
+        s = t["teks"]
+        if bebas(t) and s.isalpha() and s.islower() and len(s) >= 6:
+            for salah in imbuhan_salah(s):
+                if salah != s and salah not in ctx["kosakata"]:
+                    calon.append((i, salah))
+    if not calon:
+        return False
+    calon = [c for c in calon if HITUNG_KATA["~" + c[1]] < BATAS_PER_KATA // 2] or calon[:0]
+    if not calon:
+        return False
+    i, salah = rng.choice(calon)
+    HITUNG_KATA["~" + salah] += 1
+    W[i].update(perbaikan=W[i]["teks"], teks=salah, label="TIDAK_BAKU", kunci=True)
     return True
 
 
@@ -341,7 +466,9 @@ def op_kapital(W, rng, ctx):
         return False
     i = 0 if (0 in calon and rng.random() < 0.4) else rng.choice(calon)
     s = W[i]["teks"]
-    if s.isupper() or any(c.isupper() for c in s[1:]):
+    if s[0].isupper() and any(c.isupper() for c in s[1:]) and not s.isupper() and "/" not in s:
+        baru = rng.choice([s.lower(), s[0] + s[1:].lower()])  # TikTok -> tiktok / Tiktok
+    elif s.isupper() or any(c.isupper() for c in s[1:]):
         baru = s.lower()
     else:
         baru = s[0].lower() + s[1:]
@@ -512,6 +639,19 @@ def op_ganti_titik(W, rng, ctx):
     return True
 
 
+def op_hapus_titik_tengah(W, rng, ctx):
+    """Titik di antara dua kalimat hilang: '... Instagram. Meskipun' -> '... Instagram Meskipun'."""
+    calon = [j for j in range(1, len(W) - 1)
+             if W[j]["teks"] == "." and bebas(W[j]) and bebas(W[j - 1])
+             and W[j - 1]["teks"][-1:].isalnum() and W[j + 1]["teks"][:1].isupper()]
+    if not calon:
+        return False
+    j = rng.choice(calon)
+    W[j - 1].update(label="TAMBAH_TITIK", perbaikan=W[j - 1]["teks"] + ".", kunci=True)
+    del W[j]
+    return True
+
+
 OPERASI = {
     "typo": (op_typo, 0.15),
     "kapital": (op_kapital, 0.12),
@@ -523,17 +663,23 @@ OPERASI = {
     "kata_depan": (op_kata_depan, 0.09),
     "pisah_awalan": (op_pisah_awalan, 0.07),
     "majemuk": (op_majemuk, 0.05),
-    "tidak_baku": (op_tidak_baku, 0.06),
+    "tidak_baku": (op_tidak_baku, 0.20),
+    "imbuhan": (op_imbuhan, 0.10),
     "format_angka": (op_format_angka, 0.05),
     "ganti_titik": (op_ganti_titik, 0.50),  # hanya berlaku pada baris berisi dua kalimat
+    "hapus_titik_tengah": (op_hapus_titik_tengah, 0.15),
 }
 
 
-def rusak_kalimat(tokens, rng, kosakata, jumlah_kesalahan):
+def rusak_kalimat(tokens, rng, kosakata, jumlah_kesalahan, lindung=None, wajib=None):
     W = [tok(t, asal=i) for i, t in enumerate(tokens)]
-    ctx = {"kosakata": kosakata, "koma_lindung": koma_dilindungi(tokens)}
+    ctx = {"kosakata": kosakata,
+           "koma_lindung": koma_dilindungi(tokens) if lindung is None else lindung}
     tersedia = dict(OPERASI)
     berhasil = 0
+    if wajib and OPERASI[wajib][0](W, rng, ctx):
+        berhasil += 1
+        del tersedia[wajib]
     while berhasil < jumlah_kesalahan and tersedia:
         nama = rng.choices(list(tersedia), weights=[b for _, b in tersedia.values()])[0]
         fungsi, _ = tersedia[nama]
@@ -605,6 +751,9 @@ def main():
     ap.add_argument("--seed", type=int, default=42)
     ap.add_argument("--porsi", default="80,10,10", help="persentase train,valid,test")
     ap.add_argument("--contoh", type=int, default=0, help="tampilkan N contoh acak")
+    ap.add_argument("--pasangan", type=float, default=0.25,
+                    help="peluang dua kalimat berurutan digabung menjadi satu contoh (0 = tidak)")
+    ap.add_argument("--varian-pasangan", type=int, default=3, help="jumlah versi rusak per pasangan")
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
@@ -641,6 +790,35 @@ def main():
     for pos, i in enumerate(idx):
         split_of[i] = "train" if pos < n_train else "valid" if pos < n_train + n_valid else "test"
 
+    # Pasangan dua kalimat berurutan (sumber dan split sama) untuk melatih GANTI_TITIK dan titik
+    # yang hilang di antara kalimat. Pasangan hanya dibuat di dalam split yang sama.
+    rng_pasangan = random.Random(args.seed + 7)
+    lindung_of = {}
+    pasangan = []
+    kelompok = {}
+    for idx, (_, _, sumber_k, _) in enumerate(data_bersih):   # urutan asli dipertahankan
+        kelompok.setdefault((sumber_k, split_of[idx]), []).append(idx)
+    for (_, split_k), anggota in kelompok.items():
+        i = 0
+        while i < len(anggota) - 1:
+            (ka, ta, sa, _), (kb, tb, _, _) = data_bersih[anggota[i]], data_bersih[anggota[i + 1]]
+            awal_b = tb[0]
+            cocok = (ta[-1] == "." and tb[-1] == "." and len(ta) + len(tb) <= 60
+                     and awal_b.isalpha() and awal_b[1:].islower()
+                     and awal_b not in SAPAAN and awal_b.lower() in kosakata
+                     and "." not in ta[:-1] and "." not in tb[:-1])
+            if cocok and rng_pasangan.random() < args.pasangan:
+                kid = len(data_bersih) + len(pasangan)
+                pasangan.append((f"{ka} {kb}", ta + tb, sa, args.varian_pasangan))
+                split_of[kid] = split_k
+                lindung_of[kid] = koma_dilindungi(ta) | {j + len(ta) for j in koma_dilindungi(tb)}
+                i += 2
+            else:
+                i += 1
+    id_pasangan = set(range(len(data_bersih), len(data_bersih) + len(pasangan)))
+    data_bersih += pasangan
+    print(f"[info] pasangan kalimat: {len(pasangan)}")
+
     jumlah_salah = [1, 2, 3]
     bobot_salah = [0.45, 0.35, 0.20]
 
@@ -648,16 +826,30 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=True)
     keluaran = {s: {"pasangan": [], "token": []} for s in ("train", "valid", "test")}
     statistik = {"label": Counter(), "jenis_per_contoh": Counter(), "gagal_rekonstruksi": 0,
-                 "contoh_per_sumber": Counter(), "kalimat_per_sumber": Counter()}
+                 "contoh_per_sumber": Counter(), "kalimat_per_sumber": Counter(),
+                 "pasangan_per_sumber": Counter()}
 
     for kid, (bersih, tokens, sumber, n_varian) in enumerate(data_bersih):
         split = split_of[kid]
-        statistik["kalimat_per_sumber"][sumber] += 1
+        statistik["pasangan_per_sumber" if kid in id_pasangan else "kalimat_per_sumber"][sumber] += 1
         dilihat = set()
+        is_pasangan = kid in id_pasangan
         varian = [None] + [rng.choices(jumlah_salah, bobot_salah)[0] for _ in range(n_varian)]
+        opsional = koma_opsional(tokens) if not is_pasangan else []
+        if opsional:
+            varian.append("opsional")  # versi bersih tanpa koma opsional
         for v, n_salah in enumerate(varian):
+            target = bersih
             if n_salah is None:  # satu versi tanpa kesalahan per kalimat
                 W = [tok(t) for t in tokens]
+            elif n_salah == "opsional":
+                j = rng.choice(opsional)
+                W = [tok(t) for k, t in enumerate(tokens) if k != j]
+                target = gabung_token([t["teks"] for t in W])
+            elif is_pasangan:
+                wajib = rng.choices(["ganti_titik", "hapus_titik_tengah"], [0.65, 0.35])[0]
+                W = rusak_kalimat(tokens, rng, kosakata, rng.choice([1, 1, 2]),
+                                  lindung=lindung_of[kid], wajib=wajib)
             else:
                 W = rusak_kalimat(tokens, rng, kosakata, n_salah)
             toks = [t["teks"] for t in W]
@@ -667,14 +859,14 @@ def main():
             if salah in dilihat:
                 continue
             dilihat.add(salah)
-            if rekonstruksi(toks, labs, perb) != bersih:
+            if rekonstruksi(toks, labs, perb) != target:
                 statistik["gagal_rekonstruksi"] += 1
                 continue
             jenis = sorted({l for l in labs if l != "O"})
-            cid = f"k{kid:05d}-v{v}"
+            cid = f"k{kid:05d}-v{'o' if n_salah == 'opsional' else v}"
             keluaran[split]["pasangan"].append(
                 {"id": cid, "kalimat_id": kid, "sumber": sumber, "salah": salah,
-                 "benar": bersih, "kesalahan": jenis})
+                 "benar": target, "kesalahan": jenis})
             keluaran[split]["token"].append(
                 {"id": cid, "tokens": toks, "labels": labs, "perbaikan": perb})
             statistik["label"].update(labs)
@@ -701,13 +893,15 @@ def main():
          "deskripsi": DESKRIPSI_LABEL}, ensure_ascii=False, indent=2), encoding="utf-8")
 
     ringkas = {
-        "kalimat_bersih": len(data_bersih),
+        "kalimat_bersih": len(data_bersih) - len(pasangan),
+        "pasangan_kalimat": len(pasangan),
         "contoh_per_split": {s: len(isi["pasangan"]) for s, isi in keluaran.items()},
         "kalimat_per_split": {s: sum(1 for k in split_of.values() if k == s)
                               for s in ("train", "valid", "test")},
         "jumlah_token_per_label": dict(statistik["label"].most_common()),
         "contoh_per_jenis_kesalahan": dict(statistik["jenis_per_contoh"].most_common()),
         "kalimat_per_sumber": dict(statistik["kalimat_per_sumber"]),
+        "pasangan_per_sumber": dict(statistik["pasangan_per_sumber"]),
         "contoh_per_sumber": dict(statistik["contoh_per_sumber"]),
         "gagal_rekonstruksi": statistik["gagal_rekonstruksi"],
         "seed": args.seed,

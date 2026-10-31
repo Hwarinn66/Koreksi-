@@ -23,7 +23,7 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from buat_dataset import (BAKU, KOMA_DILINDUNGI_SEBELUM, ORDINAL, PEMBUKA_KOMA_OPSIONAL,  # noqa: E402
+from buat_dataset import (BAKU, BAKU_SEMUA, KOMA_DILINDUNGI_SEBELUM, ORDINAL, PEMBUKA_KOMA_OPSIONAL,  # noqa: E402
                           SERANGKAI, TERPISAH, gabung_token,
                           tokenisasi)
 
@@ -55,7 +55,7 @@ KATA_TUTURAN = {"mengatakan", "menyatakan", "menjelaskan", "mengungkapkan", "men
 UNSUR_GEOGRAFI = {"kecamatan", "kabupaten", "kota", "provinsi", "desa", "kelurahan",
                   "sungai", "gunung", "pulau", "danau", "selat", "teluk", "jalan", "laut",
                   "samudra", "tanjung", "kepulauan", "dusun"}
-TIDAK_BAKU_SEMUA = TIDAK_BAKU_LAIN | set(BAKU.values())
+TIDAK_BAKU_SEMUA = TIDAK_BAKU_LAIN | {x for v in BAKU_SEMUA.values() for x in v}
 
 # di/ke yang sering salah ditulis serangkai dengan kata benda/keterangan tempat
 TEMPAT = {"rumah", "sekolah", "kantor", "kota", "desa", "atas", "bawah", "dalam", "luar",

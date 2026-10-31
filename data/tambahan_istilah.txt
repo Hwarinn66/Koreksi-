@@ -1,0 +1,147 @@
+# Kalimat bergaya skripsi yang memuat istilah asing berhuruf kecil, istilah hukum, nama merek,
+# dan nama lembaga. Tujuannya agar model tidak menganggap istilah yang benar sebagai typo
+# atau sebagai kata yang perlu huruf kapital. Istilah asing di naskah asli dicetak miring;
+# karena datanya teks polos, istilah itu ditulis biasa dengan huruf kecil.
+
+# --- Teknologi informasi ---
+Pengguna menekan tombol login untuk masuk ke halaman dashboard.
+Setelah proses login berhasil, sistem menampilkan menu utama sesuai dengan hak akses pengguna.
+Admin dapat menambah, mengubah, dan menghapus data melalui form yang tersedia.
+Data hasil input disimpan di database MySQL pada server lokal.
+Aplikasi ini dibangun menggunakan framework Laravel dan bahasa pemrograman PHP.
+Tampilan antarmuka dibuat responsif dengan bantuan framework Bootstrap.
+Diagram use case menggambarkan interaksi antara aktor dan sistem.
+Activity diagram digunakan untuk menggambarkan alur aktivitas dalam sistem.
+Class diagram menunjukkan atribut, method, dan hubungan antarkelas.
+Sequence diagram menggambarkan urutan pesan yang dikirim antarobjek.
+Flowchart program menggambarkan urutan langkah yang dijalankan oleh sistem.
+Pengujian black-box dilakukan untuk memastikan setiap fungsi berjalan sesuai dengan kebutuhan.
+Pengujian white-box dilakukan dengan memeriksa alur logika di dalam kode program.
+Setiap state pada mesin menentukan kondisi gerbang parkir.
+Mesin akan berpindah ke state berikutnya setelah sensor mendeteksi kendaraan.
+Library tersebut dipasang melalui package manager agar versinya mudah dikelola.
+Sensor ultrasonik dihubungkan ke pin digital pada board Arduino.
+Motor servo digunakan untuk membuka dan menutup palang gerbang.
+Data dari sensor dikirim ke server melalui jaringan Wi-Fi.
+Aplikasi mengirimkan notifikasi kepada pengguna ketika status pesanan berubah.
+Halaman dashboard menampilkan ringkasan data dalam bentuk grafik dan tabel.
+Pengguna dapat mengunggah file dalam format PDF dengan ukuran maksimal 2 MB.
+Fitur search memudahkan pengguna menemukan materi yang dibutuhkan.
+Tombol logout digunakan untuk keluar dari sistem.
+Sistem menggunakan session untuk menyimpan data pengguna yang sedang aktif.
+Password pengguna disimpan dalam bentuk hash agar tidak dapat dibaca langsung.
+Endpoint API mengembalikan data dalam format JSON.
+Frontend aplikasi dibangun dengan React, sedangkan backend menggunakan Express.
+Repositori kode disimpan di GitHub agar riwayat perubahan dapat dilacak.
+Metode waterfall terdiri atas tahap analisis kebutuhan, desain, implementasi, pengujian, dan pemeliharaan.
+Metode prototype memungkinkan pengguna memberikan umpan balik sejak tahap awal pengembangan.
+Model CNN dilatih menggunakan dataset yang terdiri atas 5.000 gambar.
+Hasil training menunjukkan bahwa akurasi model meningkat pada setiap epoch.
+Nilai learning rate yang terlalu besar dapat membuat proses training tidak stabil.
+Data dibagi menjadi data training dan data testing dengan perbandingan 80:20.
+Confusion matrix digunakan untuk menghitung nilai precision, recall, dan f1-score.
+Tahap preprocessing meliputi case folding, tokenizing, filtering, dan stemming.
+Algoritma naive Bayes menghitung peluang setiap kelas berdasarkan data latih.
+Website ini dapat diakses melalui browser pada komputer maupun ponsel.
+Pengguna dapat memilih menu explore untuk melihat konten yang sedang populer.
+Hosting dan domain disewa selama satu tahun untuk keperluan uji coba.
+Query SQL digunakan untuk mengambil data transaksi berdasarkan tanggal.
+Tabel user memiliki kolom username, password, dan level.
+Setiap request dari client akan diproses oleh controller sebelum dikirim ke view.
+Pola MVC memisahkan logika aplikasi menjadi model, view, dan controller.
+Aplikasi berbasis Android ini dikembangkan menggunakan Android Studio.
+Fitur chat memungkinkan mahasiswa berkomunikasi langsung dengan dosen pembimbing.
+Admin perlu menekan tombol refresh untuk memperbarui data reservasi.
+File konfigurasi disimpan di folder config agar mudah diubah.
+Tim pengembang melakukan debugging untuk menemukan penyebab error pada aplikasi.
+Tampilan halaman dibuat terlebih dahulu dalam bentuk mockup sebelum diimplementasikan.
+Hasil pengujian usability menunjukkan bahwa aplikasi mudah digunakan.
+Proses deployment dilakukan setelah seluruh pengujian selesai.
+Pengguna dapat mengatur notifikasi melalui menu setting.
+Data lot parkir yang kosong ditampilkan dengan warna hijau.
+Server lokal dijalankan menggunakan XAMPP yang terdiri atas Apache dan MySQL.
+Istilah cloud computing merujuk pada layanan komputasi yang diakses melalui internet.
+Perangkat IoT mengirimkan data secara berkala ke platform pemantauan.
+Fitur scan QR code digunakan untuk mencatat kehadiran peserta.
+Setiap transaksi dicatat dalam log agar dapat ditelusuri kembali.
+Pengguna dapat mengunduh laporan dalam format Excel.
+Validasi form dilakukan agar data yang dimasukkan sesuai dengan format yang ditentukan.
+Kode program ditulis menggunakan text editor Visual Studio Code.
+Konten pada platform TikTok berupa video pendek dengan durasi beragam.
+Pengguna Instagram dapat membagikan foto dan video melalui fitur story.
+Banyak mahasiswa menggunakan WhatsApp untuk berkomunikasi dengan dosen pembimbing.
+Video pembelajaran diunggah ke kanal YouTube program studi.
+Sistem ini dibangun dengan framework CodeIgniter versi 4.
+Google Classroom digunakan sebagai media pembelajaran daring selama pandemi.
+Aplikasi Zoom digunakan untuk melaksanakan seminar secara daring.
+Dosen membagikan materi kuliah melalui Google Drive.
+Algoritma k-means digunakan untuk mengelompokkan data pelanggan.
+Data dikumpulkan melalui Google Form yang disebarkan kepada responden.
+Pengolahan data dilakukan dengan bantuan aplikasi SPSS.
+Uji normalitas dilakukan dengan uji Kolmogorov-Smirnov.
+Nilai signifikansi yang lebih kecil dari 0,05 menunjukkan adanya pengaruh yang signifikan.
+Penelitian ini menggunakan desain survei dengan pendekatan kuantitatif.
+
+# --- Hukum ---
+Wanprestasi terjadi apabila debitur tidak memenuhi prestasi yang telah diperjanjikan.
+Kreditur dapat mengajukan gugatan wanprestasi ke pengadilan negeri.
+Perikatan dapat lahir dari perjanjian maupun dari undang-undang.
+Suatu perjanjian sah apabila memenuhi syarat yang diatur dalam Pasal 1320 KUHPerdata.
+Akta autentik memiliki kekuatan pembuktian yang sempurna.
+Akta di bawah tangan baru memiliki kekuatan pembuktian apabila diakui oleh para pihak.
+Orang yang berada di bawah pengampuan dianggap tidak cakap melakukan perbuatan hukum.
+Sebelum mengajukan gugatan, kreditur biasanya mengirimkan somasi kepada debitur.
+Tergugat mengajukan eksepsi terhadap gugatan yang diajukan penggugat.
+Majelis hakim mempertimbangkan bukti surat dan keterangan saksi.
+Yurisprudensi dapat dijadikan pedoman oleh hakim dalam memutus perkara serupa.
+Perbuatan melawan hukum diatur dalam Pasal 1365 KUHPerdata.
+Asas kebebasan berkontrak memberikan keleluasaan kepada para pihak untuk menentukan isi perjanjian.
+Asas konsensualisme menyatakan bahwa perjanjian lahir sejak tercapainya kata sepakat.
+Asas pacta sunt servanda mengharuskan para pihak menaati perjanjian yang telah dibuat.
+Itikad baik harus dipenuhi dalam setiap pelaksanaan perjanjian.
+Penyidik berwenang melakukan penangkapan dan penahanan terhadap tersangka.
+Terdakwa didampingi oleh penasihat hukum selama persidangan berlangsung.
+Jaksa penuntut umum membacakan surat dakwaan di depan persidangan.
+Delik aduan hanya dapat diproses apabila ada pengaduan dari pihak yang dirugikan.
+Tindak pidana pemerasan diatur dalam Pasal 368 KUHP.
+Unsur subjektif tindak pidana berkaitan dengan diri pelaku.
+Unsur objektif tindak pidana berkaitan dengan perbuatan dan akibat yang ditimbulkan.
+Pidana penjara merupakan salah satu jenis pidana pokok.
+Penelitian hukum normatif mengkaji asas, norma, dan doktrin hukum.
+Penelitian hukum empiris mengkaji pelaksanaan hukum di dalam masyarakat.
+Bahan hukum primer terdiri atas peraturan perundang-undangan dan putusan pengadilan.
+Bahan hukum sekunder meliputi buku, jurnal, dan pendapat para ahli hukum.
+Putusan pengadilan yang telah berkekuatan hukum tetap wajib dilaksanakan oleh para pihak.
+Debitur yang lalai dapat dihukum untuk membayar ganti rugi, bunga, dan biaya perkara.
+Hak tanggungan memberikan kedudukan yang diutamakan kepada kreditur tertentu.
+Mediasi wajib ditempuh sebelum pemeriksaan pokok perkara dilanjutkan.
+Saksi ahli memberikan keterangan sesuai dengan bidang keahliannya.
+Restitusi merupakan ganti kerugian yang diberikan kepada korban atau keluarganya.
+Notaris berwenang membuat akta autentik mengenai perbuatan dan perjanjian.
+Penggugat menuntut agar tergugat membayar kerugian materiel dan imateriel.
+
+# --- Nama lembaga dan tempat penelitian ---
+Penelitian ini dilakukan pada mahasiswa Program Studi Sistem Informasi UIN Syarif Hidayatullah Jakarta.
+Populasi penelitian adalah mahasiswa Fakultas Ilmu Tarbiyah dan Keguruan UIN Syarif Hidayatullah Jakarta.
+Responden penelitian adalah mahasiswa Program Studi Ilmu Komunikasi angkatan 2022.
+Penelitian dilaksanakan di Fakultas Sains dan Teknologi UIN Sultan Syarif Kasim Riau.
+Objek penelitian ini adalah Program Studi Sistem Informasi Universitas Islam Negeri Alauddin Makassar.
+Data diperoleh dari bagian akademik Universitas Muhammadiyah Mataram.
+Penelitian ini dilakukan di Kepolisian Resor Indragiri Hilir.
+Wawancara dilakukan dengan penyidik di Satuan Reserse Kriminal Polres Indragiri Hilir.
+Data perkara diperoleh dari Pengadilan Negeri Yogyakarta.
+Sistem ini diterapkan di Unit Pelaksana Teknis Pengamanan Lingkungan Kampus Universitas Indonesia Depok.
+Penelitian dilakukan di Departemen Sistem Informasi Universitas Airlangga Surabaya.
+Responden dalam penelitian ini adalah mahasiswa Pendidikan IPS angkatan 2020.
+Kuesioner disebarkan kepada mahasiswa jurusan Teknik Informatika Politeknik Negeri Bandung.
+Penulis melakukan observasi di bagian gudang PT Sinar Abadi Jaya.
+Jumlah dosen tetap pada Program Studi Sistem Informasi adalah 19 orang.
+Kepala program studi bertugas mengoordinasikan kegiatan akademik di tingkat program studi.
+Sekretaris program studi membantu ketua program studi dalam urusan administrasi.
+Mahasiswa tingkat akhir wajib menyelesaikan tugas akhir sebagai syarat kelulusan.
+Bimbingan tugas akhir dilakukan secara tatap muka maupun daring.
+Data jumlah pengguna internet diperoleh dari Badan Pusat Statistik.
+Penelitian ini mengacu pada data Asosiasi Penyelenggara Jasa Internet Indonesia tahun 2023.
+Kurikulum yang digunakan adalah Kurikulum Merdeka.
+Penelitian ini dilakukan pada siswa kelas XI SMA Negeri 2 Pekanbaru.
+Data penelitian diambil dari Dinas Kependudukan dan Pencatatan Sipil Kota Makassar.
