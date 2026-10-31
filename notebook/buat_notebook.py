@@ -104,7 +104,7 @@ random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
 baris = [json.loads(b) for b in open(DATA_PATH, encoding="utf-8")]
 info_label = json.load(open(DATA_PATH.parent / "label.json", encoding="utf-8"))
 
-# GANTI_TITIK dan LAIN hanya ada di data asli; model tidak dilatih untuk keduanya.
+# LAIN hanya ada di data asli; model tidak dilatih untuk label itu.
 LABELS = [l for l in info_label["labels"] if l not in info_label.get("label_khusus_data_asli", [])]
 label2id = {l: i for i, l in enumerate(LABELS)}
 id2label = {i: l for l, i in label2id.items()}
@@ -128,7 +128,7 @@ md("""
 
 Label hanya dipasang pada sub-token pertama setiap kata; sisanya diberi -100 (diabaikan).
 Untuk data asli, label yang berupa gabungan (mis. `PISAH+TYPO`) memakai label pertama,
-dan token berlabel `GANTI_TITIK`/`LAIN` diabaikan saat evaluasi.
+dan token berlabel `LAIN` diabaikan saat evaluasi.
 """)
 
 code("""
@@ -138,7 +138,7 @@ def label_utama(l):
     for x in l.split("+"):
         if x in label2id:
             return label2id[x]
-    return -100   # GANTI_TITIK / LAIN
+    return -100   # LAIN
 
 def encode(contoh):
     enc = tokenizer(contoh["tokens"], is_split_into_words=True, truncation=True, max_length=MAX_LEN)
@@ -159,6 +159,8 @@ def ke_dataset(isi):
 
 data = {s: ke_dataset(isi) for s, isi in split.items() if isi}
 data["test_asli_pasti"] = ke_dataset([b for b in split["test_asli"] if b["status"] == "pasti"]) if split["test_asli"] else None
+surat = [b for b in split["test_sintetis"] if b["sumber"] == "kalimat_surat"]
+data["test_surat"] = ke_dataset(surat) if surat else None  # bagian surat dari test_sintetis
 print({k: (len(v) if v else 0) for k, v in data.items()})
 """)
 
@@ -282,7 +284,7 @@ def evaluasi(nama):
         print(f"{k:16} {v:.3f}")
     per_label(pred, gold)
 
-for nama in ("test_sintetis", "test_asli", "test_asli_pasti"):
+for nama in ("test_sintetis", "test_surat", "test_asli", "test_asli_pasti"):
     evaluasi(nama)
 """)
 

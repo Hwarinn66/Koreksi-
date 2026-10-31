@@ -14,10 +14,11 @@ Jangan masukkan kalimat dari folder ini ke data latih.
 | skripsi05 | Sistem Informasi, ITS | 144 | 44 | 66 | 4 |
 | skripsi06 | Sistem Informasi, UIN Alauddin Makassar | 138 | 81 | 127 | 6 |
 | skripsi07 | Ilmu Perpustakaan, UIN Jakarta (hanya Bab I–II) | 123 | 50 | 79 | 8 |
-| **Total** | | **1.120** | **452** | **738** | **29** |
+| skripsi08 | Ilmu Hukum (perdata), Univ. Muhammadiyah Mataram (Bab I–III) | 128 | 60 | 93 | 2 |
+| skripsi09 | Ilmu Hukum (pidana), UIN Suska Riau (Bab I–III, V) | 108 | 54 | 86 | 5 |
+| **Total** | | **1.356** | **566** | **920** | **36** |
 
-Token per label: TYPO 189, TAMBAH_KOMA 102, TIDAK_BAKU 91, KAPITAL 76, HURUF_KECIL 76,
-PISAH 67, HAPUS 40, GABUNG 36, GANTI_TITIK 33, LAIN 22, TAMBAH_TITIK 4, FORMAT_ANGKA 2.
+Token per label: TYPO 248, TAMBAH_KOMA 135, PISAH 96, TIDAK_BAKU 94, KAPITAL 88, HURUF_KECIL 85, HAPUS 59, GANTI_TITIK 44, GABUNG 40, LAIN 25, TAMBAH_TITIK 4, FORMAT_ANGKA 2.
 
 skripsi03 (hasil pindai) tidak diproses karena OCR akan menambahkan typo palsu.
 
@@ -48,9 +49,9 @@ skripsi03 (hasil pindai) tidak diproses karena OCR akan menambahkan typo palsu.
 
 ## Label tambahan
 
-`GANTI_TITIK` (koma → titik) dan `LAIN` (perubahan gabungan, misalnya *antar class* → *antarclass*)
-tidak ada di data sintetis. Saat evaluasi model yang dilatih dengan data sintetis, abaikan kedua
-label ini atau petakan `GANTI_TITIK` ke HAPUS+TAMBAH_TITIK.
+`LAIN` (perubahan gabungan, misalnya *antar class* → *antarclass*) tidak ada di data sintetis,
+jadi diabaikan saat evaluasi. `GANTI_TITIK` (koma → titik) sekarang juga ada di data sintetis
+(dari baris surat yang berisi dua kalimat), sehingga ikut dilatih dan dievaluasi.
 
 ## Saran evaluasi
 

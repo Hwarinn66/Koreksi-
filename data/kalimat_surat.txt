@@ -1,0 +1,464 @@
+# Kalimat dan baris surat sesuai EYD V: lamaran, izin, cuti, undangan, permohonan,
+# pemberitahuan, surat dinas, keterangan, pernyataan, kuasa, balasan, dan surel ke dosen.
+# Semua nama orang, instansi, dan alamat adalah rekaan.
+# Baris yang berisi dua kalimat dipakai untuk melatih kesalahan kalimat yang disambung koma.
+
+# --- Salam, pembuka, dan penutup ---
+Dengan hormat,
+Hormat saya,
+Hormat kami,
+Salam hormat,
+Bandung, 14 Juli 2026
+Surabaya, 3 Agustus 2026
+Medan, 21 September 2026
+Yogyakarta, 5 Oktober 2026
+Makassar, 17 November 2026
+Pekanbaru, 2 Februari 2026
+Mataram, 9 Maret 2026
+Jakarta, 28 Januari 2026
+Semarang, 11 Desember 2026
+Yth. Kepala Bagian Sumber Daya Manusia PT Sinar Abadi Jaya
+Yth. Manajer Personalia CV Karya Mandiri
+Yth. Bapak Kepala Desa Sukamaju
+Yth. Ibu Kepala SMA Negeri 4 Cendana
+Yth. Dekan Fakultas Teknik Universitas Nusantara Raya
+Yth. Ketua Program Studi Sistem Informasi
+Yth. Bapak Hendra Wijaya
+Yth. Ibu Ratna Sari
+Yth. Kepala Dinas Pendidikan Kota Bandung
+Yth. Direktur Utama PT Mitra Logistik Sejahtera
+Yth. Ketua RW 05 Kelurahan Sukamaju
+Yth. Bapak/Ibu Orang Tua/Wali Siswa
+Yth. Seluruh Karyawan PT Sinar Abadi Jaya
+Hal: Lamaran Pekerjaan
+Hal: Permohonan Izin Penelitian
+Hal: Permohonan Cuti Tahunan
+Hal: Undangan Rapat Koordinasi
+Hal: Pengunduran Diri
+Hal: Permohonan Peminjaman Ruangan
+Perihal: Permohonan Dukungan Dana
+Perihal: Pemberitahuan Pemadaman Listrik
+Lampiran: satu berkas
+Lampiran: dua lembar
+Demikian surat ini saya buat.
+Demikian surat ini kami sampaikan.
+Demikian surat lamaran ini saya buat dengan sebenar-benarnya.
+Demikian permohonan ini saya sampaikan.
+Demikian surat permohonan ini kami sampaikan.
+Demikian pemberitahuan ini kami sampaikan.
+Demikian undangan ini kami sampaikan.
+Demikian surat keterangan ini dibuat untuk dapat dipergunakan sebagaimana mestinya.
+Demikian surat pernyataan ini saya buat dengan sebenar-benarnya tanpa paksaan dari pihak mana pun.
+Demikian surat kuasa ini saya buat untuk dipergunakan sebagaimana mestinya.
+Atas perhatian Bapak/Ibu, saya ucapkan terima kasih.
+Atas perhatian Bapak/Ibu, kami ucapkan terima kasih.
+Atas perhatian dan kerja sama Bapak/Ibu, kami ucapkan terima kasih.
+Atas perhatian dan kehadiran Bapak/Ibu, kami ucapkan terima kasih.
+Atas perhatian Saudara, kami ucapkan terima kasih.
+Atas perhatian dan kebijaksanaan Bapak, saya ucapkan terima kasih.
+Atas bantuan dan kerja sama yang baik, kami ucapkan terima kasih.
+Terima kasih atas perhatian Bapak/Ibu.
+Terima kasih atas perhatian dan kerja samanya.
+Terima kasih atas waktu dan kesempatan yang Bapak berikan.
+Besar harapan saya agar Bapak/Ibu berkenan mengabulkan permohonan ini.
+Besar harapan kami agar Bapak/Ibu dapat hadir tepat waktu.
+Kami sangat mengharapkan kehadiran Bapak/Ibu pada acara tersebut.
+Kami berharap Bapak/Ibu dapat mempertimbangkan permohonan ini.
+
+# --- Lamaran pekerjaan ---
+Sehubungan dengan informasi lowongan pekerjaan yang dimuat di situs resmi PT Sinar Abadi Jaya, saya bermaksud melamar posisi staf administrasi.
+Sehubungan dengan adanya lowongan pekerjaan di perusahaan yang Bapak/Ibu pimpin, saya bermaksud mengajukan lamaran sebagai staf keuangan.
+Berdasarkan informasi yang saya peroleh dari media sosial perusahaan, PT Mitra Logistik Sejahtera sedang membuka lowongan untuk posisi admin gudang.
+Melalui surat ini, saya bermaksud melamar pekerjaan sebagai pengembang web di perusahaan yang Bapak/Ibu pimpin.
+Saya yang bertanda tangan di bawah ini:
+Nama: Dimas Pratama
+Nama: Rina Oktaviani
+Nama: Fajar Nugroho
+Tempat, tanggal lahir: Bandung, 2 Mei 2001
+Tempat, tanggal lahir: Surabaya, 19 Agustus 2000
+Pendidikan terakhir: Sarjana Sistem Informasi
+Pendidikan terakhir: Diploma Tiga Akuntansi
+Alamat: Jalan Melati Nomor 12, Kelurahan Sukamaju, Kota Bandung
+Alamat: Jalan Kenanga Nomor 7, Kecamatan Tampan, Kota Pekanbaru
+Saya merupakan lulusan Program Studi Sistem Informasi Universitas Nusantara Raya dengan IPK 3,62.
+Saya lulus dari Program Studi Akuntansi pada tahun 2024 dengan indeks prestasi kumulatif 3,48.
+Saya baru saja menyelesaikan pendidikan sarjana di bidang teknik informatika.
+Selama kuliah, saya aktif dalam organisasi kemahasiswaan dan pernah menjabat sebagai sekretaris himpunan mahasiswa.
+Selama kuliah, saya pernah menjadi asisten laboratorium untuk mata kuliah basis data.
+Saya memiliki pengalaman magang selama enam bulan di bagian administrasi sebuah perusahaan distribusi.
+Saya pernah bekerja sebagai staf gudang selama dua tahun di sebuah perusahaan manufaktur.
+Saya terbiasa menggunakan Microsoft Excel, Microsoft Word, dan aplikasi pengolah data lainnya.
+Saya menguasai bahasa pemrograman PHP, JavaScript, dan Python.
+Saya mampu bekerja secara mandiri maupun dalam tim.
+Saya juga terbiasa bekerja di bawah tekanan dan dapat menyelesaikan pekerjaan tepat waktu.
+Saya memiliki kemampuan komunikasi yang baik dan senang mempelajari hal baru.
+Saya bersedia ditempatkan di seluruh wilayah kerja perusahaan.
+Saya bersedia bekerja dengan sistem giliran apabila diperlukan.
+Saya yakin bahwa pengalaman dan keterampilan yang saya miliki sesuai dengan kualifikasi yang dibutuhkan perusahaan.
+Saya tertarik dengan posisi ini karena sesuai dengan latar belakang pendidikan dan minat saya.
+Saya ingin mengembangkan karier di bidang keuangan bersama perusahaan yang Bapak/Ibu pimpin.
+Sebagai bahan pertimbangan, saya lampirkan beberapa dokumen sebagai berikut:
+Sebagai bahan pertimbangan, bersama surat ini saya lampirkan:
+Berikut saya lampirkan dokumen pendukung sebagai bahan pertimbangan.
+Daftar riwayat hidup
+Fotokopi ijazah dan transkrip nilai yang telah dilegalisasi
+Fotokopi kartu tanda penduduk
+Pasfoto berwarna sebanyak dua lembar
+Sertifikat pelatihan dan surat keterangan pengalaman kerja
+Surat keterangan sehat dari dokter
+Surat keterangan catatan kepolisian
+Saya berharap dapat diberi kesempatan untuk mengikuti tahap wawancara sehingga dapat menjelaskan potensi diri saya secara lebih rinci.
+Saya sangat berharap dapat bergabung dan berkontribusi bagi kemajuan perusahaan.
+Apabila Bapak/Ibu memerlukan informasi tambahan, saya dapat dihubungi melalui surel atau nomor telepon yang tercantum pada daftar riwayat hidup.
+Saya siap mengikuti seluruh tahapan seleksi yang ditetapkan perusahaan.
+Demikian surat lamaran ini saya sampaikan. Atas perhatian Bapak/Ibu, saya ucapkan terima kasih.
+Berkas lamaran sudah saya kirimkan melalui surel. Mohon Bapak/Ibu berkenan memeriksanya.
+Saya lulusan baru dan belum memiliki pengalaman kerja formal. Namun, saya memiliki pengalaman organisasi yang cukup banyak.
+Saya pernah mengikuti pelatihan desain grafis selama tiga bulan. Sertifikat pelatihan tersebut saya lampirkan bersama surat ini.
+
+# --- Magang dan praktik kerja lapangan ---
+Kami mengajukan permohonan praktik kerja lapangan bagi mahasiswa kami di instansi yang Bapak/Ibu pimpin.
+Saya bermaksud mengajukan permohonan magang di bagian teknologi informasi PT Sinar Abadi Jaya.
+Kegiatan praktik kerja lapangan direncanakan berlangsung selama tiga bulan.
+Kegiatan magang tersebut merupakan salah satu syarat kelulusan pada Program Studi Teknik Informatika.
+Kami berharap mahasiswa kami dapat memperoleh pengalaman kerja yang bermanfaat.
+Mahasiswa yang bersangkutan bersedia mematuhi seluruh peraturan dan tata tertib yang berlaku di perusahaan.
+Selama magang, mahasiswa akan dibimbing oleh dosen pembimbing dan pembimbing lapangan.
+Nama mahasiswa, nomor induk mahasiswa, dan jadwal kegiatan tercantum dalam lampiran surat ini.
+Kami mohon kesediaan Bapak/Ibu untuk menerima mahasiswa kami sebagai peserta magang.
+Kami juga memohon agar perusahaan berkenan memberikan surat keterangan setelah kegiatan magang selesai.
+Laporan kegiatan magang akan diserahkan kepada pembimbing lapangan pada akhir periode magang.
+Peserta magang wajib hadir pukul 08.00 WIB dan mengisi daftar hadir setiap hari.
+Saya telah menyelesaikan kegiatan magang selama tiga bulan. Laporan akhir sudah saya serahkan kepada pembimbing lapangan.
+
+# --- Izin tidak masuk dan cuti ---
+Saya memohon izin tidak dapat mengikuti perkuliahan pada hari ini karena sedang sakit.
+Saya mohon izin tidak masuk kerja pada Senin, 3 Agustus 2026 karena harus menghadiri pernikahan saudara.
+Dengan ini saya memberitahukan bahwa anak kami tidak dapat mengikuti kegiatan pembelajaran karena sedang sakit.
+Anak kami, Nadia Putri, siswa kelas VIII B, tidak dapat masuk sekolah selama dua hari karena sedang dirawat di rumah sakit.
+Bersama surat ini, kami lampirkan surat keterangan dokter sebagai bukti.
+Kami mohon Bapak/Ibu berkenan memberikan izin kepada anak kami.
+Saya akan mengejar ketertinggalan materi dengan mempelajari catatan dari teman sekelas.
+Tugas yang diberikan pada hari tersebut akan saya kumpulkan setelah saya kembali masuk.
+Saya bermaksud mengajukan permohonan cuti tahunan selama lima hari kerja mulai 10 Agustus 2026.
+Cuti tersebut akan saya gunakan untuk mengurus keperluan keluarga di luar kota.
+Selama saya cuti, pekerjaan saya akan ditangani oleh rekan satu divisi, yaitu Saudara Fajar Nugroho.
+Saya akan kembali bekerja seperti biasa pada Senin, 17 Agustus 2026.
+Saya telah menyelesaikan pekerjaan yang mendesak sebelum mengajukan cuti ini.
+Saya mengajukan cuti melahirkan selama tiga bulan sesuai dengan ketentuan perusahaan.
+Selama cuti berlangsung, saya tetap dapat dihubungi melalui telepon apabila ada keperluan mendesak.
+Saya tidak dapat masuk kerja hari ini. Saya sedang demam dan disarankan dokter untuk beristirahat.
+Surat keterangan dokter akan saya serahkan besok. Mohon maaf atas ketidaknyamanan ini.
+Saya sudah meminta rekan saya untuk menggantikan tugas piket hari ini. Laporan harian tetap akan saya kirimkan sore nanti.
+Anak kami tidak dapat mengikuti ujian susulan pada hari Kamis. Kami mohon kebijaksanaan Bapak/Ibu untuk memberikan jadwal pengganti.
+Kami mohon maaf atas ketidakhadiran anak kami dalam kegiatan tersebut.
+
+# --- Pengunduran diri ---
+Melalui surat ini, saya bermaksud mengajukan pengunduran diri dari posisi staf gudang di PT Mitra Logistik Sejahtera.
+Dengan ini saya mengajukan pengunduran diri sebagai karyawan PT Sinar Abadi Jaya.
+Pengunduran diri ini berlaku efektif mulai 1 September 2026.
+Keputusan ini saya ambil setelah melalui pertimbangan yang matang.
+Saya mengundurkan diri karena akan melanjutkan pendidikan ke jenjang magister.
+Saya mengucapkan terima kasih atas kesempatan dan pengalaman yang telah diberikan selama saya bekerja di perusahaan ini.
+Saya juga memohon maaf atas segala kesalahan yang pernah saya lakukan selama bekerja.
+Saya akan menyelesaikan seluruh tanggung jawab dan melakukan serah terima pekerjaan sebelum tanggal tersebut.
+Saya bersedia membantu proses serah terima kepada karyawan pengganti.
+Semoga perusahaan terus berkembang dan semakin sukses di masa mendatang.
+Saya berterima kasih atas bimbingan yang telah Bapak berikan selama ini. Pengalaman tersebut sangat berharga bagi perkembangan karier saya.
+
+# --- Undangan dan rapat ---
+Dalam rangka memperingati Hari Ulang Tahun ke-81 Kemerdekaan Republik Indonesia, kami bermaksud mengadakan lomba antarwarga.
+Sehubungan dengan hal tersebut, kami mengundang Bapak/Ibu untuk hadir pada:
+Kami mengharapkan kehadiran Bapak/Ibu pada acara yang akan diselenggarakan pada:
+Hari, tanggal: Minggu, 16 Agustus 2026
+Hari, tanggal: Rabu, 5 Agustus 2026
+Hari, tanggal: Sabtu, 12 September 2026
+Waktu: pukul 08.00 WIB sampai selesai
+Waktu: pukul 13.00 sampai 15.00 WIB
+Tempat: Lapangan RW 05 Kelurahan Sukamaju
+Tempat: Aula Fakultas Teknik Universitas Nusantara Raya
+Acara: Rapat koordinasi persiapan bakti sosial
+Mengingat pentingnya acara tersebut, kami sangat mengharapkan kehadiran Bapak/Ibu tepat waktu.
+Kami mengundang seluruh pengurus untuk menghadiri rapat koordinasi yang akan dilaksanakan pada Rabu, 5 Agustus 2026.
+Rapat dimulai pukul 13.00 WIB di ruang rapat lantai dua.
+Rapat akan membahas persiapan kegiatan bakti sosial, pembagian tugas panitia, dan rencana anggaran.
+Agenda rapat meliputi evaluasi program kerja, laporan keuangan, dan pemilihan pengurus baru.
+Kami mengundang orang tua siswa untuk menghadiri rapat pembagian rapor semester ganjil.
+Acara pembagian rapor akan dilaksanakan di ruang kelas masing-masing.
+Kami mengundang Bapak/Ibu untuk menghadiri acara syukuran pernikahan putri kami.
+Acara akan dimeriahkan oleh penampilan seni dari siswa dan siswi sekolah.
+Setiap peserta diharapkan membawa alat tulis dan laptop masing-masing.
+Konfirmasi kehadiran dapat disampaikan kepada panitia paling lambat Jumat, 14 Agustus 2026.
+Peserta diharapkan hadir lima belas menit sebelum acara dimulai.
+Mengingat keterbatasan tempat, setiap undangan hanya berlaku untuk dua orang.
+Apabila berhalangan hadir, Bapak/Ibu dapat mengutus perwakilan dengan membawa surat undangan ini.
+Rapat ditunda hingga minggu depan. Jadwal pengganti akan kami informasikan kemudian.
+Undangan ini berlaku untuk dua orang. Mohon tunjukkan undangan kepada panitia di pintu masuk.
+Acara akan dimulai tepat waktu. Kami mohon Bapak/Ibu hadir sebelum pukul 09.00 WIB.
+Kegiatan ini tidak dipungut biaya. Seluruh peserta akan mendapatkan sertifikat dan makan siang.
+Kami mengucapkan terima kasih atas kehadiran Bapak/Ibu dalam rapat tersebut.
+
+# --- Permohonan izin penelitian ---
+Dengan ini kami mohon kesediaan Bapak/Ibu untuk memberikan izin penelitian kepada mahasiswa kami berikut ini:
+Mahasiswa tersebut sedang menyusun skripsi sebagai salah satu syarat untuk memperoleh gelar sarjana.
+Penelitian tersebut dilakukan untuk keperluan penyusunan skripsi.
+Data yang diperoleh hanya akan digunakan untuk kepentingan akademik dan akan dijaga kerahasiaannya.
+Kegiatan penelitian direncanakan berlangsung dari bulan September hingga Oktober 2026.
+Penelitian akan dilakukan melalui wawancara, observasi, dan penyebaran kuesioner kepada karyawan.
+Kami juga memohon izin untuk mengakses data penjualan perusahaan selama tiga tahun terakhir.
+Peneliti akan menyesuaikan jadwal pengambilan data dengan kegiatan operasional perusahaan.
+Hasil penelitian akan kami serahkan kepada perusahaan sebagai bahan evaluasi.
+Saya mohon izin untuk melakukan observasi di bagian gudang selama dua minggu.
+Proposal penelitian dan instrumen pengumpulan data kami lampirkan bersama surat ini.
+Izin penelitian sudah kami terima dari pihak sekolah. Pengambilan data akan dimulai pada minggu depan.
+
+# --- Permohonan dana, sponsor, dan peminjaman ---
+Kami dari Himpunan Mahasiswa Teknik Informatika bermaksud menyelenggarakan seminar nasional bertema keamanan data pribadi.
+Untuk mendukung terlaksananya kegiatan tersebut, kami mengajukan permohonan dukungan dana sebesar Rp5.000.000.
+Sebagai bentuk timbal balik, logo perusahaan Bapak/Ibu akan ditampilkan pada spanduk, poster, dan media sosial resmi kegiatan.
+Proposal kegiatan dan rincian anggaran kami lampirkan bersama surat ini.
+Kegiatan ini diperkirakan akan diikuti oleh sekitar tiga ratus peserta dari berbagai perguruan tinggi.
+Dana yang terkumpul akan digunakan untuk biaya konsumsi, sewa tempat, dan honorarium narasumber.
+Laporan penggunaan dana akan kami sampaikan paling lambat dua minggu setelah kegiatan selesai.
+Kami bermaksud meminjam aula serbaguna untuk kegiatan pelatihan kewirausahaan.
+Kami juga bermaksud meminjam proyektor, pengeras suara, dan lima puluh kursi lipat.
+Kami bertanggung jawab penuh atas kebersihan dan keamanan ruangan selama kegiatan berlangsung.
+Apabila terjadi kerusakan, kami bersedia mengganti sesuai dengan ketentuan yang berlaku.
+Peralatan yang kami pinjam akan dikembalikan pada hari yang sama setelah kegiatan selesai.
+Kegiatan tersebut akan dilaksanakan pada Sabtu, 12 September 2026 pukul 08.00 sampai 12.00 WIB.
+Kami mengajukan permohonan bantuan berupa paket sembako untuk warga yang terdampak banjir.
+Bantuan dapat disalurkan melalui posko yang berada di balai desa.
+Sumbangan dalam bentuk uang dapat ditransfer ke rekening panitia yang tercantum di bawah ini.
+
+# --- Pemberitahuan dan surat edaran ---
+Diberitahukan kepada seluruh warga bahwa akan diadakan kerja bakti pada Minggu, 9 Agustus 2026.
+Warga diimbau membawa peralatan kebersihan masing-masing.
+Kami mengimbau seluruh karyawan untuk menghemat penggunaan listrik dan air di lingkungan kantor.
+Sehubungan dengan perbaikan jaringan listrik, aliran listrik di wilayah Kecamatan Cibeunying akan dipadamkan sementara.
+Pemadaman dijadwalkan berlangsung pukul 09.00 sampai 15.00 WIB.
+Kami mohon maaf atas ketidaknyamanan yang ditimbulkan.
+Layanan akan kembali normal setelah proses pemeliharaan sistem selesai.
+Jam operasional kantor pelayanan berubah menjadi pukul 08.00 sampai 16.00 WIB mulai 1 September 2026.
+Kantor kami akan tutup sementara selama libur Idulfitri.
+Pelayanan akan dibuka kembali pada Senin, 30 Maret 2026.
+Diberitahukan bahwa pembayaran uang kuliah semester ganjil paling lambat dilakukan pada 31 Agustus 2026.
+Mahasiswa yang terlambat membayar tidak dapat mengikuti pengisian kartu rencana studi.
+Pengumpulan berkas pendaftaran beasiswa diperpanjang hingga Jumat, 18 September 2026.
+Seluruh karyawan wajib mengenakan seragam batik setiap hari Jumat.
+Karyawan yang tidak dapat hadir wajib memberi tahu atasan paling lambat satu hari sebelumnya.
+Peraturan ini berlaku bagi seluruh karyawan tetap maupun karyawan kontrak.
+Setiap tamu wajib melapor kepada petugas keamanan dan mengisi buku tamu.
+Pengumuman hasil seleksi dapat dilihat di papan pengumuman dan situs resmi kampus.
+Peserta yang dinyatakan lulus wajib melakukan daftar ulang paling lambat tanggal 25 Agustus 2026.
+Menindaklanjuti surat edaran Dinas Pendidikan Provinsi Jawa Barat, kami sampaikan beberapa hal sebagai berikut:
+Seluruh guru diwajibkan hadir di sekolah paling lambat pukul 06.45 WIB.
+Kepala sekolah diharapkan memantau pelaksanaan kegiatan tersebut dan melaporkannya secara berkala.
+Laporan pelaksanaan kegiatan disampaikan kepada Dinas Pendidikan paling lambat tanggal 30 setiap bulan.
+Surat edaran ini mulai berlaku sejak tanggal ditetapkan.
+Hal-hal yang belum diatur dalam surat edaran ini akan ditetapkan kemudian.
+Surat edaran ini harap disampaikan kepada seluruh pegawai di lingkungan unit kerja masing-masing.
+Para orang tua diharapkan mendampingi anak-anak selama kegiatan belajar dari rumah.
+Kegiatan ekstrakurikuler ditiadakan selama pekan ujian akhir semester.
+Kegiatan perkuliahan pada hari tersebut ditiadakan. Perkuliahan pengganti akan dijadwalkan oleh masing-masing dosen.
+Gedung perpustakaan sedang direnovasi. Layanan peminjaman buku dipindahkan sementara ke lantai dua gedung rektorat.
+Sistem informasi akademik tidak dapat diakses pada malam ini. Tim kami sedang melakukan pemeliharaan server.
+
+# --- Surat dinas dan kerja sama ---
+Menanggapi surat Saudara tertanggal 12 Juli 2026, dengan ini kami sampaikan bahwa permohonan tersebut kami setujui.
+Merujuk pada hasil rapat tanggal 2 Agustus 2026, kami menyampaikan jadwal pelaksanaan kegiatan sebagai berikut.
+Dalam rangka meningkatkan kualitas pelayanan publik, kami akan mengadakan pelatihan bagi seluruh pegawai.
+Kami menugaskan pegawai yang namanya tercantum di bawah ini untuk mengikuti pelatihan tersebut.
+Biaya perjalanan dinas dibebankan pada anggaran kantor tahun 2026.
+Kami bermaksud menjalin kerja sama antarinstansi dalam bidang pengembangan sumber daya manusia.
+Kami dari CV Karya Mandiri menawarkan jasa perawatan pendingin ruangan untuk kantor dan gedung perkantoran.
+Harga yang kami tawarkan sudah termasuk biaya pemasangan, tetapi belum termasuk pajak.
+Kami memberikan potongan harga sebesar 10% untuk pemesanan pertama.
+Pembayaran dapat dilakukan melalui transfer bank paling lambat tujuh hari setelah faktur diterima.
+Kami berharap dapat menjalin kerja sama yang baik dan saling menguntungkan.
+Apabila Bapak/Ibu tertarik, silakan menghubungi kami melalui nomor telepon yang tercantum di bawah ini.
+Daftar harga dan katalog produk kami lampirkan untuk menjadi bahan pertimbangan.
+Kami siap melakukan presentasi produk di kantor Bapak/Ibu sesuai dengan waktu yang disepakati.
+Pesanan Bapak/Ibu akan kami kirimkan paling lambat tiga hari kerja setelah pembayaran dikonfirmasi.
+Faktur dan kuitansi pembayaran akan kami kirimkan bersama barang pesanan.
+Kami mengonfirmasi bahwa pembayaran dari perusahaan Bapak telah kami terima.
+Barang pesanan sudah kami kirimkan melalui jasa ekspedisi pagi ini. Nomor resi pengiriman akan kami kirimkan melalui surel.
+Perjanjian kerja sama ini berlaku selama satu tahun dan dapat diperpanjang atas kesepakatan kedua belah pihak.
+Kedua belah pihak sepakat untuk menyelesaikan perselisihan secara musyawarah.
+Surat perjanjian ini dibuat rangkap dua dan masing-masing memiliki kekuatan hukum yang sama.
+Kami akan menindaklanjuti permintaan Bapak setelah mendapatkan persetujuan dari direksi.
+
+# --- Keluhan dan tanggapan ---
+Saya ingin menyampaikan keluhan terkait pesanan yang saya terima pada 20 Juli 2026.
+Ukuran dan warna barang yang saya terima tidak sesuai dengan pesanan.
+Saya sudah menghubungi layanan pelanggan sebanyak tiga kali, tetapi belum mendapatkan tanggapan.
+Saya berharap pihak toko dapat segera menindaklanjuti keluhan ini.
+Mohon pengembalian dana dapat diproses paling lambat minggu depan.
+Foto barang dan bukti pembayaran saya lampirkan bersama surel ini.
+Kami mohon maaf atas keterlambatan pengiriman pesanan Bapak/Ibu.
+Keterlambatan tersebut disebabkan oleh kendala cuaca di jalur pengiriman.
+Kami akan mengganti barang yang rusak tanpa biaya tambahan.
+Keluhan Bapak sudah kami terima dan sedang kami proses.
+Kami akan memberikan kabar terbaru paling lambat dalam dua hari kerja.
+Lampu jalan di depan rumah kami sudah padam selama dua minggu. Kondisi ini membuat warga khawatir saat pulang pada malam hari.
+Saluran air di lingkungan kami tersumbat sejak minggu lalu. Kami mohon pihak kelurahan segera melakukan perbaikan.
+
+# --- Keterangan, pernyataan, kuasa, dan rekomendasi ---
+Yang bertanda tangan di bawah ini, Kepala Desa Sukamaju, menerangkan bahwa:
+Yang bertanda tangan di bawah ini menerangkan dengan sebenarnya bahwa:
+Nama tersebut di atas adalah benar warga Desa Sukamaju yang berdomisili di RT 03 RW 05.
+Yang bersangkutan adalah benar mahasiswa aktif pada Program Studi Sistem Informasi.
+Yang bersangkutan telah bekerja di perusahaan kami sejak Januari 2022 hingga Juni 2026.
+Selama bekerja, yang bersangkutan menunjukkan kinerja yang baik dan disiplin.
+Surat keterangan ini dibuat untuk keperluan pengajuan beasiswa.
+Surat keterangan ini diberikan untuk melengkapi persyaratan pendaftaran kerja.
+Saya menyatakan bahwa seluruh data yang saya sampaikan dalam formulir ini adalah benar.
+Saya menyatakan bahwa karya tulis ini merupakan hasil karya saya sendiri.
+Apabila di kemudian hari pernyataan ini terbukti tidak benar, saya bersedia menerima sanksi sesuai dengan ketentuan yang berlaku.
+Saya bersedia menaati seluruh peraturan yang berlaku selama mengikuti program ini.
+Surat pernyataan ini saya buat dalam keadaan sadar dan tanpa paksaan dari pihak mana pun.
+Dengan ini saya memberikan kuasa kepada adik kandung saya untuk mengambil ijazah atas nama saya.
+Penerima kuasa berhak menandatangani tanda terima pengambilan dokumen tersebut.
+Surat kuasa ini berlaku sampai urusan tersebut selesai.
+Pemberi kuasa tidak dapat hadir secara langsung karena sedang bertugas di luar kota.
+Saya mengenal Saudari Rina Oktaviani sebagai mahasiswa yang tekun, jujur, dan bertanggung jawab.
+Selama mengikuti perkuliahan saya, yang bersangkutan selalu menunjukkan prestasi yang baik.
+Oleh karena itu, saya merekomendasikan yang bersangkutan untuk mengikuti program pertukaran pelajar tersebut.
+Saya tidak ragu untuk merekomendasikan Saudara Dimas Pratama untuk posisi tersebut.
+Ia mampu bekerja sama dengan baik dan memiliki inisiatif yang tinggi.
+
+# --- Balasan dan rekrutmen ---
+Kami menghargai minat Saudara untuk bergabung dengan perusahaan kami.
+Dengan berat hati kami sampaikan bahwa permohonan Saudara belum dapat kami penuhi saat ini.
+Kami akan menyimpan data Saudara untuk kebutuhan rekrutmen berikutnya.
+Kami mengucapkan selamat karena Saudara dinyatakan lolos ke tahap wawancara.
+Wawancara akan dilaksanakan secara daring pada Selasa, 18 Agustus 2026.
+Tautan rapat daring akan dikirimkan melalui surel paling lambat satu hari sebelum jadwal wawancara.
+Mohon konfirmasi kehadiran Saudara paling lambat 15 Agustus 2026.
+Saudara diminta membawa dokumen asli untuk keperluan verifikasi.
+Saudara dinyatakan diterima sebagai karyawan kontrak dengan masa percobaan selama tiga bulan.
+Gaji pokok dan tunjangan akan dijelaskan lebih lanjut pada saat penandatanganan kontrak kerja.
+Hari pertama kerja Saudara adalah Senin, 7 September 2026 pukul 08.00 WIB.
+Saudara dinyatakan lolos seleksi administrasi. Tahap selanjutnya adalah tes tertulis yang akan dilaksanakan pada minggu depan.
+Kami telah menerima berkas lamaran Saudara. Hasil seleksi administrasi akan kami umumkan melalui surel.
+
+# --- Surel dan pesan ke dosen ---
+Selamat pagi, Pak Hendra.
+Selamat siang, Bu Ratna.
+Selamat sore, Pak.
+Selamat malam, Bu.
+Mohon maaf mengganggu waktu Bapak.
+Mohon maaf mengganggu waktu istirahat Ibu.
+Perkenalkan, saya Rina Oktaviani, mahasiswa Program Studi Teknik Informatika angkatan 2022.
+Perkenalkan, saya Dimas Pratama dari kelas Basis Data B.
+Saya ingin mengajukan bimbingan skripsi untuk Bab III pada minggu ini.
+Apakah Bapak berkenan meluangkan waktu pada hari Kamis atau Jumat?
+Apakah Ibu ada di kampus pada hari ini?
+Mohon izin bertanya, Bu, apakah jadwal ujian proposal sudah ditentukan?
+Mohon izin bertanya, Pak, kapan batas akhir pengumpulan tugas besar?
+Saya sudah mengirimkan berkas revisi melalui surel kemarin sore.
+Saya sudah memperbaiki bagian metodologi sesuai dengan saran Bapak.
+Berkas revisi saya lampirkan dalam surel ini untuk Ibu periksa.
+Saya akan datang ke ruang dosen pukul 10.00 sesuai dengan arahan Ibu.
+Mohon maaf atas keterlambatan saya dalam mengumpulkan tugas.
+Mohon maaf, Pak, saya terlambat membalas pesan Bapak.
+Terima kasih atas waktu dan bimbingan yang Bapak berikan.
+Terima kasih, Bu, atas masukan yang Ibu berikan.
+Baik, Bu, terima kasih banyak.
+Baik, Pak, akan segera saya perbaiki.
+Saya izin tidak mengikuti kuliah hari ini karena sedang sakit.
+Saya ingin meminta tanda tangan Bapak untuk lembar persetujuan proposal.
+Saya mohon kesediaan Ibu untuk menjadi dosen pembimbing skripsi saya.
+Apabila Bapak berkenan, saya ingin berkonsultasi mengenai judul skripsi saya.
+Saya mohon petunjuk Bapak mengenai format penulisan laporan praktik kerja lapangan.
+Mohon kiranya Bapak dapat memberikan nilai susulan untuk mata kuliah tersebut.
+Saya sudah menyelesaikan revisi Bab IV. Mohon Ibu berkenan memeriksanya kembali.
+Saya sudah sampai di depan ruang dosen. Apakah Bapak sudah berada di ruangan?
+Saya tidak dapat mengikuti kuis hari ini karena sakit. Surat keterangan dokter sudah saya lampirkan dalam surel ini.
+Jadwal bimbingan saya bertabrakan dengan jadwal ujian praktikum. Apakah bimbingan dapat dipindahkan ke hari Jumat?
+Terima kasih atas perhatian Ibu. Semoga Ibu selalu dalam keadaan sehat.
+Saya mohon maaf karena tidak hadir pada pertemuan kemarin. Saya akan mempelajari materi tersebut secara mandiri.
+
+# --- Lain-lain ---
+Bersama surat ini, saya sampaikan laporan kegiatan bulan Juli 2026.
+Bersama surat ini, kami kirimkan dokumen yang Bapak minta.
+Kami sampaikan bahwa kegiatan bakti sosial telah terlaksana dengan baik.
+Kegiatan tersebut diikuti oleh 120 warga dari tiga rukun warga.
+Kami mengucapkan terima kasih atas dukungan yang telah Bapak/Ibu berikan sehingga kegiatan bakti sosial dapat berjalan dengan lancar.
+Bantuan tersebut sangat berarti bagi warga yang terdampak banjir.
+Semoga kerja sama yang baik ini dapat terus terjalin.
+Kami berharap kegiatan serupa dapat diadakan kembali pada tahun depan.
+Kami mohon maaf apabila terdapat kekurangan dalam penyelenggaraan acara tersebut.
+Saran dan masukan dari Bapak/Ibu akan kami jadikan bahan evaluasi.
+Sisa dana kegiatan sebesar Rp750.000 telah dikembalikan ke kas organisasi.
+Rincian penggunaan dana dapat dilihat pada lampiran laporan ini.
+Saya bermaksud mengajukan permohonan perpanjangan kontrak kerja untuk satu tahun berikutnya.
+Saya mengajukan permohonan kenaikan golongan sesuai dengan masa kerja yang telah saya jalani.
+Saya mengajukan permohonan pindah tugas ke kantor cabang Surabaya karena alasan keluarga.
+Saya bermaksud mengajukan keringanan pembayaran uang kuliah karena kondisi ekonomi keluarga.
+Orang tua saya bekerja sebagai petani dengan penghasilan yang tidak menentu.
+Kami mohon Bapak/Ibu bersedia mengisi kuesioner yang terlampir dalam surat ini.
+Kuesioner yang telah diisi dapat dikembalikan kepada petugas paling lambat satu minggu setelah surat ini diterima.
+Identitas responden akan dirahasiakan dan hanya digunakan untuk kepentingan penelitian.
+Kami mengucapkan selamat atas terpilihnya Bapak sebagai ketua yayasan yang baru.
+Semoga Bapak dapat menjalankan amanah tersebut dengan baik.
+Kami turut berdukacita atas wafatnya ayahanda Bapak.
+Semoga keluarga yang ditinggalkan diberi ketabahan.
+Kami mengingatkan bahwa tagihan bulan Juli belum dibayarkan.
+Mohon pembayaran dapat dilakukan paling lambat 10 Agustus 2026 agar layanan tidak terputus.
+Apabila Bapak/Ibu telah melakukan pembayaran, mohon abaikan surat ini.
+Paket sudah sampai di kantor kami pagi ini. Terima kasih atas pengiriman yang tepat waktu.
+Pembayaran sudah saya lakukan melalui transfer bank. Bukti pembayaran saya lampirkan bersama pesan ini.
+
+# --- Tambahan: baris dua kalimat ---
+Saya sudah mengisi formulir pendaftaran secara daring. Berkas fisik akan saya serahkan langsung ke bagian akademik.
+Rapat hari ini dibatalkan karena pimpinan sedang bertugas ke luar kota. Informasi jadwal rapat berikutnya akan disampaikan melalui grup pengurus.
+Kami sudah menerima surat permohonan Bapak. Permohonan tersebut sedang kami pelajari.
+Kunci ruangan dapat diambil di pos satpam. Mohon kunci dikembalikan setelah kegiatan selesai.
+Barang yang Bapak pesan saat ini sedang kosong. Kami akan segera mengabari Bapak setelah stok tersedia kembali.
+Saya mohon maaf tidak dapat hadir pada rapat besok. Saya harus mendampingi orang tua saya berobat.
+Pendaftaran peserta dibuka mulai hari ini. Kuota peserta terbatas untuk lima puluh orang.
+Saya sudah mentransfer biaya pendaftaran. Mohon panitia berkenan memeriksa bukti transfer yang saya lampirkan.
+Kegiatan kerja bakti dimulai pukul 07.00 WIB. Warga diharapkan berkumpul di depan balai warga.
+Ruang rapat lantai dua sedang digunakan. Rapat dipindahkan ke ruang serbaguna lantai satu.
+Saya belum menerima tautan untuk wawancara daring. Mohon Bapak/Ibu berkenan mengirimkan ulang tautan tersebut.
+Laporan keuangan bulan ini sudah selesai disusun. Laporan tersebut akan saya serahkan kepada bendahara besok pagi.
+Jadwal ujian akhir semester telah diumumkan. Mahasiswa diharapkan memeriksa jadwal tersebut secara berkala.
+Formulir pendaftaran dapat diunduh di situs resmi panitia. Formulir yang sudah diisi dikirimkan kembali melalui surel.
+Saya sedang dalam perjalanan menuju kampus. Saya akan tiba sekitar lima belas menit lagi.
+Kami sudah memperbaiki kerusakan pada jaringan internet kantor. Mohon laporkan kepada kami apabila masih terjadi gangguan.
+Gaji karyawan bulan ini akan dibayarkan lebih awal. Pembayaran dilakukan pada tanggal 25 karena bertepatan dengan hari libur.
+Pengambilan ijazah dapat dilakukan setiap hari kerja. Mahasiswa wajib membawa kartu tanda mahasiswa dan bukti bebas pustaka.
+Saya sudah mendiskusikan masalah ini dengan kepala bagian. Beliau menyarankan agar saya mengajukan surat permohonan resmi.
+Pesanan Ibu sudah kami terima. Pesanan akan kami proses setelah pembayaran dikonfirmasi.
+Saya kehilangan kartu tanda mahasiswa pada minggu lalu. Saya bermaksud mengajukan permohonan pembuatan kartu pengganti.
+Bapak dapat mengambil hasil pemeriksaan pada hari Kamis. Hasil tersebut juga dapat dikirimkan melalui pos.
+Masa berlaku kontrak sewa akan berakhir bulan depan. Kami ingin mengetahui apakah Bapak berencana memperpanjang kontrak tersebut.
+Proposal kegiatan sudah kami revisi sesuai dengan masukan Ibu. Proposal tersebut kami lampirkan kembali dalam surel ini.
+Terima kasih atas undangan yang Bapak berikan. Saya akan hadir bersama dua orang rekan kerja.
+Mohon maaf atas keterlambatan balasan surel ini. Saya baru kembali dari tugas lapangan.
+Saya ingin mengonfirmasi jadwal wawancara pada hari Selasa. Apakah wawancara tetap dilaksanakan pukul 10.00 WIB?
+Kami telah menerima pembayaran uang muka dari Bapak. Sisa pembayaran dapat dilunasi saat barang diterima.
+Air di kompleks perumahan kami mati sejak kemarin pagi. Kami mohon pihak pengelola segera menangani masalah tersebut.
+Ujian susulan hanya diberikan kepada mahasiswa yang memiliki alasan yang sah. Permohonan ujian susulan diajukan paling lambat tiga hari setelah jadwal ujian.
+
+# --- Tambahan: kalimat isi surat ---
+Saya mengajukan permohonan surat keterangan aktif kuliah untuk keperluan pengajuan beasiswa.
+Saya bermaksud mengajukan permohonan legalisasi ijazah sebanyak lima lembar.
+Saya mohon bantuan Bapak untuk memperbaiki kesalahan penulisan nama pada sertifikat saya.
+Kami mengajukan permohonan pemasangan jaringan internet di gedung kantor yang baru.
+Kami bermaksud mengadakan kunjungan industri ke perusahaan yang Bapak/Ibu pimpin.
+Kunjungan tersebut akan diikuti oleh empat puluh mahasiswa dan dua dosen pendamping.
+Kami mohon kesediaan Bapak/Ibu untuk menjadi narasumber dalam seminar tersebut.
+Materi yang kami harapkan berkaitan dengan peluang karier di bidang teknologi informasi.
+Panitia akan menyediakan transportasi dan akomodasi bagi narasumber.
+Kami bermaksud menyewa gedung pertemuan untuk acara wisuda angkatan 2026.
+Saya bersedia mengikuti seluruh rangkaian kegiatan sampai selesai.
+Peserta yang tidak hadir tanpa keterangan akan dianggap mengundurkan diri.
+Setiap peserta wajib mengikuti protokol keamanan yang telah ditetapkan panitia.
+Seluruh dokumen yang diserahkan tidak dapat dikembalikan.
+Pengaduan dapat disampaikan melalui kotak saran atau surel resmi kelurahan.
+Pemerintah desa akan menyalurkan bantuan langsung tunai kepada warga yang memenuhi syarat.
+Warga yang belum terdaftar dapat melapor kepada ketua RT setempat.
+Kami mohon Bapak/Ibu segera melengkapi berkas yang masih kurang.
+Kami informasikan bahwa nomor rekening perusahaan tidak mengalami perubahan.
+Harap berhati-hati terhadap pihak yang mengatasnamakan perusahaan kami.

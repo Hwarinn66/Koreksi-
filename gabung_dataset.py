@@ -35,8 +35,9 @@ def baca_jsonl(p):
 def main():
     OUT.mkdir(exist_ok=True)
     label_info = json.loads((DIR / "output" / "label.json").read_text(encoding="utf-8"))
-    labels = label_info["labels"] + [l for l in LABEL_ASLI_SAJA if l not in label_info["labels"]]
-    deskripsi = {**label_info["deskripsi"], **LABEL_ASLI_SAJA}
+    khusus = [l for l in LABEL_ASLI_SAJA if l not in label_info["labels"]]  # tidak ada di data sintetis
+    labels = label_info["labels"] + khusus
+    deskripsi = {**LABEL_ASLI_SAJA, **label_info["deskripsi"]}
 
     baris = []
 
@@ -108,7 +109,7 @@ def main():
 
     (OUT / "label.json").write_text(json.dumps(
         {"labels": labels, "label2id": {l: i for i, l in enumerate(labels)},
-         "label_khusus_data_asli": list(LABEL_ASLI_SAJA), "deskripsi": deskripsi},
+         "label_khusus_data_asli": khusus, "deskripsi": deskripsi},
         ensure_ascii=False, indent=2), encoding="utf-8")
 
     per_split = Counter(b["split"] for b in baris)

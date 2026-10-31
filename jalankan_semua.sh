@@ -23,7 +23,7 @@ python3 saring_korpus.py --output data/korpus_idn.txt \
 
 # Kalimat bergaya skripsi diberi lebih banyak varian karena paling sesuai dengan tujuan.
 python3 buat_dataset.py --input \
-  data/kalimat_bersih.txt:10 data/tambahan_skripsi.txt:10 \
+  data/kalimat_bersih.txt:10 data/tambahan_skripsi.txt:10 data/kalimat_surat.txt:12 \
   data/korpus_ud.txt:8 data/korpus_idn.txt:8 \
   --output output --contoh 5
 

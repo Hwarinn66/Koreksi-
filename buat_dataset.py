@@ -39,6 +39,7 @@ LABELS = [
     "PISAH",         # token ini seharusnya dipisah (dirumah -> di rumah)
     "GABUNG",        # token ini seharusnya digabung dengan token berikutnya
     "FORMAT_ANGKA",  # format angka salah (0.05 -> 0,05)
+    "GANTI_TITIK",   # koma ini seharusnya titik (dua kalimat disambung koma)
 ]
 
 DESKRIPSI_LABEL = {
@@ -53,6 +54,7 @@ DESKRIPSI_LABEL = {
     "PISAH": "Pisahkan token ini menjadi dua kata.",
     "GABUNG": "Gabungkan token ini dengan token berikutnya.",
     "FORMAT_ANGKA": "Format angka salah (desimal memakai koma, ribuan memakai titik).",
+    "GANTI_TITIK": "Koma seharusnya titik (kalimat yang disambung koma dipecah).",
 }
 
 # ---------------------------------------------------------------------------
@@ -78,6 +80,15 @@ BAKU = {
     "kuesioner": "kuisioner", "akhir": "ahir", "kedaluwarsa": "kadaluarsa",
     "menyimulasikan": "mensimulasikan", "cokelat": "coklat", "hektare": "hektar",
     "rezeki": "rejeki", "kelembapan": "kelembaban",
+    # sering muncul di surat
+    "silakan": "silahkan", "fotokopi": "fotocopy", "ijazah": "ijasah",
+    "kuitansi": "kwitansi", "keterampilan": "ketrampilan", "imbauan": "himbauan",
+    "mengimbau": "menghimbau", "diimbau": "dihimbau", "nasihat": "nasehat",
+    "apotek": "apotik", "koordinasi": "kordinasi", "karier": "karir",
+    "kualifikasi": "kwalifikasi", "sekretaris": "sekertaris", "zaman": "jaman",
+    "khawatir": "kuatir", "mengizinkan": "mengijinkan", "perizinan": "perijinan",
+    "menaati": "mentaati", "mengonfirmasi": "mengkonfirmasi",
+    "menyukseskan": "mensukseskan", "senin": "senen", "legalisasi": "legalisir",
 }
 
 # Kata yang diawali "di" tetapi BUKAN awalan di-.
@@ -109,6 +120,14 @@ SERANGKAI = {
     "antarmodul": ("antar", "modul"), "antaranotator": ("antar", "anotator"),
     "antarpengguna": ("antar", "pengguna"), "prasiklus": ("pra", "siklus"),
     "antarkaryawan": ("antar", "karyawan"),
+    "pasfoto": ("pas", "foto"), "antarinstansi": ("antar", "instansi"),
+    "antarwarga": ("antar", "warga"), "serbaguna": ("serba", "guna"),
+    "menindaklanjuti": ("menindak", "lanjuti"), "ditindaklanjuti": ("ditindak", "lanjuti"),
+    "menandatangani": ("menanda", "tangani"), "penandatanganan": ("penanda", "tanganan"),
+    "sebagaimana": ("sebagai", "mana"), "ketidakhadiran": ("ketidak", "hadiran"),
+    "ketidaknyamanan": ("ketidak", "nyamanan"), "berdukacita": ("berduka", "cita"),
+    "diberitahukan": ("diberi", "tahukan"), "memberitahukan": ("memberi", "tahukan"),
+    "pemberitahuan": ("pemberi", "tahuan"),
 }
 
 # Gabungan kata yang harus ditulis terpisah; kesalahannya: disatukan.
@@ -120,12 +139,15 @@ TERPISAH = {
     ("lalu", "lintas"), ("tumpang", "tindih"), ("kata", "kunci"), ("kata", "sandi"),
     ("dua", "belas"), ("dua", "puluh"), ("empat", "puluh"), ("rumah", "tangga"),
     ("daya", "beli"), ("tumbuh", "kembang"), ("sehari", "hari"),
+    ("bertanda", "tangan"), ("serah", "terima"), ("mana", "pun"), ("kapan", "pun"),
+    ("memberi", "tahu"), ("beri", "tahu"), ("tindak", "lanjut"), ("wali", "kota"),
+    ("tata", "tertib"), ("kerja", "bakti"), ("lima", "belas"), ("uang", "muka"),
 }
 
 KATA_DEPAN = {"di", "ke"}
 
 # Singkatan yang memang memakai titik.
-SINGKATAN_BERTITIK = {"dkk.", "dll.", "dsb.", "dst.", "hlm.", "Tbk.", "Swt."}
+SINGKATAN_BERTITIK = {"dkk.", "dll.", "dsb.", "dst.", "hlm.", "Tbk.", "Swt.", "Yth.", "Sdr."}
 # Singkatan nama badan yang TIDAK memakai titik (kesalahan: "PT.").
 SINGKATAN_TANPA_TITIK = {"PT", "CV"}
 
@@ -135,7 +157,10 @@ PEMBUKA_KOMA_OPSIONAL = {
     "Berdasarkan", "Pada", "Dalam", "Dari", "Untuk", "Dengan", "Menurut",
     "Sesuai", "Selama", "Melalui", "Di", "Sebagai", "Secara", "Bagi", "Terkait",
     "Mengacu", "Saat", "Kini", "Sebelumnya",
+    "Sehubungan", "Bersama", "Menindaklanjuti", "Merujuk", "Menanggapi",
 }
+# Sapaan yang tetap berhuruf kapital walaupun berada di tengah kalimat.
+SAPAAN = {"Bapak", "Ibu", "Bapak/Ibu", "Pak", "Bu", "Saudara", "Saudari", "Anda"}
 # Koma sebelum kata ini tidak dihapus (penggunaannya bervariasi).
 KOMA_DILINDUNGI_SEBELUM = {"yaitu", "yakni", "seperti", "misalnya", "termasuk",
                            "terutama", "khususnya", "kecuali"}
@@ -159,7 +184,7 @@ ROMAWI = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"}
 # ---------------------------------------------------------------------------
 TOKEN_RE = re.compile(
     r"""
-      (?<!\w)(?:dkk|dll|dsb|dst|hlm|Tbk|Swt)\.    # singkatan bertitik
+      (?<!\w)(?:dkk|dll|dsb|dst|hlm|Tbk|Swt|Yth|Sdr)\.    # singkatan bertitik
     | (?<!\w)Rp\d+(?:[.,]\d+)*                   # uang: Rp9.050 Rp227,88
     | \d+(?:[.,:]\d+)*%?                         # angka: 12.500 0,05 08.00 80:10:10 25%
     | [^\W\d_]\w*(?:['’\-/]\w+)*-?               # kata: sehari-hari, karunia-Nya, di-
@@ -264,7 +289,7 @@ def koma_dilindungi(tokens):
     lindung = set()
     if len(tokens) > 1:
         awal_opsional = (tokens[0] in PEMBUKA_KOMA_OPSIONAL
-                         and not (tokens[0] == "Dengan" and tokens[1] == "demikian"))
+                         and not (tokens[0] == "Dengan" and tokens[1] in {"demikian", "hormat"}))
         if awal_opsional and "," in tokens:
             lindung.add(tokens.index(","))
     for i, t in enumerate(tokens):
@@ -458,10 +483,32 @@ def op_format_angka(W, rng, ctx):
             calon.append((i, s.replace(",", ".")))
         elif re.fullmatch(r"(?:Rp)?\d{1,3}(?:\.\d{3})+", s):
             calon.append((i, s.replace(".", ",")))
+        elif (re.fullmatch(r"\d{2}\.\d{2}", s)
+              and any(x["teks"].lower() == "pukul" for x in W[:i])):
+            calon.append((i, s.replace(".", ":")))  # jam: pukul 08.00 -> 08:00
     if not calon:
         return False
     i, baru = rng.choice(calon)
     W[i].update(perbaikan=W[i]["teks"], teks=baru, label="FORMAT_ANGKA", kunci=True)
+    return True
+
+
+def op_ganti_titik(W, rng, ctx):
+    """Dua kalimat disambung koma: '... buat. Atas ...' -> '... buat, atas ...'."""
+    calon = []
+    for j in range(1, len(W) - 1):
+        t, nx = W[j], W[j + 1]
+        s = nx["teks"]
+        if (t["teks"] == "." and bebas(t) and bebas(nx) and W[j - 1]["teks"][-1:].isalnum()
+                and s.isalpha() and s[0].isupper() and s[1:].islower()
+                and s not in SAPAAN and s.lower() in ctx["kosakata"]):
+            calon.append(j)
+    if not calon:
+        return False
+    j = rng.choice(calon)
+    s = W[j + 1]["teks"]
+    W[j].update(teks=",", label="GANTI_TITIK", perbaikan=".", kunci=True)
+    W[j + 1].update(teks=s.lower(), label="KAPITAL", perbaikan=s, kunci=True)
     return True
 
 
@@ -478,6 +525,7 @@ OPERASI = {
     "majemuk": (op_majemuk, 0.05),
     "tidak_baku": (op_tidak_baku, 0.06),
     "format_angka": (op_format_angka, 0.05),
+    "ganti_titik": (op_ganti_titik, 0.50),  # hanya berlaku pada baris berisi dua kalimat
 }
 
 
@@ -505,7 +553,7 @@ def rekonstruksi(tokens, labels, perbaikan):
         t, lab, p = tokens[i], labels[i], perbaikan[i]
         if lab == "O":
             hasil.append(t)
-        elif lab in {"TYPO", "TIDAK_BAKU", "KAPITAL", "HURUF_KECIL", "FORMAT_ANGKA"}:
+        elif lab in {"TYPO", "TIDAK_BAKU", "KAPITAL", "HURUF_KECIL", "FORMAT_ANGKA", "GANTI_TITIK"}:
             hasil.append(p)
         elif lab in {"TAMBAH_KOMA", "TAMBAH_TITIK"}:
             hasil.extend([p] if p in SINGKATAN_BERTITIK else [t, p[-1]])

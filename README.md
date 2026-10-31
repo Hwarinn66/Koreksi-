@@ -1,22 +1,25 @@
 # Dataset Sintetis Pendeteksi Kesalahan Penulisan Bahasa Indonesia
 
-Dataset untuk melatih model yang mendeteksi kesalahan penulisan pada skripsi dan laporan:
-typo, huruf kapital, koma, titik, kata depan *di/ke*, kata tidak baku, dan format angka.
+Dataset untuk melatih model yang mendeteksi kesalahan penulisan pada skripsi, laporan, dan surat
+(lamaran, izin, undangan, surat dinas, surel ke dosen): typo, huruf kapital, koma, titik, kata depan
+*di/ke*, kata tidak baku, format angka, dan kalimat yang disambung koma.
 
 ## Ringkasan
 
-58.675 contoh (train 46.933, valid 5.858, test 5.884) dari 6.685 kalimat bersih:
+63.611 contoh (train 50.858, valid 6.379, test 6.374) dari 7.111 kalimat bersih:
 
 | Sumber | Kalimat | Contoh | Varian per kalimat |
 |---|---|---|---|
-| `kalimat_bersih` (gaya skripsi/laporan) | 473 | 4.804 | 10 |
-| `tambahan_skripsi` (gaya skripsi, berbagai bidang) | 671 | 6.801 | 10 |
-| `korpus_ud` (UD Indonesian, disaring) | 3.331 | 28.286 | 8 |
-| `korpus_idn` (IDN Tagged Corpus, disaring) | 2.210 | 18.784 | 8 |
+| `kalimat_bersih` (gaya skripsi/laporan) | 473 | 4.792 | 10 |
+| `tambahan_skripsi` (gaya skripsi, berbagai bidang) | 671 | 6.830 | 10 |
+| `kalimat_surat` (surat dan surel resmi) | 426 | 4.908 | 12 |
+| `korpus_ud` (UD Indonesian, disaring) | 3.331 | 28.266 | 8 |
+| `korpus_idn` (IDN Tagged Corpus, disaring) | 2.210 | 18.815 | 8 |
 
-Jumlah token per label: TYPO 29.012, KAPITAL 19.592, HURUF_KECIL 13.339, TAMBAH_TITIK 9.378,
-TAMBAH_KOMA 8.509, HAPUS 4.698, GABUNG 4.462, PISAH 2.483, TIDAK_BAKU 1.309, FORMAT_ANGKA 536.
-Data uji berisi minimal sekitar 100 contoh untuk setiap jenis kesalahan, kecuali FORMAT_ANGKA (63).
+Jumlah token per label: TYPO 31.502, KAPITAL 21.848, HURUF_KECIL 14.274, TAMBAH_TITIK 10.136,
+TAMBAH_KOMA 8.845, HAPUS 4.936, GABUNG 4.908, PISAH 2.758, TIDAK_BAKU 1.689, FORMAT_ANGKA 604,
+GANTI_TITIK 356. Data uji berisi minimal sekitar 150 contoh untuk setiap jenis kesalahan, kecuali
+FORMAT_ANGKA (50) dan GANTI_TITIK (14).
 
 Pembagian train/valid/test dilakukan **per kalimat asal**, jadi kalimat yang sama tidak
 pernah muncul di dua split.
@@ -40,14 +43,14 @@ disertakan. Tanpa folder itu, `gabung_dataset.py` tetap berjalan dan hanya memak
 
 | split | Isi | Contoh |
 |---|---|---|
-| `train` | data sintetis untuk pelatihan | 46.933 |
-| `valid` | data sintetis untuk validasi | 5.858 |
-| `test_sintetis` | data sintetis untuk uji | 5.884 |
-| `test_asli` | kalimat skripsi asli yang dikoreksi manual (lihat `data_uji_asli/`) | 1.120 |
+| `train` | data sintetis untuk pelatihan | 50.858 |
+| `valid` | data sintetis untuk validasi | 6.379 |
+| `test_sintetis` | data sintetis untuk uji (432 di antaranya dari surat) | 6.374 |
+| `test_asli` | kalimat skripsi asli yang dikoreksi manual (lihat `data_uji_asli/`) | 1.356 |
 
 Setiap baris: `id, split, jenis_data, sumber, salah, benar, kesalahan, tokens, labels, perbaikan,
 status, catatan`. `dataset/dataset_lengkap.csv` adalah versi ringkas untuk Excel, dan
-`dataset/label.json` memuat semua label (termasuk `GANTI_TITIK` dan `LAIN` yang hanya ada di data asli).
+`dataset/label.json` memuat semua label (termasuk `LAIN` yang hanya ada di data asli).
 Bangun ulang dengan `python gabung_dataset.py`.
 
 ```python
@@ -63,6 +66,8 @@ test_asli = ds.filter(lambda x: x["split"] == "test_asli" and x["status"] == "pa
 data/
   kalimat_bersih.txt      kalimat bergaya skripsi/laporan, ditulis sesuai EYD V
   tambahan_skripsi.txt    kalimat bergaya skripsi dari berbagai bidang ilmu
+  kalimat_surat.txt       baris surat: lamaran, izin, cuti, undangan, permohonan, surat dinas,
+                          keterangan, pernyataan, kuasa, balasan, dan surel ke dosen
   korpus_ud.txt           kalimat dari UD Indonesian GSD, CSUI, PUD (sudah disaring)
   korpus_idn.txt          kalimat dari IDN Tagged Corpus (sudah disaring)
 buat_dataset.py           perusak + pelabel: kalimat bersih -> pasangan salah/benar
@@ -71,7 +76,7 @@ jalankan_semua.sh         unduh korpus, saring, buat dataset, lalu gabungkan (sa
 gabung_dataset.py         menyatukan output/ dan data_uji_asli/ menjadi dataset/
 notebook/latih_model.ipynb  notebook Colab untuk melatih dan menguji model
 dataset/                  DATASET GABUNGAN (lihat bagian di atas)
-data_uji_asli/            1.120 kalimat skripsi asli + koreksi manual + alat untuk menambah
+data_uji_asli/            1.356 kalimat skripsi asli + koreksi manual + alat untuk menambah
 output/
   pasangan_{train,valid,test}.jsonl   pasangan salah -> benar (untuk seq2seq)
   token_{train,valid,test}.jsonl      label per token (untuk IndoBERT)
@@ -149,7 +154,26 @@ menandai kalimat yang sudah benar.
 | `HAPUS` | tanda baca berlebih | *menyatakan, bahwa*; *PT.* → *PT* |
 | `PISAH` | harus dipisah | *dirumah*, *kedalam*, *kerjasama* |
 | `GABUNG` | harus digabung dengan token berikutnya | *di lakukan*, *antar muka*, *sub bab* |
-| `FORMAT_ANGKA` | format angka | *0.05* → *0,05*, *Rp12,500* → *Rp12.500* |
+| `FORMAT_ANGKA` | format angka | *0.05* → *0,05*, *Rp12,500* → *Rp12.500*, *pukul 08:00* → *pukul 08.00* |
+| `GANTI_TITIK` | koma seharusnya titik (dua kalimat disambung koma) | *... saya buat, atas perhatian ...* → *... saya buat. Atas perhatian ...* |
+
+## Data surat
+
+`kalimat_surat.txt` berisi baris-baris surat yang sudah sesuai EYD V, termasuk salam pembuka dan
+penutup (*Dengan hormat,* dan *Hormat saya,*), baris tanggal, *Yth.*, dan isi surat. Semua nama orang,
+instansi, dan alamat adalah rekaan. Kesalahan yang khas surat ikut dibuat:
+
+- Salam: *Dengan Hormat* → *Dengan hormat,*, *Hormat Saya* → *Hormat saya,*.
+- Sapaan berhuruf kapital: *bapak/ibu* → *Bapak/Ibu*, *saudara* → *Saudara*, *selamat pagi pak* → *Selamat pagi, Pak.*
+- Singkatan: *Yth* → *Yth.*.
+- Kata tidak baku: *silahkan, ijin, ijasah, fotocopy, kwitansi, ketrampilan, himbauan, karir, mentaati,
+  mengkonfirmasi, legalisir, Senen*.
+- Penulisan serangkai/terpisah: *bertandatangan, terimakasih, pas foto, menindak lanjuti, sebagai mana,
+  ketidak hadiran, serah terima, memberi tahu*.
+- Format jam: *pukul 08:00* → *pukul 08.00*.
+- Kalimat yang disambung koma (`GANTI_TITIK`), dari baris yang berisi dua kalimat.
+
+Bagian surat dievaluasi terpisah di notebook (`test_surat`).
 
 ## Melatih model
 
@@ -188,3 +212,5 @@ Cantumkan sumber-sumber di atas jika dataset ini dipakai dalam skripsi atau publ
   menurut EYD, jadi sengaja tidak dihapus agar labelnya tidak ambigu.
 - Huruf miring untuk istilah asing tidak terwakili karena datanya teks polos.
 - Satu token hanya punya satu label per contoh.
+- Data surat masih sintetis seluruhnya; belum ada surat asli yang dikoreksi manual. Contoh
+  `GANTI_TITIK` juga masih sedikit dan hanya berasal dari surat.
