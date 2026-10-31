@@ -217,6 +217,30 @@ gaya skripsi, perhatikan skor `test_asli` dan skor per skripsi. Notebook juga me
 Notebook dibangun dari `notebook/buat_notebook.py` (`pip install nbformat`, lalu
 `python notebook/buat_notebook.py`) supaya isinya mudah ditinjau di Git.
 
+## Memakai model hasil training
+
+Unduh isi folder `model_ejaan` dari Google Drive (cukup `model.safetensors`, `config.json`,
+`tokenizer.json`, dan `tokenizer_config.json`; folder `checkpoint-*` tidak perlu) ke folder
+`model_ejaan/` di dalam repo ini, lalu:
+
+```bash
+pip install torch transformers
+python periksa.py "Penelitian ini bertujuan untuk menganalisa data dikampus."
+python periksa.py --file tulisan.txt
+```
+
+Dari kode Python lain:
+
+```python
+from periksa import Pemeriksa
+p = Pemeriksa("model_ejaan")
+for kalimat, temuan in p.periksa("Data di analisis menggunakan SPSS."):
+    print(kalimat, temuan)   # temuan: [(kata, label, saran), ...]
+```
+
+Folder `model_ejaan/` sudah masuk `.gitignore` karena ukurannya sekitar 1,1 GB (batas berkas
+GitHub 100 MB).
+
 ## Lisensi sumber
 
 - `kalimat_bersih.txt`, `tambahan_skripsi.txt`, dan kode: bebas dipakai.

@@ -7,3 +7,6 @@ data_uji_asli/skripsi*/
 __pycache__/
 *.pyc
 *.zip
+# model hasil training (terlalu besar untuk GitHub, simpan di Drive / Hugging Face)
+model_ejaan/
+*.safetensors
