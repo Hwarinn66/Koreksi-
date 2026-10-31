@@ -241,6 +241,16 @@ for kalimat, temuan in p.periksa("Data di analisis menggunakan SPSS."):
 Folder `model_ejaan/` sudah masuk `.gitignore` karena ukurannya sekitar 1,1 GB (batas berkas
 GitHub 100 MB).
 
+## Web
+
+Folder `web/` berisi aplikasi web: unggah PDF/DOCX/TXT, lalu lihat kesalahan per halaman beserta
+versi benarnya. Cara menjalankan ada di [`web/README.md`](web/README.md):
+
+```bash
+pip install -r web/requirements.txt
+uvicorn web.app:app --reload      # http://127.0.0.1:8000
+```
+
 ## Lisensi sumber
 
 - `kalimat_bersih.txt`, `tambahan_skripsi.txt`, dan kode: bebas dipakai.

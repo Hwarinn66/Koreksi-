@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Koreksi: pemeriksa ejaan bahasa Indonesia</title>
+  <meta name="description" content="Periksa ejaan skripsi, laporan, dan surat sesuai EYD V. Unggah PDF atau DOCX, lalu lihat kesalahan per halaman beserta versi benarnya.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tinos:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="kepala">
+    <a class="merek" href="/" aria-label="Koreksi, kembali ke awal">Kor<span class="merek-sisip" aria-hidden="true">‸</span>eksi</a>
+    <span class="kepala-ket">Pemeriksa ejaan bahasa Indonesia sesuai EYD V</span>
+  </header>
+
+  <main>
+    <!-- 1. Unggah -->
+    <section id="layar-unggah" class="layar-unggah">
+      <div class="pembuka">
+        <h1>Periksa ejaan naskahmu sebelum sampai ke meja pembimbing.</h1>
+        <p class="pembuka-isi">Unggah skripsi, laporan, atau surat. Koreksi menunjukkan kesalahan di setiap halaman
+          beserta versi benarnya. Berkasmu tidak diubah.</p>
+
+        <figure class="contoh" aria-label="Contoh hasil pemeriksaan">
+          <p class="naskah contoh-asli">Penelitian ini bertujuan untuk <mark class="tanda k-ejaan">menganalisa</mark>
+            data yang dikumpulkan <mark class="tanda k-kata">dikampus</mark>, <mark class="tanda k-baca">hal</mark> ini
+            dilakukan selama <mark class="tanda k-kapital">bulan maret</mark>.</p>
+          <p class="naskah contoh-benar">Penelitian ini bertujuan untuk <ins>menganalisis</ins> data yang dikumpulkan
+            <ins>di kampus. Hal</ins> ini dilakukan selama <ins>bulan Maret</ins>.</p>
+          <figcaption>Kata yang salah ditandai di kalimat asli. Di bawahnya, kalimat yang sudah dibetulkan.</figcaption>
+        </figure>
+      </div>
+
+      <div class="lembar-unggah">
+        <div class="tab" role="tablist" aria-label="Cara memasukkan naskah">
+          <button role="tab" id="tab-berkas" aria-selected="true" aria-controls="form-berkas">Unggah berkas</button>
+          <button role="tab" id="tab-teks" aria-selected="false" aria-controls="form-teks" tabindex="-1">Tempel teks</button>
+        </div>
+
+        <form id="form-berkas" class="panel" role="tabpanel" aria-labelledby="tab-berkas">
+          <label class="zona" id="zona" for="input-berkas">
+            <input type="file" id="input-berkas" accept=".pdf,.docx,.txt,.md" hidden>
+            <span class="zona-ikon" aria-hidden="true">
+              <svg viewBox="0 0 48 60" width="44" height="55"><path d="M4 2h28l12 12v42a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M32 2v12h12" fill="none" stroke="currentColor" stroke-width="2.5"/><path d="M12 30h22M12 38h22M12 46h14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+            </span>
+            <span class="zona-judul" id="zona-judul">Pilih berkas atau seret ke sini</span>
+            <span class="zona-ket" id="zona-ket">PDF, DOCX, TXT, atau MD. Maksimal 25 MB.</span>
+          </label>
+          <button type="submit" class="tombol" id="tombol-berkas" disabled>Periksa naskah</button>
+        </form>
+
+        <form id="form-teks" class="panel" role="tabpanel" aria-labelledby="tab-teks" hidden>
+          <label for="input-teks" class="lbl">Tempel teks yang ingin diperiksa</label>
+          <textarea id="input-teks" rows="10" placeholder="Contoh: Dengan Hormat, saya yang bertandatangan dibawah ini bermaksud melamar pekerjaan di perusahaan bapak."></textarea>
+          <button type="submit" class="tombol" id="tombol-teks">Periksa teks</button>
+        </form>
+
+        <p class="galat" id="galat-unggah" role="alert" hidden></p>
+        <p class="catatan-model" id="catatan-model" hidden></p>
+      </div>
+    </section>
+
+    <!-- 2. Proses -->
+    <section id="layar-proses" class="layar-proses" hidden aria-live="polite">
+      <p class="proses-nama" id="proses-nama"></p>
+      <div class="baris-proses" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar">
+        <span id="bar-isi"></span>
+      </div>
+      <p class="proses-pesan" id="proses-pesan">Menunggu giliran…</p>
+    </section>
+
+    <!-- 3. Hasil -->
+    <section id="layar-hasil" class="layar-hasil" hidden>
+      <aside class="samping" aria-label="Ringkasan dan navigasi">
+        <div class="samping-dalam">
+          <h2 class="nama-berkas" id="nama-berkas"></h2>
+          <p class="ringkas" id="ringkas"></p>
+
+          <details class="panel-saring" id="panel-saring" open>
+          <summary>Saring jenis kesalahan dan lompat ke halaman</summary>
+          <fieldset class="saring">
+            <legend>Tampilkan jenis kesalahan</legend>
+            <div id="daftar-jenis"></div>
+            <label class="sakelar"><input type="checkbox" id="hanya-yakin"> Sembunyikan temuan yang perlu dicek</label>
+          </fieldset>
+
+          <nav class="nav-halaman" aria-label="Lompat ke halaman">
+            <h3 id="judul-nav">Halaman</h3>
+            <ol id="daftar-halaman"></ol>
+          </nav>
+
+          <details class="info-lewati" id="info-lewati">
+            <summary>Bagian yang tidak diperiksa</summary>
+            <p id="teks-lewati"></p>
+          </details>
+          </details>
+
+          <button class="tombol tombol-garis" id="tombol-baru">Periksa naskah lain</button>
+        </div>
+      </aside>
+
+      <div class="isi-hasil" id="isi-hasil"></div>
+    </section>
+  </main>
+
+  <template id="tpl-temuan">
+    <article class="temuan">
+      <p class="lokasi"></p>
+      <p class="naskah asli"></p>
+      <p class="naskah benar"></p>
+      <ul class="perubahan"></ul>
+      <button class="salin" type="button">Salin kalimat benar</button>
+    </article>
+  </template>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
