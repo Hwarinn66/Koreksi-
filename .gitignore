@@ -1,0 +1,9 @@
+# hasil generate (bangun ulang dengan: bash jalankan_semua.sh)
+output/
+dataset/
+unduhan/
+# kutipan skripsi pihak lain (tidak dipublikasikan)
+data_uji_asli/skripsi*/
+__pycache__/
+*.pyc
+*.zip

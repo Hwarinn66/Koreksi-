@@ -1,0 +1,504 @@
+# Kalimat bersih bergaya skripsi dan laporan (sesuai EYD V).
+# Satu kalimat per baris. Baris yang diawali # diabaikan.
+# Tambahkan kalimatmu sendiri di bawah, lalu jalankan ulang buat_dataset.py.
+
+# === Bab I: Latar belakang ===
+Perkembangan teknologi informasi memengaruhi hampir seluruh aspek kehidupan masyarakat.
+Saat ini banyak perusahaan menggunakan sistem informasi untuk mendukung kegiatan operasional sehari-hari.
+Pencatatan stok barang di gudang masih dilakukan secara manual menggunakan buku besar.
+Proses manual tersebut membutuhkan waktu yang lama dan rentan terhadap kesalahan pencatatan.
+Kesalahan pencatatan dapat menyebabkan perbedaan antara jumlah barang di sistem dan jumlah barang di gudang.
+Oleh karena itu, diperlukan sebuah sistem yang mampu mencatat transaksi barang masuk dan barang keluar secara otomatis.
+Penelitian ini dilakukan di PT Sinar Logam Nusantara yang berlokasi di Kota Bekasi, Jawa Barat.
+Perusahaan tersebut bergerak di bidang produksi pipa baja untuk kebutuhan industri minyak dan gas.
+Berdasarkan hasil observasi awal, petugas gudang sering mengalami kesulitan dalam mencari data barang.
+Selain itu, laporan persediaan barang baru dapat disusun pada akhir bulan.
+Kondisi ini menghambat pengambilan keputusan oleh manajer operasional.
+Pemanfaatan teknologi diharapkan dapat meningkatkan efektivitas dan efisiensi kerja karyawan.
+Sistem informasi yang baik harus mampu menyajikan data secara akurat, relevan, dan tepat waktu.
+Menurut Pratama (2021), sistem informasi merupakan kombinasi dari manusia, perangkat keras, perangkat lunak, dan prosedur yang saling berinteraksi.
+Namun, sebagian besar usaha kecil dan menengah belum memanfaatkan sistem informasi secara optimal.
+Hal ini disebabkan oleh keterbatasan biaya, sumber daya manusia, dan pengetahuan teknis.
+Di sisi lain, harga perangkat keras dan layanan komputasi awan semakin terjangkau.
+Penggunaan aplikasi berbasis web memungkinkan pengguna mengakses data dari mana saja.
+Aplikasi berbasis web juga tidak memerlukan instalasi pada setiap komputer pengguna.
+Sementara itu, jumlah pengguna telepon seluler di Indonesia terus meningkat setiap tahun.
+Peningkatan tersebut membuka peluang bagi pengembangan aplikasi bergerak di berbagai bidang.
+Pada bidang pendidikan, aplikasi pembelajaran daring banyak digunakan oleh siswa dan guru.
+Pembelajaran daring menuntut kemandirian siswa dalam mengatur waktu belajar.
+Akan tetapi, tidak semua siswa memiliki akses internet yang stabil di rumah.
+Kesenjangan akses tersebut dapat memengaruhi hasil belajar siswa.
+Kecerdasan buatan kini diterapkan untuk membantu manusia menyelesaikan pekerjaan yang berulang.
+Salah satu cabang kecerdasan buatan yang berkembang pesat adalah pembelajaran mesin.
+Pembelajaran mesin memungkinkan komputer belajar dari data tanpa diprogram secara eksplisit.
+Metode ini telah digunakan dalam pengenalan wajah, penerjemahan bahasa, dan deteksi penipuan.
+Meskipun demikian, kualitas model sangat bergantung pada kualitas data yang digunakan.
+Data yang tidak seimbang dapat menyebabkan model cenderung memprediksi kelas mayoritas.
+Masalah tersebut menjadi tantangan tersendiri dalam penelitian klasifikasi teks berbahasa Indonesia.
+Bahasa Indonesia memiliki sistem imbuhan yang cukup kompleks.
+Satu kata dasar dapat membentuk puluhan kata turunan melalui proses afiksasi.
+Kesalahan penulisan masih sering ditemukan dalam karya ilmiah mahasiswa.
+Kesalahan yang paling umum adalah penggunaan huruf kapital, tanda baca, dan penulisan kata depan.
+Banyak mahasiswa menulis kata depan serangkai dengan kata yang mengikutinya.
+Sebaliknya, awalan di- sering dipisahkan dari kata dasarnya.
+Kesalahan tersebut dapat mengurangi kualitas tulisan dan menyulitkan pembaca.
+Pemeriksaan ejaan secara manual memerlukan waktu dan ketelitian yang tinggi.
+Oleh sebab itu, dibutuhkan alat bantu yang dapat mendeteksi kesalahan penulisan secara otomatis.
+Alat bantu tersebut diharapkan dapat membantu mahasiswa menyusun skripsi dan laporan dengan lebih baik.
+Klinik tersebut masih mencatat data pasien menggunakan kartu berbahan kertas.
+Pencarian riwayat pasien membutuhkan waktu yang cukup lama ketika jumlah pasien meningkat.
+Antrean panjang sering terjadi pada hari Senin dan Kamis.
+Kondisi tersebut menurunkan tingkat kepuasan pasien terhadap pelayanan klinik.
+Penerapan sistem antrean daring diharapkan dapat mengurangi waktu tunggu pasien.
+Usaha mikro, kecil, dan menengah memiliki peran penting dalam perekonomian nasional.
+Sebagian pelaku usaha belum melakukan pencatatan keuangan secara teratur.
+Akibatnya, pelaku usaha sulit mengetahui keuntungan yang diperoleh setiap bulan.
+Pencatatan keuangan yang rapi juga diperlukan sebagai syarat pengajuan pinjaman ke bank.
+
+# === Bab I: Rumusan masalah ===
+Bagaimana merancang sistem informasi persediaan barang yang sesuai dengan kebutuhan perusahaan?
+Bagaimana tingkat akurasi metode yang diusulkan dalam mendeteksi kesalahan penulisan?
+Apakah terdapat pengaruh kualitas pelayanan terhadap kepuasan pelanggan?
+Seberapa besar pengaruh motivasi kerja terhadap produktivitas karyawan?
+Bagaimana hasil pengujian kegunaan aplikasi menurut pengguna?
+Apa saja faktor yang memengaruhi minat mahasiswa dalam menggunakan perpustakaan digital?
+Bagaimana perbandingan kinerja algoritma Naive Bayes dan Support Vector Machine pada data ulasan aplikasi?
+
+# === Bab I: Tujuan, manfaat, dan batasan ===
+Penelitian ini bertujuan untuk merancang dan membangun sistem informasi persediaan barang berbasis web.
+Tujuan lain dari penelitian ini adalah mengukur tingkat penerimaan pengguna terhadap sistem yang dibangun.
+Hasil penelitian diharapkan dapat menjadi bahan pertimbangan bagi perusahaan dalam mengambil keputusan.
+Bagi peneliti, penelitian ini menjadi sarana untuk menerapkan ilmu yang diperoleh selama perkuliahan.
+Bagi pembaca, hasil penelitian ini dapat digunakan sebagai referensi untuk penelitian selanjutnya.
+Penelitian ini dibatasi pada proses pencatatan barang masuk, barang keluar, dan pembuatan laporan.
+Sistem tidak mencakup proses pembelian barang dan pembayaran kepada pemasok.
+Data yang digunakan adalah data transaksi gudang selama periode Januari sampai Juni 2024.
+Aplikasi dibangun menggunakan bahasa pemrograman PHP dengan kerangka kerja Laravel.
+Basis data yang digunakan adalah MySQL.
+Pengujian sistem dilakukan menggunakan metode kotak hitam.
+Responden dalam penelitian ini dibatasi pada karyawan bagian gudang dan bagian produksi.
+Penelitian hanya membahas kesalahan ejaan, huruf kapital, tanda koma, dan tanda titik.
+Kesalahan pada tingkat struktur kalimat tidak dibahas dalam penelitian ini.
+Model yang digunakan adalah IndoBERT yang telah dilatih sebelumnya pada korpus berbahasa Indonesia.
+
+# === Sistematika penulisan ===
+Bab I berisi latar belakang, rumusan masalah, tujuan penelitian, manfaat penelitian, dan batasan masalah.
+Bab II menguraikan teori yang mendukung penelitian serta penelitian terdahulu yang relevan.
+Bab III menjelaskan metode penelitian, teknik pengumpulan data, dan tahapan pengembangan sistem.
+Bab IV memaparkan hasil penelitian dan pembahasan.
+Bab V berisi kesimpulan dan saran untuk pengembangan penelitian selanjutnya.
+Setiap bab terdiri atas beberapa subbab yang saling berkaitan.
+Pembahasan mengenai kebutuhan sistem diuraikan pada subbab berikutnya.
+
+# === Bab II: Tinjauan pustaka ===
+Sistem adalah sekumpulan elemen yang saling berhubungan untuk mencapai tujuan tertentu.
+Informasi merupakan data yang telah diolah sehingga bermakna bagi penerimanya.
+Data adalah fakta mentah yang belum memiliki arti bagi pengguna.
+Persediaan adalah barang yang disimpan untuk digunakan dalam proses produksi atau untuk dijual kembali.
+Pengendalian persediaan bertujuan menjaga jumlah barang agar tidak kurang dan tidak berlebih.
+Metode FIFO mengeluarkan barang yang pertama kali masuk ke gudang terlebih dahulu.
+Basis data adalah kumpulan data yang terorganisasi sehingga mudah diakses dan dikelola.
+Sistem manajemen basis data berfungsi untuk menyimpan, mengubah, dan mengambil data.
+Diagram alir data digunakan untuk menggambarkan aliran data di dalam sistem.
+Diagram hubungan entitas menggambarkan hubungan antarentitas dalam basis data.
+Bahasa pemodelan terpadu atau UML merupakan bahasa standar untuk memodelkan perangkat lunak berorientasi objek.
+Diagram kasus penggunaan menggambarkan interaksi antara aktor dan sistem.
+Diagram aktivitas menunjukkan urutan aktivitas dalam suatu proses bisnis.
+Diagram kelas menggambarkan struktur kelas, atribut, dan metode dalam sistem.
+Model air terjun merupakan model pengembangan perangkat lunak yang bersifat sistematis dan berurutan.
+Tahapan model air terjun meliputi analisis kebutuhan, desain, implementasi, pengujian, dan pemeliharaan.
+Metode prototipe memungkinkan pengguna memberikan masukan sejak tahap awal pengembangan.
+Pengujian kotak hitam berfokus pada fungsi sistem tanpa memperhatikan struktur kode program.
+Pengujian kotak putih dilakukan dengan memeriksa alur logika di dalam kode program.
+Antarmuka pengguna adalah bagian sistem yang berinteraksi langsung dengan pengguna.
+Antarmuka yang baik harus mudah dipahami, konsisten, dan responsif.
+Kegunaan suatu sistem dapat diukur menggunakan kuesioner System Usability Scale.
+Skor System Usability Scale berada pada rentang 0 sampai 100.
+Laravel adalah kerangka kerja PHP yang menerapkan pola arsitektur Model-View-Controller.
+Pola arsitektur tersebut memisahkan logika bisnis, tampilan, dan pengendali.
+MySQL merupakan sistem manajemen basis data relasional yang bersifat sumber terbuka.
+Flutter adalah perangkat pengembangan aplikasi yang dapat menghasilkan aplikasi Android dan iOS dari satu kode sumber.
+Kecerdasan buatan adalah cabang ilmu komputer yang mempelajari cara membuat mesin berperilaku cerdas.
+Pembelajaran mesin terbagi menjadi pembelajaran terawasi, pembelajaran tak terawasi, dan pembelajaran penguatan.
+Pada pembelajaran terawasi, model dilatih menggunakan data yang telah memiliki label.
+Klasifikasi adalah proses menentukan kelas suatu data berdasarkan ciri-cirinya.
+Algoritma Naive Bayes menghitung peluang suatu kelas berdasarkan teorema Bayes.
+Support Vector Machine mencari bidang pemisah terbaik di antara dua kelas data.
+Pohon keputusan membagi data secara bertahap berdasarkan atribut yang paling informatif.
+Random Forest menggabungkan banyak pohon keputusan untuk menghasilkan prediksi yang lebih stabil.
+Jaringan saraf tiruan terinspirasi dari cara kerja sel saraf pada otak manusia.
+Pembelajaran mendalam menggunakan jaringan saraf dengan banyak lapisan tersembunyi.
+Jaringan saraf konvolusional banyak digunakan untuk mengolah data berupa gambar.
+Transformer menggunakan mekanisme perhatian untuk memahami hubungan antarkata dalam kalimat.
+BERT merupakan model bahasa yang dilatih dengan cara menebak kata yang disembunyikan.
+IndoBERT adalah model BERT yang dilatih menggunakan korpus berbahasa Indonesia berukuran besar.
+Penyetelan ulang dilakukan dengan melatih model yang sudah ada menggunakan data tugas tertentu.
+Klasifikasi token memberikan label pada setiap kata dalam kalimat.
+Pengenalan entitas bernama merupakan salah satu contoh tugas klasifikasi token.
+Praproses teks meliputi pembersihan data, tokenisasi, dan normalisasi.
+Tokenisasi adalah proses memecah teks menjadi satuan yang lebih kecil.
+Jarak Levenshtein menghitung jumlah operasi minimum untuk mengubah satu kata menjadi kata lain.
+Operasi tersebut terdiri atas penyisipan, penghapusan, dan penggantian karakter.
+Jarak Damerau-Levenshtein menambahkan operasi pertukaran dua karakter yang berdekatan.
+Kesalahan ejaan dapat dibedakan menjadi kesalahan bukan kata dan kesalahan kata nyata.
+Kesalahan bukan kata terjadi jika hasil penulisan tidak terdapat dalam kamus.
+Kesalahan kata nyata terjadi jika kata yang ditulis terdapat dalam kamus, tetapi tidak sesuai dengan konteks kalimat.
+Ejaan yang Disempurnakan Edisi Kelima ditetapkan sebagai pedoman ejaan bahasa Indonesia pada tahun 2022.
+Pedoman tersebut mengatur penggunaan huruf, penulisan kata, tanda baca, dan penulisan unsur serapan.
+Huruf kapital dipakai sebagai huruf pertama awal kalimat.
+Huruf kapital juga dipakai pada nama hari, bulan, tahun, dan hari besar.
+Tanda koma dipakai di antara unsur-unsur dalam suatu pemerincian.
+Tanda titik dipakai pada akhir kalimat pernyataan.
+Kata depan ditulis terpisah dari kata yang mengikutinya.
+Awalan di- ditulis serangkai dengan kata dasar yang mengikutinya.
+Partikel pun ditulis terpisah dari kata yang mendahuluinya, kecuali pada kata yang sudah dianggap padu.
+Unsur terikat seperti antar-, pasca-, dan sub- ditulis serangkai dengan kata yang mengikutinya.
+Penelitian terdahulu oleh Wulandari dkk. (2022) menggunakan algoritma Naive Bayes untuk mengklasifikasikan ulasan aplikasi.
+Hasil penelitian tersebut menunjukkan akurasi sebesar 84,6%.
+Santoso dan Lestari (2020) membangun sistem pemeriksa ejaan menggunakan kamus dan jarak Levenshtein.
+Sistem tersebut mampu mengoreksi kesalahan bukan kata, tetapi belum dapat menangani kesalahan kata nyata.
+Penelitian lain mengembangkan aplikasi persediaan barang berbasis Android untuk toko bangunan (Hidayat, 2019).
+Aplikasi tersebut membantu pemilik toko memantau stok barang secara langsung.
+Perbedaan penelitian ini dengan penelitian sebelumnya terletak pada metode dan objek penelitian.
+Penelitian ini menggabungkan pendekatan berbasis aturan dan pendekatan pembelajaran mendalam.
+Kepuasan pelanggan adalah perasaan senang atau kecewa yang muncul setelah membandingkan harapan dengan kenyataan (Kurniawan, 2020).
+Kualitas pelayanan terdiri atas lima dimensi, yaitu bukti fisik, keandalan, daya tanggap, jaminan, dan empati.
+Motivasi kerja adalah dorongan yang membuat seseorang bersedia melakukan pekerjaan dengan sungguh-sungguh.
+Produktivitas karyawan menggambarkan perbandingan antara hasil kerja dan sumber daya yang digunakan.
+Minat menggunakan teknologi dipengaruhi oleh persepsi kegunaan dan persepsi kemudahan penggunaan.
+Model penerimaan teknologi menjelaskan alasan seseorang menerima atau menolak suatu teknologi.
+Kajian teoretis dalam bab ini menjadi dasar penyusunan kerangka berpikir.
+Teori tersebut juga dikutip oleh Pratama (2021, hlm. 45) dalam bukunya.
+
+# === Bab III: Metode penelitian ===
+Penelitian ini menggunakan pendekatan kuantitatif dengan metode survei.
+Penelitian ini merupakan penelitian kualitatif dengan pendekatan studi kasus.
+Penelitian dilaksanakan di bagian gudang PT Sinar Logam Nusantara selama tiga bulan.
+Penelitian dimulai pada bulan Februari 2024 dan berakhir pada bulan April 2024.
+Populasi dalam penelitian ini adalah seluruh karyawan bagian produksi yang berjumlah 148 orang.
+Sampel ditentukan menggunakan rumus Slovin dengan tingkat kesalahan sebesar 5%.
+Berdasarkan perhitungan tersebut, jumlah sampel yang diperoleh adalah 107 responden.
+Teknik pengambilan sampel yang digunakan adalah pengambilan sampel acak sederhana.
+Data primer diperoleh melalui kuesioner, wawancara, dan observasi langsung.
+Data sekunder diperoleh dari dokumen perusahaan, jurnal, dan buku referensi.
+Wawancara semiterstruktur dilakukan dengan kepala gudang dan dua orang staf administrasi.
+Observasi dilakukan untuk mengetahui alur kerja pencatatan barang secara langsung.
+Kuesioner disusun menggunakan skala Likert dengan lima pilihan jawaban.
+Setiap pernyataan diberi skor dari 1 sampai 5 sesuai dengan tingkat persetujuan responden.
+Variabel bebas dalam penelitian ini adalah kualitas pelayanan dan harga.
+Variabel terikat dalam penelitian ini adalah kepuasan pelanggan.
+Setiap variabel diturunkan menjadi beberapa indikator yang dapat diukur.
+Uji validitas dilakukan untuk mengetahui ketepatan setiap butir pernyataan dalam kuesioner.
+Butir pernyataan dinyatakan valid apabila nilai r hitung lebih besar daripada nilai r tabel.
+Uji reliabilitas dilakukan menggunakan koefisien alfa Cronbach.
+Instrumen dinyatakan reliabel apabila nilai koefisien alfa Cronbach lebih dari 0,6.
+Sebelum analisis regresi dilakukan, data diuji terlebih dahulu dengan uji asumsi klasik.
+Uji asumsi klasik meliputi uji normalitas, uji multikolinearitas, dan uji heteroskedastisitas.
+Uji normalitas dilakukan menggunakan uji Kolmogorov-Smirnov.
+Analisis data dilakukan menggunakan regresi linear berganda dengan bantuan perangkat lunak SPSS.
+Uji t digunakan untuk mengetahui pengaruh setiap variabel bebas secara parsial.
+Uji F digunakan untuk mengetahui pengaruh variabel bebas secara bersama-sama.
+Koefisien determinasi menunjukkan besarnya kontribusi variabel bebas terhadap variabel terikat.
+Pengembangan sistem menggunakan model air terjun yang terdiri atas lima tahap.
+Tahap pertama adalah analisis kebutuhan yang dilakukan melalui wawancara dengan pengguna.
+Kebutuhan fungsional menggambarkan layanan yang harus disediakan oleh sistem.
+Kebutuhan nonfungsional menggambarkan batasan kualitas sistem, seperti keamanan dan kecepatan akses.
+Tahap desain menghasilkan rancangan basis data, rancangan antarmuka, dan rancangan arsitektur sistem.
+Rancangan antarmuka dibuat dalam bentuk purwarupa menggunakan Figma.
+Tahap implementasi dilakukan dengan menerjemahkan rancangan ke dalam kode program.
+Kode program ditulis menggunakan bahasa PHP dan JavaScript.
+Pengujian dilakukan setelah seluruh modul selesai dibangun.
+Pengujian penerimaan pengguna melibatkan 32 responden dari bagian gudang dan bagian administrasi.
+Data penelitian berupa kumpulan kalimat yang diambil dari skripsi dan laporan kerja praktik mahasiswa.
+Kalimat yang sudah benar kemudian diberi kesalahan buatan secara acak.
+Kesalahan buatan meliputi kesalahan ketik, kesalahan huruf kapital, dan kesalahan tanda baca.
+Data dibagi menjadi data latih, data validasi, dan data uji dengan perbandingan 80:10:10.
+Pembagian data dilakukan berdasarkan kalimat asal agar tidak terjadi kebocoran data.
+Model dilatih selama lima epoch dengan laju pembelajaran sebesar 0,00002.
+Ukuran batch yang digunakan adalah 32.
+Evaluasi model dilakukan menggunakan metrik presisi, perolehan, dan skor F.
+Presisi diutamakan karena peringatan palsu dapat mengganggu pengguna.
+Analisis data kualitatif dilakukan melalui tahap reduksi data, penyajian data, dan penarikan kesimpulan.
+Keabsahan data diuji menggunakan triangulasi sumber dan triangulasi teknik.
+Wawancara direkam dengan izin narasumber dan ditranskripsikan secara saksama.
+Lokasi penelitian berada di Kecamatan Cibinong, Kabupaten Bogor, Provinsi Jawa Barat.
+Teknik pengumpulan data yang digunakan adalah observasi, wawancara, dan dokumentasi.
+Frekuensi pemesanan barang ditentukan berdasarkan rata-rata pemakaian setiap minggu.
+Standar operasional prosedur disusun untuk menyeragamkan cara kerja setiap petugas.
+Karena jumlah data terbatas, peneliti menggunakan teknik augmentasi data.
+Agar hasil pengujian lebih objektif, pengujian dilakukan oleh pengguna yang tidak terlibat dalam pengembangan.
+Setelah data terkumpul, peneliti melakukan pemeriksaan kelengkapan jawaban responden.
+Sebelum kuesioner disebarkan, peneliti melakukan uji coba kepada dua puluh responden.
+Karena sebagian responden bekerja di lapangan, kuesioner juga disebarkan secara daring.
+Oleh sebab itu, peneliti memilih metode prototipe dalam pengembangan sistem.
+
+# === Bab IV: Hasil dan pembahasan ===
+Hasil analisis kebutuhan menunjukkan bahwa pengguna membutuhkan fitur pencarian barang yang cepat.
+Sistem memiliki tiga jenis pengguna, yaitu administrator, petugas gudang, dan manajer.
+Administrator memiliki hak akses untuk mengelola data pengguna dan data barang.
+Petugas gudang bertugas mencatat transaksi barang masuk dan barang keluar.
+Manajer hanya dapat melihat laporan dan grafik persediaan barang.
+Halaman masuk merupakan halaman pertama yang ditampilkan ketika pengguna membuka aplikasi.
+Pengguna harus memasukkan nama pengguna dan kata sandi untuk mengakses sistem.
+Jika kata sandi yang dimasukkan salah, sistem akan menampilkan pesan kesalahan.
+Halaman dasbor menampilkan ringkasan jumlah barang, transaksi terbaru, dan barang dengan stok menipis.
+Barang dengan stok di bawah batas minimum ditandai dengan warna merah.
+Pengguna dapat mencari barang berdasarkan kode, nama, atau kategori barang.
+Data transaksi disimpan secara otomatis ke dalam basis data.
+Laporan bulanan dapat diunduh dalam format PDF dan Excel.
+Sistem juga menyediakan fitur pencetakan label kode batang untuk setiap barang.
+Gambar 4.1 menunjukkan rancangan basis data yang terdiri atas tujuh tabel.
+Tabel 4.2 menyajikan hasil pengujian fungsional pada setiap modul sistem.
+Seluruh skenario pengujian memberikan hasil yang sesuai dengan yang diharapkan.
+Hasil pengujian kotak hitam menunjukkan bahwa semua fungsi berjalan dengan baik.
+Waktu rata-rata pencarian data barang berkurang dari empat menit menjadi kurang dari sepuluh detik.
+Nilai rata-rata System Usability Scale yang diperoleh adalah 78,5.
+Nilai tersebut termasuk dalam kategori dapat diterima dengan predikat baik.
+Sebanyak 107 kuesioner disebarkan dan seluruhnya dikembalikan dalam keadaan lengkap.
+Mayoritas responden berjenis kelamin laki-laki dengan persentase sebesar 68,2%.
+Sebagian besar responden telah bekerja lebih dari lima tahun.
+Hasil uji validitas menunjukkan bahwa seluruh butir pernyataan dinyatakan valid.
+Nilai koefisien alfa Cronbach untuk variabel kualitas pelayanan adalah 0,812.
+Dengan demikian, instrumen penelitian dinyatakan reliabel.
+Hasil uji normalitas menunjukkan nilai signifikansi sebesar 0,200.
+Nilai tersebut lebih besar daripada 0,05 sehingga data dinyatakan berdistribusi normal.
+Nilai toleransi setiap variabel lebih besar daripada 0,1 sehingga tidak terjadi multikolinearitas.
+Persamaan regresi yang diperoleh menunjukkan bahwa kedua variabel bebas berpengaruh positif.
+Variabel kualitas pelayanan berpengaruh signifikan terhadap kepuasan pelanggan.
+Variabel harga tidak berpengaruh signifikan terhadap kepuasan pelanggan.
+Nilai koefisien determinasi sebesar 0,634 menunjukkan bahwa 63,4% variasi kepuasan pelanggan dijelaskan oleh kedua variabel bebas.
+Sisanya sebesar 36,6% dipengaruhi oleh variabel lain yang tidak diteliti.
+Hasil ini sejalan dengan penelitian Kurniawan (2020) yang menyatakan bahwa kualitas pelayanan memengaruhi kepuasan pelanggan.
+Akan tetapi, hasil penelitian ini berbeda dengan temuan Hidayat (2019) mengenai pengaruh harga.
+Perbedaan tersebut dapat disebabkan oleh karakteristik responden yang berbeda.
+Model IndoBERT menghasilkan nilai presisi sebesar 0,91 pada data uji.
+Nilai perolehan model mencapai 0,83.
+Kesalahan kapitalisasi lebih mudah dideteksi daripada kesalahan tanda koma.
+Kesalahan pada kata depan dapat dideteksi dengan akurasi yang tinggi.
+Pendekatan berbasis aturan menghasilkan sedikit peringatan palsu.
+Namun, pendekatan tersebut tidak dapat menangani kesalahan yang bergantung pada konteks.
+Penggabungan kedua pendekatan menghasilkan kinerja terbaik pada seluruh jenis kesalahan.
+Waktu pemeriksaan satu dokumen berukuran 48 halaman rata-rata kurang dari satu menit.
+Responden menilai fitur penjelasan aturan ejaan sangat membantu.
+Sebagian responden menginginkan fitur koreksi otomatis tanpa perlu memilih saran satu per satu.
+Hasil wawancara menunjukkan bahwa petugas gudang merasa terbantu dengan adanya sistem.
+Petugas tidak perlu lagi mencocokkan catatan manual dengan stok fisik setiap hari.
+Kepala gudang menyatakan bahwa laporan kini dapat disusun dalam hitungan menit.
+Sistem ini masih memerlukan koneksi internet agar dapat digunakan.
+Apabila koneksi terputus, data yang belum tersimpan akan hilang.
+Fitur penyimpanan sementara perlu ditambahkan untuk mengatasi masalah tersebut.
+Perubahan alur kerja juga memerlukan pelatihan bagi karyawan yang belum terbiasa menggunakan komputer.
+Pelatihan dilaksanakan pada hari Jumat, 15 Maret 2024, di ruang rapat perusahaan.
+Kegiatan tersebut diikuti oleh dua belas karyawan dari bagian gudang.
+Setelah pelatihan selesai, seluruh peserta mampu mengoperasikan sistem dengan baik.
+Sistem lama mampu mencatat transaksi, tetapi tidak dapat menghasilkan laporan secara otomatis.
+Pengujian fungsional dilakukan oleh peneliti, sedangkan pengujian kegunaan dilakukan oleh pengguna akhir.
+Masalah utama perusahaan bukan terletak pada jumlah karyawan, melainkan pada alur kerja yang tidak efisien.
+Data latih berisi kalimat dengan kesalahan buatan, sedangkan data uji berisi kesalahan yang ditulis oleh manusia.
+Responden umumnya puas terhadap tampilan aplikasi, tetapi masih mengeluhkan kecepatan akses pada jam sibuk.
+Model mampu mengenali nama orang, tetapi masih keliru dalam mengenali nama lembaga.
+Metode tersebut sederhana, tetapi cukup efektif untuk data berukuran kecil.
+Meskipun akurasi model cukup tinggi, masih terdapat kesalahan pada kalimat yang panjang.
+Ketika jumlah transaksi meningkat, waktu respons sistem tetap stabil.
+Apabila stok barang mencapai batas minimum, sistem akan mengirimkan notifikasi kepada petugas.
+Jika data yang dimasukkan tidak lengkap, sistem akan menolak penyimpanan data.
+Walaupun sistem sudah berjalan dengan baik, beberapa fitur masih perlu disempurnakan.
+Ketika pengguna menekan tombol simpan, data akan dikirim ke server.
+Selain itu, sistem dapat menampilkan grafik pergerakan stok setiap bulan.
+Selain itu, responden juga menyarankan penambahan fitur mode gelap.
+Oleh karena itu, peneliti menambahkan fitur ekspor data ke format Excel.
+Namun, fitur tersebut belum diuji pada perangkat dengan spesifikasi rendah.
+Dengan demikian, hipotesis pertama dalam penelitian ini diterima.
+Jadi, dapat disimpulkan bahwa hipotesis kedua ditolak.
+Akibatnya, sebagian data harus dimasukkan ulang secara manual.
+Sebaliknya, kelompok kontrol tidak menunjukkan peningkatan yang berarti.
+Meskipun demikian, hasil penelitian ini perlu dikaji lebih lanjut.
+Sementara itu, bagian keuangan masih menggunakan aplikasi lembar kerja.
+Penjelasan secara detail mengenai rancangan sistem disajikan pada lampiran.
+Fitur tersebut tidak sekadar mempercepat pekerjaan, tetapi juga mengurangi kesalahan pencatatan.
+Apa pun hasilnya, penelitian ini tetap memberikan gambaran awal mengenai masalah tersebut.
+Siapa pun dapat menggunakan aplikasi ini tanpa harus mendaftar terlebih dahulu.
+Meskipun sederhana, aplikasi tersebut sangat membantu pekerjaan petugas.
+Sistem tetap dapat digunakan walaupun jumlah pengguna meningkat.
+Data tersebut tidak dapat digunakan karena banyak jawaban yang kosong.
+
+# === Fitur aplikasi pemeriksa ejaan ===
+Mahasiswa dapat mengunggah naskah skripsi ke dalam sistem dalam format DOCX.
+Sistem kemudian menandai kata yang diduga salah dengan garis bawah berwarna merah.
+Pengguna dapat melihat penjelasan aturan ejaan dengan mengarahkan kursor ke kata yang ditandai.
+Saran perbaikan ditampilkan di samping naskah dalam bentuk daftar.
+Pengguna dapat menerima atau menolak setiap saran yang diberikan oleh sistem.
+Kata yang sering digunakan oleh pengguna dapat ditambahkan ke kamus pribadi.
+Nama orang, nama tempat, dan istilah teknis tidak ditandai sebagai kesalahan.
+Bagian daftar pustaka tidak diperiksa oleh sistem.
+Sistem juga memeriksa konsistensi penulisan istilah dalam seluruh naskah.
+Data dikirim dari aplikasi bergerak ke server melalui antarmuka pemrograman aplikasi.
+Berkas cadangan disimpan di dalam server terpisah yang berada di ruang data.
+Petugas memindahkan barang dari rak penyimpanan ke area pengiriman.
+Hasil pemindaian kode batang langsung ditampilkan di layar telepon seluler.
+
+# === Laporan kerja praktik ===
+Kerja praktik dilaksanakan di PT Baja Prima Sentosa mulai tanggal 2 September sampai 29 November 2024.
+Penulis ditempatkan di Departemen Teknologi Informasi selama kerja praktik berlangsung.
+Kegiatan kerja praktik dilakukan setiap hari Senin sampai Jumat pukul 08.00 sampai 17.00.
+PT Baja Prima Sentosa didirikan pada tahun 1998 di Kabupaten Karawang.
+Perusahaan memiliki visi menjadi produsen baja terkemuka di Asia Tenggara.
+Struktur organisasi perusahaan dipimpin oleh seorang direktur utama.
+Direktur utama dibantu oleh direktur keuangan, direktur produksi, dan direktur pemasaran.
+Setiap departemen dipimpin oleh seorang manajer yang bertanggung jawab kepada direktur terkait.
+Tugas pertama penulis adalah memperbarui data inventaris perangkat komputer.
+Penulis juga membantu memperbaiki jaringan lokal di gedung administrasi.
+Selain itu, penulis ditugaskan membuat situs web internal untuk dokumentasi prosedur kerja.
+Situs web tersebut dibangun menggunakan kerangka kerja Laravel dan basis data MySQL.
+Pembimbing lapangan memberikan masukan terkait tampilan dan alur penggunaan situs web.
+Penulis belajar menjalin kerja sama dengan anggota tim dalam lingkungan kerja yang sebenarnya.
+Kendala yang dihadapi selama kerja praktik adalah keterbatasan akses ke beberapa server perusahaan.
+Kendala tersebut diatasi dengan meminta izin kepada kepala departemen.
+Kegiatan kerja praktik memberikan pengalaman yang sangat berharga bagi penulis.
+Penulis menyadari pentingnya kedisiplinan dan tanggung jawab dalam bekerja.
+Laporan ini disusun sebagai salah satu syarat kelulusan mata kuliah Kerja Praktik.
+Barang yang datang dari pemasok diperiksa terlebih dahulu oleh petugas penerimaan.
+Barang yang lolos pemeriksaan kemudian dicatat dan disimpan di rak sesuai kategorinya.
+Setiap rak diberi kode lokasi agar barang mudah ditemukan.
+Barang yang rusak dikembalikan kepada pemasok disertai berita acara pengembalian.
+Permintaan barang dari bagian produksi harus disetujui oleh kepala gudang.
+Penghitungan fisik barang dilakukan setiap akhir bulan untuk mencocokkan data sistem dengan jumlah barang di gudang.
+Selisih antara data sistem dan jumlah fisik dicatat dalam laporan penyesuaian stok.
+Penulis mengamati bahwa proses pencarian berkas di gudang masih memakan waktu.
+Dokumen penerimaan barang masih disimpan dalam map dan disusun berdasarkan tanggal.
+Penulis kemudian mengusulkan pemindaian dokumen agar arsip dapat dicari secara digital.
+Usulan tersebut diterima dengan baik oleh pembimbing lapangan.
+Barang habis pakai di gudang meliputi sarung tangan, masker, kawat las, dll.
+Setiap pengeluaran barang harus disertai tanda tangan petugas yang menerima.
+Tata letak gudang diatur berdasarkan frekuensi pengambilan barang.
+
+# === Bab V: Kesimpulan dan saran ===
+Berdasarkan hasil penelitian, dapat disimpulkan bahwa sistem informasi persediaan barang berhasil dibangun sesuai dengan kebutuhan pengguna.
+Sistem yang dibangun mampu mempercepat proses pencatatan dan pembuatan laporan.
+Hasil pengujian menunjukkan bahwa seluruh fungsi sistem berjalan sesuai dengan rancangan.
+Kualitas pelayanan berpengaruh positif dan signifikan terhadap kepuasan pelanggan.
+Harga tidak berpengaruh signifikan terhadap kepuasan pelanggan pada objek penelitian ini.
+Model yang diusulkan mampu mendeteksi kesalahan penulisan dengan presisi yang tinggi.
+Pendekatan gabungan menghasilkan kinerja yang lebih baik daripada pendekatan tunggal.
+Penelitian selanjutnya disarankan menggunakan jumlah data yang lebih besar.
+Peneliti selanjutnya juga dapat menambahkan jenis kesalahan lain, seperti kesalahan kata tidak baku.
+Sistem dapat dikembangkan menjadi aplikasi bergerak agar lebih mudah diakses di lapangan.
+Perusahaan disarankan melakukan pencadangan data secara berkala.
+Pelatihan lanjutan perlu diberikan kepada karyawan baru yang akan menggunakan sistem.
+Penambahan fitur notifikasi stok minimum dapat membantu bagian pembelian merencanakan pemesanan barang.
+Perusahaan sebaiknya meningkatkan kualitas pelayanan, terutama pada aspek daya tanggap.
+Penelitian ini masih memiliki keterbatasan pada jumlah responden dan wilayah penelitian.
+Hasil penelitian belum dapat digeneralisasikan untuk seluruh perusahaan manufaktur di Indonesia.
+Jadi, sistem yang dibangun telah memenuhi kebutuhan pengguna.
+
+# === Kata pengantar dan abstrak ===
+Puji syukur penulis panjatkan ke hadirat Tuhan Yang Maha Esa atas rahmat dan karunia-Nya.
+Skripsi ini disusun untuk memenuhi salah satu syarat memperoleh gelar sarjana pada Program Studi Teknik Informatika.
+Penulis mengucapkan terima kasih kepada kedua orang tua yang selalu memberikan doa dan dukungan.
+Ucapan terima kasih juga penulis sampaikan kepada dosen pembimbing yang telah memberikan arahan selama penyusunan skripsi.
+Penulis juga berterima kasih kepada seluruh dosen Program Studi Teknik Informatika Universitas Cendekia Nusantara.
+Penulis menyadari bahwa skripsi ini masih jauh dari sempurna.
+Oleh karena itu, kritik dan saran yang membangun sangat penulis harapkan.
+Semoga skripsi ini bermanfaat bagi pembaca dan pihak-pihak yang membutuhkan.
+Penelitian ini bertujuan untuk mengembangkan sistem pendeteksi kesalahan penulisan bahasa Indonesia pada karya ilmiah.
+Data penelitian terdiri atas 12.500 kalimat yang diambil dari repositori skripsi.
+Hasil penelitian menunjukkan bahwa model gabungan memperoleh nilai F sebesar 0,87.
+Mahasiswa program pascasarjana juga dapat menggunakan sistem ini untuk memeriksa tesis.
+
+# === Teknologi dan aplikasi ===
+Keamanan data menjadi aspek penting dalam pengembangan aplikasi berbasis web.
+Kata sandi pengguna disimpan dalam bentuk terenkripsi menggunakan algoritma bcrypt.
+Setiap pengguna hanya dapat mengakses menu sesuai dengan perannya.
+Sistem mencatat seluruh aktivitas pengguna ke dalam log aktivitas.
+Aplikasi diuji pada beberapa peramban, seperti Google Chrome, Mozilla Firefox, dan Microsoft Edge.
+Waktu muat halaman utama rata-rata adalah 1,2 detik.
+Server aplikasi menggunakan sistem operasi Ubuntu dan dijalankan pada layanan komputasi awan.
+Pencadangan basis data dilakukan secara otomatis setiap pukul 23.00.
+Jaringan komputer di kantor tersebut menggunakan topologi bintang.
+Gangguan jaringan sering terjadi akibat kabel yang rusak dan perangkat yang sudah usang.
+Administrator jaringan bertugas memantau lalu lintas data dan menangani gangguan.
+Akun pengguna yang tidak aktif selama enam bulan akan dinonaktifkan secara otomatis.
+Pengguna dengan status nonaktif tidak dapat masuk ke dalam sistem.
+Komunikasi antarbagian menjadi lebih cepat setelah sistem diterapkan.
+Aplikasi bergerak dikembangkan menggunakan Flutter dengan bahasa pemrograman Dart.
+Notifikasi dikirim kepada pengguna melalui layanan Firebase Cloud Messaging.
+Pengguna dapat masuk ke aplikasi menggunakan akun Google.
+Lokasi pengemudi diperbarui setiap lima detik selama pesanan berlangsung.
+Pelanggan dapat melacak posisi pengemudi secara langsung melalui peta.
+Biaya pengiriman dihitung berdasarkan jarak antara lokasi restoran dan lokasi pelanggan.
+Model prediksi waktu pengantaran dilatih menggunakan data riwayat pesanan.
+Fitur rekomendasi menampilkan menu yang sering dipesan oleh pelanggan dengan selera serupa.
+Kamera digunakan untuk mengambil gambar objek yang akan dihitung.
+Model deteksi objek dilatih menggunakan gambar yang telah diberi anotasi secara manual.
+Setiap objek pada gambar ditandai dengan kotak pembatas.
+Kepadatan objek yang tinggi menyebabkan banyak objek saling tumpang tindih.
+Peta kepadatan digunakan untuk memperkirakan jumlah objek pada area yang padat.
+Kinerja model dievaluasi menggunakan rata-rata galat absolut.
+Hasil penghitungan otomatis dibandingkan dengan hasil penghitungan manual.
+Tes kepribadian disusun berdasarkan empat dimensi preferensi.
+Jawaban responden diolah untuk menentukan tipe kepribadian yang paling sesuai.
+Hasil tes ditampilkan beserta penjelasan singkat mengenai setiap dimensi.
+Subsistem pelaporan bertugas mengolah data transaksi menjadi laporan bulanan.
+Hubungan antarvariabel dianalisis menggunakan korelasi Pearson.
+
+# === Penulisan karya ilmiah ===
+Penulisan daftar pustaka mengikuti gaya APA edisi ketujuh.
+Setiap kutipan harus mencantumkan nama penulis dan tahun terbit.
+Kutipan langsung yang lebih dari empat puluh kata ditulis dalam blok terpisah.
+Judul tabel diletakkan di atas tabel, sedangkan judul gambar diletakkan di bawah gambar.
+Setiap tabel dan gambar harus dirujuk di dalam teks.
+Naskah skripsi diketik menggunakan huruf Times New Roman berukuran 12 poin.
+Jarak antarbaris pada naskah adalah 1,5 spasi.
+Batas kiri halaman adalah 4 cm, sedangkan batas atas, kanan, dan bawah adalah 3 cm.
+Nomor halaman bagian awal skripsi ditulis menggunakan angka Romawi kecil.
+Abstrak ditulis dalam bahasa Indonesia dan bahasa Inggris.
+Abstrak berisi latar belakang singkat, tujuan, metode, hasil, dan kesimpulan penelitian.
+Jumlah kata dalam abstrak tidak lebih dari 250 kata.
+Istilah asing yang belum memiliki padanan dalam bahasa Indonesia ditulis dengan huruf miring.
+Mahasiswa wajib berkonsultasi dengan dosen pembimbing minimal delapan kali sebelum sidang.
+Naskah yang telah disetujui ditandatangani oleh dosen pembimbing dan ketua program studi.
+Revisi naskah harus diselesaikan paling lambat satu bulan setelah sidang.
+Mahasiswa yang tidak menyelesaikan revisi tepat waktu dinyatakan belum lulus.
+Pertanggungjawaban penggunaan dana penelitian dilaporkan pada akhir semester.
+Sidang skripsi dijadwalkan pada bulan Agustus 2024.
+Rapat evaluasi diadakan pada hari Rabu, 8 Mei 2024.
+Data dikumpulkan setiap hari Selasa dan Kamis selama bulan Oktober.
+Pengumpulan naskah dilakukan paling lambat tanggal 30 November 2024.
+Perayaan Hari Kemerdekaan Republik Indonesia diadakan setiap tanggal 17 Agustus.
+Libur Idulfitri menyebabkan kegiatan operasional gudang berhenti selama satu minggu.
+Pada bulan Ramadan, jam kerja karyawan dikurangi satu jam.
+
+# === Ekonomi, pendidikan, kesehatan, dan lingkungan ===
+Inflasi yang tinggi dapat menurunkan daya beli masyarakat.
+Pertumbuhan ekonomi daerah dipengaruhi oleh investasi, konsumsi rumah tangga, dan belanja pemerintah.
+Pemerintah daerah berupaya meningkatkan kualitas infrastruktur jalan di wilayah pedesaan.
+Pendapatan asli daerah Kabupaten Sukamaju meningkat pada tahun 2023.
+Literasi keuangan berperan penting dalam pengambilan keputusan investasi.
+Mahasiswa dengan literasi keuangan yang baik cenderung memiliki kebiasaan menabung yang teratur.
+Guru berperan sebagai fasilitator dalam proses pembelajaran di kelas.
+Model pembelajaran berbasis proyek mendorong siswa untuk bekerja sama dalam kelompok.
+Penilaian dilakukan melalui tes tertulis, observasi, dan penugasan.
+Hasil belajar siswa meningkat setelah penerapan model pembelajaran tersebut.
+Rata-rata nilai siswa pada siklus pertama adalah 68,4.
+Pada siklus kedua, rata-rata nilai siswa meningkat menjadi 81,2.
+Ketuntasan belajar klasikal tercapai pada siklus kedua.
+Orang tua siswa juga dilibatkan dalam pemantauan kegiatan belajar di rumah.
+Kreativitas siswa meningkat setelah mengikuti kegiatan pembelajaran berbasis proyek.
+Kegiatan olahraga pagi dilaksanakan setiap hari Jumat di lapangan sekolah.
+Pola makan yang tidak teratur dapat meningkatkan risiko gangguan pencernaan.
+Kesadaran masyarakat terhadap pentingnya pemeriksaan kesehatan berkala masih rendah.
+Kader posyandu berperan penting dalam pemantauan tumbuh kembang balita.
+Penyuluhan kesehatan dilaksanakan di balai desa setiap bulan.
+Rumah sakit tersebut telah menerapkan rekam medis elektronik sejak tahun 2021.
+Penerapan rekam medis elektronik mempercepat proses pelayanan pasien.
+Tenaga kesehatan memerlukan pelatihan untuk mengoperasikan sistem yang baru.
+Sampah plastik menjadi salah satu masalah lingkungan yang serius di perkotaan.
+Bank sampah membantu masyarakat memilah sampah sekaligus memperoleh penghasilan tambahan.
+Kegiatan tersebut didukung oleh Dinas Lingkungan Hidup setempat.
+Pariwisata berbasis masyarakat dapat meningkatkan kesejahteraan warga desa.
+Desa Wisata Sukamaju menawarkan atraksi budaya, kuliner tradisional, dan wisata alam.
+Jumlah kunjungan wisatawan meningkat setelah desa tersebut dipromosikan melalui media sosial.
+Promosi melalui media sosial dinilai lebih murah daripada promosi melalui media cetak.
+Kerja sama antara pemerintah desa dan pelaku usaha perlu ditingkatkan.
+Setiap kepala keluarga bertanggung jawab atas kebersihan lingkungan rumahnya.
+Sumber daya manusia yang terampil menjadi kunci keberhasilan program tersebut.
