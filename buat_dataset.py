@@ -754,6 +754,9 @@ def main():
     ap.add_argument("--pasangan", type=float, default=0.25,
                     help="peluang dua kalimat berurutan digabung menjadi satu contoh (0 = tidak)")
     ap.add_argument("--varian-pasangan", type=int, default=3, help="jumlah versi rusak per pasangan")
+    ap.add_argument("--hanya-train", nargs="*", default=[],
+                    help="nama sumber (stem berkas) yang seluruhnya masuk split train, "
+                         "mis. kalimat benar dari dokumen train_asli")
     args = ap.parse_args()
 
     rng = random.Random(args.seed)
@@ -781,7 +784,8 @@ def main():
     kosakata |= kosakata_tambahan()
 
     # Pembagian berdasarkan kalimat asal (mencegah kebocoran data)
-    idx = list(range(len(data_bersih)))
+    paksa_train = {i for i, d in enumerate(data_bersih) if d[2] in set(args.hanya_train)}
+    idx = [i for i in range(len(data_bersih)) if i not in paksa_train]
     rng.shuffle(idx)
     p_train, p_valid, _ = (int(x) for x in args.porsi.split(","))
     n_train = round(len(idx) * p_train / 100)
@@ -789,6 +793,8 @@ def main():
     split_of = {}
     for pos, i in enumerate(idx):
         split_of[i] = "train" if pos < n_train else "valid" if pos < n_train + n_valid else "test"
+    for i in paksa_train:
+        split_of[i] = "train"
 
     # Pasangan dua kalimat berurutan (sumber dan split sama) untuk melatih GANTI_TITIK dan titik
     # yang hilang di antara kalimat. Pasangan hanya dibuat di dalam split yang sama.

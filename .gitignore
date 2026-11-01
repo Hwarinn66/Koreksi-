@@ -10,3 +10,7 @@ __pycache__/
 # model hasil training (terlalu besar untuk GitHub, simpan di Drive / Hugging Face)
 model_ejaan/
 *.safetensors
+# kutipan jurnal pihak lain dan turunannya (tidak dipublikasikan)
+data_uji_asli/jurnal*/
+data_uji_asli/semua_*
+data/kalimat_asli_train.txt

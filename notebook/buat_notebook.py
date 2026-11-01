@@ -26,8 +26,9 @@ Notebook ini melatih model **klasifikasi token**: setiap kata diberi label seper
 
 Alur:
 1. Siapkan data (`dataset/dataset_lengkap.jsonl`)
-2. Latih dengan split `train`, pantau dengan `valid`
-3. Uji di `test_sintetis` dan **`test_asli`** (kalimat skripsi sungguhan), skor ini yang paling penting
+2. Latih dengan split `train` (sintetis) ditambah `train_asli` (kalimat skripsi/jurnal sungguhan
+   yang dikoreksi manual), pantau dengan `valid`
+3. Uji di `test_sintetis` dan **`test_asli`** (dokumen sungguhan yang tidak ikut dilatih), skor ini yang paling penting
 4. Simpan model dan coba pada teks sendiri
 """)
 
@@ -39,7 +40,8 @@ md("""
 ## 1. Siapkan data
 
 **Opsi A (disarankan):** unggah `dataset_ejaan_final.zip` ke Google Drive (folder `MyDrive`),
-lalu jalankan sel ini. Zip itu sudah berisi data uji asli dari 8 skripsi. Zip selalu diekstrak
+lalu jalankan sel ini. Zip itu sudah berisi data asli dari 10 skripsi dan 26 jurnal
+(19 dokumen untuk latih, 17 dokumen untuk uji). Zip selalu diekstrak
 ulang, jadi zip baru di Drive langsung terpakai.
 
 **Opsi B:** jika zip tidak ada, sel ini akan meng-clone repo dan membangun data sintetis saja
@@ -83,6 +85,8 @@ md("""
   uncased, jadi tidak dipakai. Bawaan: `xlm-roberta-base` (cased, mendukung bahasa Indonesia).
 - `PORSI_TRAIN`: isi 0.25 atau 0.5 untuk melatih dengan sebagian data (uji perlu-tidaknya tambah data).
 - `PAKAI_BOBOT`: True untuk memberi bobot lebih pada label yang jarang (recall naik, presisi biasanya turun).
+- `ULANG_ASLI`: berapa kali `train_asli` diulang di data latih. Data asli jauh lebih sedikit dari data
+  sintetis, jadi diulang agar tetap terasa pengaruhnya. Isi 0 untuk melatih tanpa data asli.
 """)
 
 code("""
@@ -93,6 +97,7 @@ BATCH = 32
 LR = 3e-5
 PORSI_TRAIN = 1.0
 PAKAI_BOBOT = False
+ULANG_ASLI = 3
 SEED = 42
 OUTPUT_DIR = "model_ejaan"
 MAX_STEPS = -1          # biarkan -1; hanya untuk uji cepat
@@ -115,10 +120,14 @@ LABELS = [l for l in info_label["labels"] if l not in info_label.get("label_khus
 label2id = {l: i for i, l in enumerate(LABELS)}
 id2label = {i: l for l, i in label2id.items()}
 
-split = {s: [b for b in baris if b["split"] == s] for s in ("train", "valid", "test_sintetis", "test_asli")}
+split = {s: [b for b in baris if b["split"] == s]
+         for s in ("train", "train_asli", "valid", "test_sintetis", "test_asli")}
 if PORSI_TRAIN < 1:
     random.shuffle(split["train"])
     split["train"] = split["train"][: int(len(split["train"]) * PORSI_TRAIN)]
+# Data asli ikut dilatih (diulang ULANG_ASLI kali), lalu diacak bersama data sintetis.
+split["train"] = split["train"] + split["train_asli"] * ULANG_ASLI
+random.shuffle(split["train"])
 for s, isi in split.items():
     print(f"{s:14} {len(isi):6} contoh")
 
@@ -165,6 +174,11 @@ def ke_dataset(isi):
 
 mentah = dict(split)
 mentah["test_asli_pasti"] = [b for b in split["test_asli"] if b["status"] == "pasti"]
+# 8 skripsi lama (pembanding dengan model sebelumnya) dan dokumen uji baru (skripsi/jurnal).
+LAMA = {"skripsi01", "skripsi02", "skripsi04", "skripsi05", "skripsi06", "skripsi07", "skripsi08", "skripsi09"}
+mentah["test_asli_lama"] = [b for b in split["test_asli"] if b["sumber"].split("/")[0] in LAMA]
+mentah["test_asli_baru"] = [b for b in split["test_asli"] if b["sumber"].split("/")[0] not in LAMA]
+del mentah["train_asli"]
 mentah["test_surat"] = [b for b in split["test_sintetis"] if b["sumber"] == "kalimat_surat"]
 data = {s: ke_dataset(isi) for s, isi in mentah.items() if isi}
 print({k: (len(v) if v else 0) for k, v in data.items()})
@@ -313,14 +327,14 @@ def evaluasi(nama, kamus=False):
         print(f"{k:16} {v:.3f}")
     per_label(pred.ravel(), gold.ravel())
 
-for nama in ("test_sintetis", "test_surat", "test_asli", "test_asli_pasti"):
+for nama in ("test_sintetis", "test_surat", "test_asli", "test_asli_pasti", "test_asli_lama", "test_asli_baru"):
     evaluasi(nama)
-for nama in ("test_asli", "test_asli_pasti"):
+for nama in ("test_asli", "test_asli_pasti", "test_asli_lama", "test_asli_baru"):
     evaluasi(nama, kamus=True)
 """)
 
 code("""
-# Skor per skripsi pada test_asli: apakah model hanya bagus di satu gaya tulisan?
+# Skor per dokumen pada test_asli: apakah model hanya bagus di satu gaya tulisan?
 if split["test_asli"]:
     per_sumber = {}
     for b in split["test_asli"]:

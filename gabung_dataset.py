@@ -61,18 +61,22 @@ def main():
                 "catatan": "",
             })
 
-    # 2) Data uji asli (koreksi manual skripsi)
+    # 2) Data asli (koreksi manual skripsi dan jurnal), dibagi per dokumen lewat pembagian.json
     asli_dir = DIR / "data_uji_asli"
-    folder_asli = sorted(asli_dir.glob("skripsi*"))
+    pembagian_path = asli_dir / "pembagian.json"
+    pembagian = json.loads(pembagian_path.read_text(encoding="utf-8"))["dokumen"] if pembagian_path.exists() else {}
+    folder_asli = sorted(p for p in asli_dir.iterdir() if (p / "pasangan_asli.jsonl").exists()) \
+        if asli_dir.exists() else []
     if not folder_asli:
-        print("[info] data_uji_asli/skripsi* tidak ditemukan; dataset hanya berisi data sintetis.")
+        print("[info] data_uji_asli/ kosong; dataset hanya berisi data sintetis.")
     for folder in folder_asli:
+        split_dok = pembagian.get(folder.name, {}).get("split", "test_asli")
         token = {t["id"]: t for t in baca_jsonl(folder / "token_asli.jsonl")}
         for p in baca_jsonl(folder / "pasangan_asli.jsonl"):
             t = token[p["id"]]
             baris.append({
                 "id": f"asli-{p['id']}",
-                "split": "test_asli",
+                "split": split_dok,
                 "jenis_data": "asli",
                 "sumber": f"{p['sumber']}/{p['bab']}",
                 "salah": p["salah"],
@@ -85,9 +89,11 @@ def main():
                 "catatan": p["catatan"],
             })
 
-    # Pemeriksaan: tidak ada kalimat benar yang sama di train dan di data uji
-    benar_train = {b["benar"] for b in baris if b["split"] == "train"}
-    bocor = Counter(b["split"] for b in baris if b["split"] != "train" and b["benar"] in benar_train)
+    # Pemeriksaan: tidak ada kalimat benar yang sama di data latih (train, train_asli) dan di data uji
+    LATIH = ("train", "train_asli")
+    benar_train = {b["benar"] for b in baris if b["split"] in LATIH}
+    bocor = Counter(b["split"] for b in baris
+                    if b["split"] in ("valid", "test_asli") and b["benar"] in benar_train)
     if bocor:
         raise SystemExit(f"Kebocoran data ke train: {dict(bocor)}")
     for b in baris:
@@ -123,13 +129,14 @@ def main():
         "total_contoh": len(baris),
         "contoh_per_split": dict(per_split),
         "berkesalahan_per_split": dict(per_split_salah),
-        "kalimat_ragu_test_asli": sum(b["status"] == "ragu" for b in baris),
+        "kalimat_ragu_asli": sum(b["status"] == "ragu" for b in baris),
         "sumber_test_asli": dict(Counter(b["sumber"].split("/")[0] for b in baris if b["split"] == "test_asli")),
+        "sumber_train_asli": dict(Counter(b["sumber"].split("/")[0] for b in baris if b["split"] == "train_asli")),
         "token_per_label_per_split": {s: dict(c.most_common()) for s, c in label_split.items()},
     }
     (OUT / "statistik.json").write_text(json.dumps(stat, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps({k: stat[k] for k in ("total_contoh", "contoh_per_split", "berkesalahan_per_split",
-                                            "kalimat_ragu_test_asli")}, ensure_ascii=False, indent=2))
+                                            "kalimat_ragu_asli")}, ensure_ascii=False, indent=2))
 
 
 if __name__ == "__main__":

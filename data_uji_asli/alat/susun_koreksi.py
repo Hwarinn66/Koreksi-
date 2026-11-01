@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from buat_dataset import BAKU_SEMUA, gabung_token, tokenisasi  # noqa: E402
 from kamus_baku import TIDAK_BAKU as KAMUS_TIDAK_BAKU  # noqa: E402
 
-folder, sumber = Path(sys.argv[1]), sys.argv[2]
+folder = sumber = None  # diisi di __main__
 
 # Bentuk tidak baku tambahan yang ditemui di skripsi asli
 TIDAK_BAKU_EKSTRA = {"presentase", "negative", "popular", "trend", "hoax", "kerjasama",
@@ -234,4 +234,5 @@ def main():
 
 
 if __name__ == "__main__":
+    folder, sumber = Path(sys.argv[1]), sys.argv[2]
     main()

@@ -38,8 +38,8 @@ pip install Sastrawi
 bash jalankan_semua.sh
 ```
 
-Data uji asli (`data_uji_asli/skripsiXX/`, kutipan kalimat dari skripsi orang lain) juga tidak
-disertakan. Tanpa folder itu, `gabung_dataset.py` tetap berjalan dan hanya memakai data sintetis.
+Data asli (`data_uji_asli/skripsiXX/` dan `jurnalXX/`, kutipan kalimat dari skripsi dan jurnal
+orang lain) juga tidak disertakan. Tanpa folder itu, `gabung_dataset.py` tetap berjalan dan hanya memakai data sintetis.
 
 ## Dataset gabungan (pakai ini untuk melatih)
 
@@ -47,10 +47,11 @@ disertakan. Tanpa folder itu, `gabung_dataset.py` tetap berjalan dan hanya memak
 
 | split | Isi | Contoh |
 |---|---|---|
-| `train` | data sintetis untuk pelatihan | 55.754 |
-| `valid` | data sintetis untuk validasi | 6.907 |
-| `test_sintetis` | data sintetis untuk uji (471 di antaranya dari surat) | 6.929 |
-| `test_asli` | kalimat skripsi asli yang dikoreksi manual (lihat `data_uji_asli/`) | 1.356 |
+| `train` | data sintetis untuk pelatihan | 64.785 |
+| `valid` | data sintetis untuk validasi | 6.974 |
+| `test_sintetis` | data sintetis untuk uji (471 di antaranya dari surat) | 6.950 |
+| `train_asli` | kalimat asli dari 19 dokumen (skripsi/jurnal) yang dikoreksi manual, ikut dilatih | 967 |
+| `test_asli` | kalimat asli dari 17 dokumen lain (8 skripsi lama + 9 dokumen baru), hanya untuk uji | 1.855 |
 
 Setiap baris: `id, split, jenis_data, sumber, salah, benar, kesalahan, tokens, labels, perbaikan,
 status, catatan`. `dataset/dataset_lengkap.csv` adalah versi ringkas untuk Excel, dan
@@ -83,7 +84,7 @@ jalankan_semua.sh         unduh korpus, saring, buat dataset, lalu gabungkan (sa
 gabung_dataset.py         menyatukan output/ dan data_uji_asli/ menjadi dataset/
 notebook/latih_model.ipynb  notebook Colab untuk melatih dan menguji model
 dataset/                  DATASET GABUNGAN (lihat bagian di atas)
-data_uji_asli/            1.356 kalimat skripsi asli + koreksi manual + alat untuk menambah
+data_uji_asli/            2.822 kalimat skripsi/jurnal asli + koreksi manual + alat untuk menambah
 output/
   pasangan_{train,valid,test}.jsonl   pasangan salah -> benar (untuk seq2seq)
   token_{train,valid,test}.jsonl      label per token (untuk IndoBERT)

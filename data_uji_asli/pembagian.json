@@ -1,0 +1,185 @@
+{
+  "keterangan": "Pembagian per dokumen. test_asli dipakai untuk menilai model, train_asli ikut dilatih (dan kalimat benarnya dipakai sebagai bahan data sintetis). Satu dokumen tidak pernah dipecah ke dua split.",
+  "dokumen": {
+    "jurnal01": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal02": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum (Supremasi Jurnal Hukum)"
+    },
+    "jurnal03": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum (Supremasi Jurnal Hukum)"
+    },
+    "jurnal04": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum (Supremasi Jurnal Hukum)"
+    },
+    "jurnal05": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal06": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal07": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal08": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal09": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal10": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum"
+    },
+    "jurnal11": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam"
+    },
+    "jurnal12": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam"
+    },
+    "jurnal13": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam"
+    },
+    "jurnal14": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam"
+    },
+    "jurnal15": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam (Al-Syakhshiyyah)"
+    },
+    "jurnal16": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Hukum keluarga Islam (Al-Syakhshiyyah)"
+    },
+    "jurnal17": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Akuntansi (pajak)"
+    },
+    "jurnal18": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi pembangunan"
+    },
+    "jurnal19": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Akuntansi dan manajemen"
+    },
+    "jurnal20": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi Islam (zakat)"
+    },
+    "jurnal21": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi Islam (zakat)"
+    },
+    "jurnal22": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi (UMKM)"
+    },
+    "jurnal23": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi Islam (Al-Iqtishod)"
+    },
+    "jurnal24": {
+      "split": "test_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi Islam (Al-Iqtishod)"
+    },
+    "jurnal25": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Ekonomi Islam (Al-Iqtishod)"
+    },
+    "jurnal26": {
+      "split": "train_asli",
+      "jenis": "jurnal",
+      "bidang": "Manajemen SDM"
+    },
+    "skripsi01": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Tadris IPS (pendidikan sosial), UIN Jakarta"
+    },
+    "skripsi02": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Sistem Informasi, UIN Jakarta"
+    },
+    "skripsi04": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Sistem Informasi, UIN Suska Riau (Bab IV tidak tersedia)"
+    },
+    "skripsi05": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Sistem Informasi, ITS"
+    },
+    "skripsi06": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Sistem Informasi, UIN Alauddin Makassar"
+    },
+    "skripsi07": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Ilmu Perpustakaan, UIN Jakarta (hanya Bab I–II)"
+    },
+    "skripsi08": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Ilmu Hukum (perdata), Univ. Muhammadiyah Mataram (Bab I–III)"
+    },
+    "skripsi09": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Ilmu Hukum (pidana), UIN Suska Riau (Bab I–III, V)"
+    },
+    "skripsi10": {
+      "split": "train_asli",
+      "jenis": "skripsi",
+      "bidang": "Ilmu Hukum, Universitas Nahdlatul Ulama Indonesia"
+    },
+    "skripsi11": {
+      "split": "test_asli",
+      "jenis": "skripsi",
+      "bidang": "Ilmu Hukum (perlindungan konsumen)"
+    }
+  }
+}
