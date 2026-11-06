@@ -5,7 +5,7 @@ Daftar kata baku (web/data/leksikon.tsv) dan pencari saran ejaan.
 Saran dicari dengan dua cara, lalu digabung:
   1. SymSpell langsung pada daftar kata (kata yang pernah muncul di data bersih).
   2. Sadar imbuhan: imbuhan dilepas, kata dasarnya dicari di daftar kata dasar, lalu dirakit
-     ulang (mencangkup -> men + cakup -> mencakup). Ini menangani kata turunan yang tidak ada
+     ulang (mengagenadi -> me + agenda + i -> mengagendai). Ini menangani kata turunan yang tidak ada
      di daftar kata.
 """
 from pathlib import Path
@@ -23,6 +23,9 @@ PERMUKAAN = {
     "me": ("me", ""), "mem": ("me", "p"), "men": ("me", "t"), "meng": ("me", "k"), "meny": ("me", "s"),
     "pem": ("pe", "p"), "pen": ("pe", "t"), "peng": ("pe", "k"), "peny": ("pe", "s"),
 }
+# Istilah asing yang lazim diberi imbuhan tetapi tidak ada di data bersih (meng-upload, di-update).
+ISTILAH_ASING = {"upload", "download", "update", "install", "logout", "share", "backup", "print", "delete",
+                 "copy", "paste", "submit", "follow"}
 
 
 def pasang_awalan(awalan, dasar):
@@ -83,6 +86,9 @@ class Leksikon:
 
     def kenal(self, kata):
         return kata.lower() in self.frek
+
+    def kata_asing(self, kata):
+        return kata in ISTILAH_ASING or (kata in self.frek and kata not in self.dasar)
 
     def bentuk_tulis(self, kata):
         """Bentuk tulis yang lazim, mis. tiktok -> TikTok. None jika tidak ada bentuk khusus."""
@@ -163,10 +169,12 @@ class Leksikon:
         k = kata.lower()
         if k in self.frek:
             return None
-        for awal in ("meng", "di", "ter", "ber", "me", "ke"):
+        for awal in ("meng", "men", "mem", "di", "ter", "ber", "me", "ke"):
             sisa = k[len(awal):]
-            if (k.startswith(awal) and len(sisa) >= 3 and sisa in self.frek and sisa not in self.dasar
-                    and not sisa.endswith(("kan", "an", "nya"))):
+            if not k.startswith(awal) or len(sisa) < 3 or sisa.endswith(("kan", "an", "nya")):
+                continue
+            # men-/mem- hanya untuk istilah yang pasti asing: "menpemuda" lebih mungkin salah ketik.
+            if sisa in ISTILAH_ASING or (awal not in ("men", "mem") and self.kata_asing(sisa)):
                 return f"{awal}-{sisa}"
         return None
 

@@ -107,9 +107,14 @@ for _salah, _benar in TIDAK_BAKU.items():
     if _salah != _benar:
         BAKU_KE_TIDAK_BAKU.setdefault(_benar, []).append(_salah)
 
+# Hanya untuk pemeriksaan, tidak untuk data sintetis, supaya dataset tetap bisa dibangun ulang sama persis.
+HANYA_PERIKSA = {"mencangkup": "mencakup", "dicangkup": "dicakup", "tercangkup": "tercakup",
+                 "cangkupan": "cakupan"}
+
 # Dipakai untuk pascaproses (pemeriksaan berbasis kamus). "tapi" dikeluarkan karena lazim di
 # kutipan/dialog, dan kata berejaan asing tidak dimasukkan (lihat ASING).
-KAMUS_PERIKSA = {k: v for k, v in {**INDONESIA, **TIDAK_BAKU_LAIN}.items() if k != v and k != "tapi"}
+KAMUS_PERIKSA = {k: v for k, v in {**INDONESIA, **TIDAK_BAKU_LAIN, **HANYA_PERIKSA}.items()
+                 if k != v and k != "tapi"}
 
 
 def kena_kamus(kata, posisi):

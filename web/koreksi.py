@@ -38,6 +38,12 @@ DEPAN = "([{“\"'‘"
 BELAKANG = ",.;:?!)]}”\"'’"
 PECAH_TERPISAH = {a + b: f"{a} {b}" for a, b in TERPISAH}
 GABUNG_SERANGKAI = {f"{a} {b}".lower(): k for k, (a, b) in SERANGKAI.items()}
+# Kata ulang berubah bunyi yang belum tentu ada di leksikon.
+KATA_ULANG_BERUBAH = {"sayur-mayur", "lauk-pauk", "ramah-tamah", "gerak-gerik", "warna-warni", "hiruk-pikuk",
+                      "porak-poranda", "compang-camping", "mondar-mandir", "desas-desus", "serba-serbi"}
+# Angka setelah kata ini bukan desimal (Gambar 4.1, pukul 08.00).
+BUKAN_DESIMAL_SETELAH = {"gambar", "tabel", "grafik", "diagram", "bagan", "bab", "subbab", "persamaan", "rumus",
+                         "lampiran", "bagian", "pasal", "versi", "pukul", "jam"}
 
 
 # --------------------------------------------------------------------------- token
@@ -108,18 +114,25 @@ def saran_pisah(kata):
     return samakan_kapital(terbaik, kata) if terbaik else None
 
 
+def kata_ulang(awal, sisa):
+    """kelompok kelompok, tumbuh tumbuhan, sayur mayur; bukan ada pada."""
+    bentuk = f"{awal}-{sisa}"
+    return (len(awal) >= 3 and (sisa in (awal, awal + "an", awal + "nya") or bentuk in LEKSIKON.frek
+                                or bentuk in KATA_ULANG_BERUBAH))
+
+
 def saran_gabung(bagian):
     """bagian: daftar kata yang harus digabung, mis. ["di", "lakukan"]."""
     teks = " ".join(bagian).lower()
     awal, sisa = bagian[0].lower(), "".join(bagian[1:]).lower()
     if teks in GABUNG_SERANGKAI:
         hasil = GABUNG_SERANGKAI[teks]
-    elif len(bagian) == 2 and len(awal) >= 3 and (sisa == awal or sisa.endswith(awal[1:])):
-        hasil = f"{awal}-{sisa}"                            # kata ulang: kelompok kelompok
+    elif len(bagian) == 2 and kata_ulang(awal, sisa):
+        hasil = f"{awal}-{sisa}"
     else:
         hasil = "".join(bagian).lower()
         if (awal in ("di", "ke", "meng", "me", "ter", "ber") and not LEKSIKON.kenal(hasil)
-                and LEKSIKON.kenal(sisa) and sisa not in LEKSIKON.dasar and sisa.isalpha()
+                and LEKSIKON.kata_asing(sisa) and sisa.isalpha()
                 and not sisa.endswith(("kan", "an", "i", "nya"))):
             hasil = f"{awal}-{sisa}"                        # imbuhan + kata asing: di-update
         if hasil in KAMUS_PERIKSA:                          # di analisa -> dianalisis
@@ -130,12 +143,17 @@ def saran_gabung(bagian):
     return samakan_kapital(hasil, bagian[0])
 
 
-def saran_angka(t):
-    if re.fullmatch(r"\d{1,2}:\d{2}", t):
-        return t.replace(":", ".")                          # 08:00 -> 08.00
-    if re.fullmatch(r"(Rp)?\d{1,3}(,\d{3})+(\.\d+)?", t):
+def saran_angka(t, sebelum=()):
+    """sebelum: token sebelum angka ini dalam kalimat, huruf kecil. None jika angkanya tidak perlu diubah."""
+    jam = re.fullmatch(r"(\d{1,2}):(\d{2})", t)
+    if jam:                                                 # 08:00 -> 08.00; 1:10 tanpa "pukul" adalah rasio
+        sah = int(jam[1]) < 24 and int(jam[2]) < 60
+        return t.replace(":", ".") if sah and (len(jam[1]) == 2 or {"pukul", "jam"} & set(sebelum)) else None
+    if re.fullmatch(r"(Rp)?[1-9]\d{0,2}(,\d{3})+(\.\d+)?", t):   # 0,812 sudah desimal yang benar
         return t.replace(",", "#").replace(".", ",").replace("#", ".")   # 12,500.50 -> 12.500,50
     if re.fullmatch(r"(Rp)?\d+\.\d+%?", t) and not re.fullmatch(r"(Rp)?\d{1,3}(\.\d{3})+", t):
+        if sebelum and sebelum[-1] in BUKAN_DESIMAL_SETELAH:
+            return None
         return t.replace(".", ",")                          # 0.05 -> 0,05
     return None
 
@@ -224,7 +242,7 @@ def susun_temuan(kalimat, token, label, frek_dok):
             catat(i, lab, saran, p, [{"awal": s, "akhir": token[j][2], "teks": saran}], j)
 
         elif lab == "FORMAT_ANGKA":
-            saran = saran_angka(t)
+            saran = saran_angka(t, [x[0].lower() for x in token[:i]])
             if saran is None:
                 continue
             catat(i, lab, saran, p, ganti(i, saran))

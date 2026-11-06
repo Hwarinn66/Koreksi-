@@ -63,6 +63,10 @@ _model = {"objek": None, "galat": None}
 _kunci_model = threading.Lock()
 
 
+class ModelTidakTersedia(Exception):
+    pass
+
+
 def model():
     """Memuat model sekali saja (butuh beberapa detik). Dikunci karena dipanggil dari dua utas."""
     with _kunci_model:
@@ -75,7 +79,7 @@ def model():
                 from periksa import Pemeriksa
                 _model["objek"] = Pemeriksa(str(MODEL_DIR))
     if _model["galat"]:
-        raise RuntimeError(_model["galat"])
+        raise ModelTidakTersedia(_model["galat"])
     return _model["objek"]
 
 
@@ -139,11 +143,11 @@ def proses(job_id, path, nama, teks):
         laporan = kelompokkan(hasil, info, len(kalimat))
         laporan.update({"nama_berkas": nama, "info": info})
         ubah(job_id, status="selesai", progres=1.0, pesan="Selesai", hasil=laporan)
-    except (ValueError, RuntimeError) as e:
+    except (ValueError, ModelTidakTersedia) as e:
         ubah(job_id, status="gagal", pesan=str(e))
-    except Exception as e:  # noqa: BLE001
-        traceback.print_exc()
-        ubah(job_id, status="gagal", pesan=f"Terjadi kesalahan saat memproses dokumen: {e}")
+    except Exception:  # noqa: BLE001
+        traceback.print_exc()                              # rinciannya hanya untuk log server
+        ubah(job_id, status="gagal", pesan="Terjadi kesalahan saat memproses dokumen. Coba lagi beberapa saat lagi.")
     finally:
         if path:
             shutil.rmtree(Path(path).parent, ignore_errors=True)

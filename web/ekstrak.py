@@ -23,7 +23,8 @@ JUDUL_LANJUT = re.compile(
     r"^(BAB\s+[IVXLC\d]+|((\d+|[A-Z]|[IVXLC]+)[.)]?\s+)?(KATA PENGANTAR|ABSTRAK|ABSTRACT|PENDAHULUAN))\b", re.I)
 # Tanda bahwa baris pendek tanpa titik adalah kalimat, bukan judul.
 PREDIKAT = re.compile(r"\b(adalah|merupakan|tidak|dapat|akan|telah|sudah|sedang|harus|perlu|di[a-z]{3,}kan)\b")
-KETERANGAN = re.compile(r"^(Gambar|Tabel|Grafik|Diagram|Bagan|Lampiran|Sumber)\s*\d", re.I)
+# Keterangan, bukan kalimat isi: "Tabel 4.1 Hasil Uji" ya, "Tabel 4.1 menunjukkan bahwa ..." tidak.
+KETERANGAN = re.compile(r"^(?i:Gambar|Tabel|Grafik|Diagram|Bagan|Lampiran|Sumber)\s*\d[\d.]*(?![\d.]|\s+[a-z])")
 NOMOR_HALAMAN = re.compile(r"^\s*(\d{1,4}|[ivxlcdm]{1,7})\s*$", re.I)
 
 
@@ -155,7 +156,11 @@ def saring_bagian(paragraf):
 def baca_pdf(path):
     import pymupdf
 
-    doc = pymupdf.open(path)
+    try:
+        # Dibuka dari memori: di Windows, berkas yang gagal dibuka tetap terkunci dan tidak bisa dihapus.
+        doc = pymupdf.open(stream=Path(path).read_bytes(), filetype="pdf")
+    except Exception as e:  # noqa: BLE001
+        raise ValueError("PDF rusak atau tidak bisa dibuka. Coba simpan ulang berkasnya.") from e
     if doc.needs_pass:
         raise ValueError("PDF dilindungi kata sandi.")
     baris_semua = []      # (halaman, x0, y0, x1, y1, ukuran, teks, tebal)
@@ -237,7 +242,10 @@ def baca_docx(path):
     from docx.oxml.ns import qn
 
     BR, LRPB, T = qn("w:br"), qn("w:lastRenderedPageBreak"), qn("w:t")
-    d = docx.Document(path)
+    try:
+        d = docx.Document(path)
+    except Exception as e:  # noqa: BLE001
+        raise ValueError("DOCX rusak atau tidak bisa dibuka. Coba simpan ulang berkasnya di Word.") from e
     paragraf, halaman, ada_info_halaman = [], 1, False
     for par in d.paragraphs:
         p = par._p
@@ -307,7 +315,7 @@ def baca_dokumen(path, nama=None):
 
 # --------------------------------------------------------------------------- kalimat
 SINGKATAN = {
-    "dkk", "dll", "dsb", "dst", "hlm", "no", "yth", "sdr", "sdri", "dr", "drs", "dra", "prof", "ir",
+    "dkk", "hlm", "no", "yth", "sdr", "sdri", "dr", "drs", "dra", "prof", "ir",
     "h", "hj", "st", "tn", "ny", "kol", "jl", "vol", "ed", "cet", "terj", "pp", "hal", "et", "al",
     "kab", "kec", "kel", "prov", "tbk", "swt", "saw", "as", "ra", "pt", "cv", "a.n", "u.p", "s.d",
     "m.pd", "s.pd", "s.kom", "m.kom", "s.h", "m.h", "s.e", "m.m", "s.t", "m.t", "s.si", "ph.d",
@@ -327,10 +335,11 @@ def pecah_kalimat(teks):
             k = kata_akhir.group(1).lower()
             akronim = (k in AKRONIM_AKHIR and kata_akhir.group(1).isupper()
                        and not teks[m.end()].isdigit())           # RT. 05 tetap singkatan
-            if (k in SINGKATAN and not akronim) or (len(k) == 1 and k.isalpha()) or re.fullmatch(r"(\w\.)+\w", k):
+            if ((k in SINGKATAN and not akronim) or (len(k) == 1 and k.isalpha())
+                    or re.fullmatch(r"([^\W\d_]\.)+[^\W\d_]", k)):
                 continue                                   # singkatan atau inisial nama
-            if re.fullmatch(r"\d+", k) and len(sebelum.split()) <= 1:
-                continue                                   # penomoran "1."
+            if re.fullmatch(r"[\d.]+", k) and len(sebelum.split()) <= 1:
+                continue                                   # penomoran "1." atau "1.1."
         akhir = m.end(1)
         hasil.append((mulai, teks[mulai:akhir].strip()))
         mulai = m.end()
