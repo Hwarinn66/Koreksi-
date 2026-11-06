@@ -46,6 +46,23 @@ def pecah_token(teks):
     return hasil
 
 
+def jendela_kata(n, maks_kata=60, tepi=10):
+    """Membagi n kata menjadi jendela bertumpuk: [(mulai, akhir, inti_awal, inti_akhir), ...].
+
+    Hanya label di bagian inti yang dipakai, karena di ujung jendela model mengira kalimatnya baru
+    mulai atau sudah berakhir, lalu memberi label kapital dan titik palsu.
+    """
+    if n <= maks_kata:
+        return [(0, n, 0, n)] if n else []
+    hasil, mulai = [], 0
+    while True:
+        akhir = min(mulai + maks_kata, n)
+        hasil.append((mulai, akhir, mulai + tepi if mulai else 0, akhir - tepi if akhir < n else n))
+        if akhir == n:
+            return hasil
+        mulai += maks_kata - 2 * tepi
+
+
 class Pemeriksa:
     def __init__(self, model_dir="model_ejaan"):
         self.tok = AutoTokenizer.from_pretrained(model_dir)
@@ -57,12 +74,12 @@ class Pemeriksa:
         """Label per kata untuk banyak kalimat sekaligus.
 
         daftar_kata: list berisi list kata. Mengembalikan list berisi list (label, peluang).
-        Kalimat yang lebih panjang dari maks_kata dipotong menjadi beberapa bagian.
+        Kalimat yang lebih panjang dari maks_kata diperiksa dengan jendela bertumpuk (lihat jendela_kata).
         """
         potongan, asal = [], []
         for n, kata in enumerate(daftar_kata):
-            for mulai in range(0, max(len(kata), 1), maks_kata):
-                potongan.append(kata[mulai:mulai + maks_kata]); asal.append((n, mulai))
+            for mulai, akhir, inti_awal, inti_akhir in jendela_kata(len(kata), maks_kata):
+                potongan.append(kata[mulai:akhir]); asal.append((n, mulai, inti_awal, inti_akhir))
         hasil = [[("O", 1.0)] * len(k) for k in daftar_kata]
         id2label = self.model.config.id2label
         urut = sorted(range(len(potongan)), key=lambda x: len(potongan[x]))   # kurangi padding
@@ -76,10 +93,10 @@ class Pemeriksa:
                 logit = self.model(**{k: v.to(self.model.device) for k, v in enc.items()}).logits
             peluang = torch.softmax(logit, -1).cpu()
             for j, kata in enumerate(kelompok):
-                n, mulai = asal[i + j]
+                n, mulai, inti_awal, inti_akhir = asal[i + j]
                 prev = None
                 for pos, w in enumerate(enc.word_ids(j)):
-                    if w is not None and w != prev:
+                    if w is not None and w != prev and inti_awal <= mulai + w < inti_akhir:
                         pr, idx = peluang[j, pos].max(-1)
                         hasil[n][mulai + w] = (id2label[int(idx)], float(pr))
                     prev = w
@@ -90,24 +107,16 @@ class Pemeriksa:
         kata = pecah_token(kalimat)
         if not kata:
             return []
-        enc = self.tok(kata, is_split_into_words=True, truncation=True, max_length=MAX_LEN,
-                       return_tensors="pt").to(self.model.device)
-        with torch.no_grad():
-            pred = self.model(**enc).logits.argmax(-1)[0].tolist()
-        label, prev = {}, None
-        for pos, w in enumerate(enc.word_ids()):
-            if w is not None and w != prev:
-                label[w] = self.model.config.id2label[pred[pos]]
-            prev = w
+        label = [lab for lab, _ in self.prediksi([kata])[0]]
         for i, k in enumerate(kata):  # kamus kata tidak baku
             if kena_kamus(k, i):
                 label[i] = "TIDAK_BAKU"
         hasil = []
-        for i in sorted(label):
-            if label[i] == "O":
+        for k, lab in zip(kata, label):
+            if lab == "O":
                 continue
-            saran = KAMUS_PERIKSA.get(kata[i].lower()) if label[i] == "TIDAK_BAKU" else None
-            hasil.append((kata[i], label[i], saran))
+            saran = KAMUS_PERIKSA.get(k.lower()) if lab == "TIDAK_BAKU" else None
+            hasil.append((k, lab, saran))
         return hasil
 
     def periksa(self, teks):

@@ -39,7 +39,7 @@ berkas ──> ekstrak.py ──> kalimat + nomor halaman ──> model (periksa
 | Berkas | Isi |
 |---|---|
 | `app.py` | API FastAPI: `POST /api/periksa` (berkas atau teks), `GET /api/hasil/{id}` (progres dan hasil), `GET /api/status` |
-| `ekstrak.py` | Membaca PDF (PyMuPDF), DOCX (python-docx), TXT/MD. Menyambung baris dan kata yang terpotong, membuang catatan kaki dan nomor halaman, melewati judul, daftar isi, daftar pustaka, tabel, keterangan gambar, dan paragraf berbahasa asing, lalu memecah paragraf menjadi kalimat |
+| `ekstrak.py` | Membaca PDF (PyMuPDF), DOCX (python-docx), TXT/MD. Menyambung baris dan kata yang terpotong, membuang catatan kaki, kepala/kaki halaman, dan nomor halaman, melewati judul, daftar isi, daftar pustaka, tabel, keterangan gambar, dan paragraf berbahasa asing, lalu memecah paragraf menjadi kalimat |
 | `koreksi.py` | Mengubah label model menjadi saran: kamus tidak baku, saran ejaan, pemecahan/penggabungan kata, huruf kapital, tanda baca, format angka. Lalu menyusun kalimat benar |
 | `leksikon.py` | Daftar kata baku dan saran ejaan (SymSpell + pelepasan imbuhan: *mengagenadi → mengagendai*) |
 | `data/leksikon.tsv`, `data/kata_dasar.txt` | Dibuat oleh `buat_leksikon.py` dari `data/*.txt` dan kata dasar Sastrawi |

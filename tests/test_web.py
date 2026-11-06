@@ -270,6 +270,179 @@ class SaranEjaan(unittest.TestCase):
             self.assertEqual(ko.saran_ejaan(salah), benar)
 
 
+@unittest.skipUnless(importlib.util.find_spec("pymupdf"), "pymupdf belum terpasang")
+class KepalaHalaman(unittest.TestCase):
+    AWAL = "Penelitian ini membahas pengaruh media sosial terhadap prestasi belajar para mahasiswa yang"
+    LANJUT = "tinggal di asrama kampus selama masa perkuliahan berlangsung pada semester genap."
+
+    def buat_pdf(self, folder, halaman, kaki=True, baris_tepi=None):
+        """halaman: daftar berisi daftar baris isi. Nomor gaya I-1 dan kepala/kaki ditambahkan otomatis."""
+        import pymupdf
+
+        p = Path(folder) / "a.pdf"
+        doc = pymupdf.open()
+        for no, isi in enumerate(halaman, 1):
+            h = doc.new_page(width=612, height=792)
+            h.insert_text((72, 30), "PERPUSTAKAAN UNIVERSITAS CONTOH", fontsize=12)
+            y = 113
+            for baris in isi:
+                h.insert_text((72, y), baris, fontsize=12)
+                y += 15.6
+            if kaki:
+                h.insert_text((280, 728), f"I-{no}", fontsize=12)
+            if baris_tepi:
+                h.insert_text((72, 720), baris_tepi, fontsize=12)
+        doc.save(p)
+        doc.close()
+        return p
+
+    def test_kalimat_berlanjut_ke_halaman_berikutnya(self):
+        with tempfile.TemporaryDirectory() as d:
+            halaman = [["Ini kalimat pembuka yang utuh dan selesai pada halaman pertama dokumen ini.", self.AWAL],
+                       [self.LANJUT], ["Ini kalimat penutup yang utuh dan selesai pada halaman terakhir dokumen."]]
+            kal, info = ek.ekstrak(self.buat_pdf(d, halaman), "a.pdf")
+        teks = [k.teks for k in kal]
+        self.assertIn(f"{self.AWAL} {self.LANJUT}", teks)
+        self.assertEqual(kal[teks.index(f"{self.AWAL} {self.LANJUT}")].halaman, (1, 2))
+        self.assertFalse(any("UNIVERSITAS CONTOH" in t or "I-" in t for t in teks))
+        self.assertEqual(info["label_halaman"]["2"], "I-2")
+
+    def test_baris_pendek_tetap_berlanjut_jika_halaman_berikutnya_huruf_kecil(self):
+        # Teks rata kiri: baris terakhir halaman bisa pendek walaupun kalimatnya belum selesai.
+        pendek = "Penelitian ini membahas pengaruh media sosial bagi mahasiswa"
+        halaman = [[self.AWAL + ".", pendek], ["yang tinggal di asrama kampus selama masa perkuliahan berlangsung."],
+                   ["Ini kalimat penutup yang utuh dan selesai pada halaman terakhir dokumen."]]
+        with tempfile.TemporaryDirectory() as d:
+            teks = [p.teks for p in ek.baca_pdf(self.buat_pdf(d, halaman))[0]]
+        self.assertTrue(any(f"{pendek} yang tinggal" in t for t in teks), teks)
+
+    def test_judul_di_halaman_berikutnya_tidak_tersambung(self):
+        kutipan = "Berlelah-lelahlah maka manisnya hidup akan terasa"
+        for halaman in ([[self.AWAL, kutipan], ["KATA PENGANTAR", "Ini kalimat isi pada halaman kedua dokumen."]],   # judul kapital
+                        [[self.AWAL, kutipan], ["Ini kalimat isi pada halaman kedua dokumen."]],                      # baris pendek
+                        [[self.AWAL, kutipan], [], ["Ini kalimat isi pada halaman ketiga dokumen."]]):                # halaman kosong
+            with tempfile.TemporaryDirectory() as d:
+                paragraf = ek.baca_pdf(self.buat_pdf(d, halaman))[0]
+            teks = [p.teks for p in paragraf]
+            self.assertTrue(any(t.endswith(kutipan) for t in teks), teks)
+
+    def test_baris_isi_berhuruf_kecil_di_tepi_tidak_dibuang(self):
+        # Baris terakhir halaman bisa sama berkali-kali, tetapi lanjutan kalimat berawal huruf kecil.
+        with tempfile.TemporaryDirectory() as d:
+            isi = [[f"Ini kalimat isi yang panjang dan selesai pada halaman nomor {i} dalam dokumen ini."] for i in range(4)]
+            kal, _ = ek.ekstrak(self.buat_pdf(d, isi, baris_tepi="perpustakaan di kampus sudah berjalan dengan baik."), "a.pdf")
+        self.assertTrue(any("perpustakaan di kampus" in k.teks for k in kal))
+
+    def test_baris_di_tepi_dua_halaman_tidak_dibuang(self):
+        # Hanya muncul di dua halaman: belum cukup untuk dianggap kaki halaman.
+        with tempfile.TemporaryDirectory() as d:
+            p = self.buat_pdf(d, [["Ini kalimat isi yang panjang dan selesai pada halaman pertama dokumen ini."],
+                                  ["Ini kalimat isi yang panjang dan selesai pada halaman kedua dokumen ini."]],
+                              baris_tepi="Kalimat dekat tepi ini hanya ada di dokumen yang berisi dua halaman saja.")
+            kal, _ = ek.ekstrak(p, "a.pdf")
+        self.assertTrue(any("dekat tepi" in k.teks for k in kal))
+
+    def test_kaki_halaman_berulang_dibuang(self):
+        with tempfile.TemporaryDirectory() as d:
+            isi = [[f"Ini kalimat isi yang panjang dan selesai pada halaman nomor {i} dalam dokumen ini."] for i in range(4)]
+            kal, _ = ek.ekstrak(self.buat_pdf(d, isi, baris_tepi="Laporan Penelitian Tahun 2020 Halaman Kaki"), "a.pdf")
+        self.assertEqual(len(kal), 4)
+        self.assertFalse(any("Laporan Penelitian" in k.teks for k in kal))
+
+
+class JendelaKata(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        # periksa.py butuh torch dan transformers saat diimpor; fungsi ini tidak memakainya.
+        palsu = {m: sys.modules.get(m) or mock.MagicMock() for m in ("torch", "transformers")}
+        with mock.patch.dict(sys.modules, palsu):
+            sys.modules.pop("periksa", None)
+            import periksa
+            cls.jendela = staticmethod(periksa.jendela_kata)
+            sys.modules.pop("periksa", None)
+
+    def test_kalimat_pendek_tidak_dipotong(self):
+        self.assertEqual(self.jendela(0), [])
+        self.assertEqual(self.jendela(5), [(0, 5, 0, 5)])
+        self.assertEqual(self.jendela(60), [(0, 60, 0, 60)])
+
+    def test_inti_menutup_semua_kata_tanpa_tumpang_tindih(self):
+        for n in (61, 70, 100, 101, 140, 141, 500):
+            jendela = self.jendela(n)
+            inti = [i for _, _, a, b in jendela for i in range(a, b)]
+            self.assertEqual(inti, list(range(n)), n)
+            for mulai, akhir, a, b in jendela:
+                self.assertLessEqual(akhir - mulai, 60)
+                self.assertTrue(mulai <= a <= b <= akhir)
+
+    def test_ujung_jendela_bukan_inti(self):
+        jendela = self.jendela(97)
+        self.assertEqual(jendela[0][3], 50)                # ujung jendela pertama (kata ke-60) dibuang
+        self.assertEqual(jendela[1][2], 50)
+        self.assertEqual(jendela[-1][3], 97)
+
+
+@unittest.skipUnless(importlib.util.find_spec("torch"), "torch belum terpasang")
+class PrediksiKalimatPanjang(unittest.TestCase):
+    """Model tiruan yang selalu memberi KAPITAL di kata pertama dan TITIK di kata terakhir yang dilihatnya."""
+
+    @classmethod
+    def setUpClass(cls):
+        import torch
+
+        cls.torch = torch
+        palsu = {"transformers": sys.modules.get("transformers") or mock.MagicMock()}
+        with mock.patch.dict(sys.modules, palsu):
+            sys.modules.pop("periksa", None)
+            import periksa
+            cls.periksa = periksa
+            sys.modules.pop("periksa", None)
+
+    def pemeriksa(self):
+        torch = self.torch
+        id2label = {0: "O", 1: "KAPITAL", 2: "TAMBAH_TITIK"}
+
+        class Enc(dict):
+            def word_ids(self, j):
+                return self.kata[j]
+
+        def tok(kelompok, **_):
+            panjang = max(len(k) for k in kelompok) + 2
+            kata = [[None] + list(range(len(k))) + [None] * (panjang - len(k) - 1) for k in kelompok]
+            enc = Enc(attention_mask=torch.tensor([[int(w is not None) for w in b] for b in kata]))
+            enc.kata = kata
+            return enc
+
+        class Model:
+            device = "cpu"
+            config = types.SimpleNamespace(id2label=id2label)
+
+            def __call__(self, attention_mask):
+                logit = torch.zeros(*attention_mask.shape, 3)
+                logit[:, :, 0] = 5
+                for b, m in enumerate(attention_mask):
+                    logit[b, 1, 1] = 9
+                    logit[b, int(m.sum()), 2] = 9
+                return types.SimpleNamespace(logits=logit)
+
+        p = self.periksa.Pemeriksa.__new__(self.periksa.Pemeriksa)
+        p.tok, p.model = tok, Model()
+        return p
+
+    def test_tidak_ada_label_palsu_di_batas_potongan(self):
+        p = self.pemeriksa()
+        for n in (3, 60, 61, 97, 103, 250):
+            label = [lab for lab, _ in p.prediksi([[f"kata{i}" for i in range(n)]])[0]]
+            harap = ["KAPITAL"] + ["O"] * (n - 2) + ["TAMBAH_TITIK"]
+            self.assertEqual(label, harap, n)
+
+    def test_periksa_kalimat_memakai_jalur_yang_sama(self):
+        p = self.pemeriksa()
+        kata = " ".join(f"kata{i}" for i in range(97)) + " analisa akhir"
+        temuan = p.periksa_kalimat(kata)
+        self.assertEqual([t[1] for t in temuan], ["KAPITAL", "TIDAK_BAKU", "TAMBAH_TITIK"])
+
+
 class BerkasRusak(unittest.TestCase):
     def galat(self, nama):
         with tempfile.TemporaryDirectory() as d:

@@ -3,11 +3,11 @@ ekstrak.py
 Membaca dokumen (PDF, DOCX, TXT, MD) menjadi paragraf dan kalimat yang tahu letak halamannya.
 
 Bagian yang tidak diperiksa: judul/subjudul, daftar isi/tabel/gambar, daftar pustaka, tabel,
-keterangan gambar/tabel, catatan kaki, nomor halaman, dan paragraf berbahasa asing.
+keterangan gambar/tabel, catatan kaki, kepala/kaki halaman, nomor halaman, dan paragraf berbahasa asing.
 """
 import codecs
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -25,7 +25,7 @@ JUDUL_LANJUT = re.compile(
 PREDIKAT = re.compile(r"\b(adalah|merupakan|tidak|dapat|akan|telah|sudah|sedang|harus|perlu|di[a-z]{3,}kan)\b")
 # Keterangan, bukan kalimat isi: "Tabel 4.1 Hasil Uji" ya, "Tabel 4.1 menunjukkan bahwa ..." tidak.
 KETERANGAN = re.compile(r"^(?i:Gambar|Tabel|Grafik|Diagram|Bagan|Lampiran|Sumber)\s*\d[\d.]*(?![\d.]|\s+[a-z])")
-NOMOR_HALAMAN = re.compile(r"^\s*(\d{1,4}|[ivxlcdm]{1,7})\s*$", re.I)
+NOMOR_HALAMAN = re.compile(r"^\s*(\d{1,4}|[ivxlcdm]{1,7}|[ivxlcdm\d]{1,7}\s*[-–]\s*\d{1,4})\s*$", re.I)   # 12, xiv, I-2
 
 
 @dataclass
@@ -153,6 +153,11 @@ def saring_bagian(paragraf):
 
 
 # --------------------------------------------------------------------------- PDF
+def kunci_tepi(teks):
+    """Kunci pembanding kepala/kaki halaman; angkanya diabaikan (Bab 1 halaman 12 = Bab 1 halaman 13)."""
+    return re.sub(r"\d+", "#", teks).lower()
+
+
 def baca_pdf(path):
     import pymupdf
 
@@ -164,7 +169,8 @@ def baca_pdf(path):
     if doc.needs_pass:
         raise ValueError("PDF dilindungi kata sandi.")
     baris_semua = []      # (halaman, x0, y0, x1, y1, ukuran, teks, tebal)
-    ukuran = Counter()
+    di_tepi = set()       # indeks baris_semua yang berada di tepi atas/bawah halaman
+    tepi = defaultdict(set)   # teks di tepi halaman -> halaman tempat teks itu muncul
     label_halaman = {}    # nomor halaman PDF -> nomor yang tercetak di halaman (mis. "xiv", "12")
     for no, page in enumerate(doc, start=1):
         tinggi = page.rect.height
@@ -192,13 +198,22 @@ def baca_pdf(path):
                         label_halaman[no] = teks.strip()
                     continue
                 tebal = all(s["flags"] & 16 for s in spans)
+                if (y0 < 0.12 * tinggi or y1 > 0.88 * tinggi) and not teks[:1].islower():
+                    di_tepi.add(len(baris_semua))
+                    tepi[kunci_tepi(teks)].add(no)
                 baris_semua.append((no, x0, y0, x1, y1, round(besar, 1), teks, tebal))
-                ukuran[round(besar, 1)] += len(teks)
     jumlah_halaman = doc.page_count
     doc.close()
+    # Kepala dan kaki halaman: teks yang berulang di tepi banyak halaman. Jika tidak dibuang, teks ini
+    # memutus kalimat yang berlanjut ke halaman berikutnya.
+    berulang = {k for k, hal in tepi.items() if len(hal) >= max(3, 0.1 * jumlah_halaman)}
+    baris_semua = [b for i, b in enumerate(baris_semua) if not (i in di_tepi and kunci_tepi(b[6]) in berulang)]
     if not baris_semua:
         raise ValueError("PDF tidak berisi teks yang bisa dibaca (kemungkinan hasil pindai/scan).")
 
+    ukuran = Counter()
+    for b in baris_semua:
+        ukuran[b[5]] += len(b[6])
     ukuran_isi = ukuran.most_common(1)[0][0]
     isi = [b for b in baris_semua if b[5] >= ukuran_isi - 1.0]          # buang catatan kaki
     kiri = Counter(round(b[1]) for b in isi).most_common(1)[0][0]       # margin kiri teks isi
@@ -222,6 +237,9 @@ def baca_pdf(path):
                 mulai_baru = True                                         # judul
             elif no != pno and teks[:1].isupper() and akhir:
                 mulai_baru = True
+            elif no - pno > 1 or (no != pno and not teks[:1].islower()
+                                  and (teks.isupper() or x0 > kiri + 15 or px1 < kanan - 40)):
+                mulai_baru = True                                         # bukan lanjutan dari halaman sebelumnya
         if mulai_baru:
             if cur:
                 paragraf.append(cur)
