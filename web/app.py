@@ -60,18 +60,20 @@ _pekerja = ThreadPoolExecutor(max_workers=1)   # satu dokumen diproses dalam sat
 _jobs = {}
 _kunci = threading.Lock()
 _model = {"objek": None, "galat": None}
+_kunci_model = threading.Lock()
 
 
 def model():
-    """Memuat model sekali saja (butuh beberapa detik)."""
-    if _model["objek"] is None and _model["galat"] is None:
-        if not (MODEL_DIR / "config.json").exists():
-            _model["galat"] = (f"Model tidak ditemukan di {MODEL_DIR}. Unduh isi folder model_ejaan dari "
-                               "Google Drive (model.safetensors, config.json, tokenizer.json, "
-                               "tokenizer_config.json) ke folder itu, lalu jalankan ulang server.")
-        else:
-            from periksa import Pemeriksa
-            _model["objek"] = Pemeriksa(str(MODEL_DIR))
+    """Memuat model sekali saja (butuh beberapa detik). Dikunci karena dipanggil dari dua utas."""
+    with _kunci_model:
+        if _model["objek"] is None and _model["galat"] is None:
+            if not (MODEL_DIR / "config.json").exists():
+                _model["galat"] = (f"Model tidak ditemukan di {MODEL_DIR}. Unduh isi folder model_ejaan dari "
+                                   "Google Drive (model.safetensors, config.json, tokenizer.json, "
+                                   "tokenizer_config.json) ke folder itu, lalu jalankan ulang server.")
+            else:
+                from periksa import Pemeriksa
+                _model["objek"] = Pemeriksa(str(MODEL_DIR))
     if _model["galat"]:
         raise RuntimeError(_model["galat"])
     return _model["objek"]

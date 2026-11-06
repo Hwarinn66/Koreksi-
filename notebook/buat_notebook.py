@@ -73,7 +73,7 @@ print("Data:", DATA_PATH, DATA_PATH.exists())
 # Kamus kata tidak baku dipakai sebagai pascaproses (lihat bagian 6 dan 8).
 import sys
 sys.path.insert(0, str(DATA_PATH.parent.parent))
-from kamus_baku import KAMUS_PERIKSA
+from kamus_baku import KAMUS_PERIKSA, kena_kamus
 print("Kamus tidak baku:", len(KAMUS_PERIKSA), "kata")
 """, tag="setup")
 
@@ -305,8 +305,7 @@ def pakai_kamus(isi, pred):
         prev = None
         for pos, w in enumerate(wid):
             if w is not None and w != prev and pos < pred.shape[1]:
-                t = b["tokens"][w]
-                if t.lower() in KAMUS_PERIKSA and not t.isupper():
+                if kena_kamus(b["tokens"][w], w):
                     pred[i, pos] = label2id["TIDAK_BAKU"]
             prev = w
     return pred
@@ -436,7 +435,7 @@ def periksa(teks, model_dir=None):
                 label_kata[w] = mdl.config.id2label[pred[pos]]
             prev = w
         for i, k in enumerate(kata):   # kamus kata tidak baku
-            if k.lower() in KAMUS_PERIKSA and not k.isupper():
+            if kena_kamus(k, i):
                 label_kata[i] = "TIDAK_BAKU"
         temuan = [(kata[i], l) for i, l in sorted(label_kata.items()) if l != "O"]
         print("•", kalimat)

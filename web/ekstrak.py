@@ -5,6 +5,7 @@ Membaca dokumen (PDF, DOCX, TXT, MD) menjadi paragraf dan kalimat yang tahu leta
 Bagian yang tidak diperiksa: judul/subjudul, daftar isi/tabel/gambar, daftar pustaka, tabel,
 keterangan gambar/tabel, catatan kaki, nomor halaman, dan paragraf berbahasa asing.
 """
+import codecs
 import re
 from collections import Counter
 from dataclasses import dataclass, field
@@ -13,10 +14,15 @@ from pathlib import Path
 from leksikon import LEKSIKON
 
 AKHIR_KALIMAT = (".", "?", "!", ".”", ".\"", "?”", "!”", ".)", ":")
-JUDUL_LEWATI = re.compile(
-    r"^(DAFTAR (ISI|TABEL|GAMBAR|LAMPIRAN|PUSTAKA|REFERENSI|SINGKATAN|SIMBOL)|REFERENSI|BIBLIOGRAFI|"
-    r"REFERENCES|BIBLIOGRAPHY|LAMPIRAN)\b", re.I)
-JUDUL_LANJUT = re.compile(r"^(BAB\s+[IVXLC\d]+|KATA PENGANTAR|ABSTRAK|ABSTRACT|PENDAHULUAN)\b", re.I)
+# Judul bagian yang dilewati harus berupa judul utuh: "Lampiran: 1 berkas" pada surat bukan judul.
+DAFTAR_DEPAN = re.compile(r"^DAFTAR (ISI|TABEL|GAMBAR|LAMPIRAN|SINGKATAN|SIMBOL)$", re.I)
+DAFTAR_BELAKANG = re.compile(
+    r"^(DAFTAR (PUSTAKA|REFERENSI)|REFERENSI|BIBLIOGRAFI|REFERENCES|BIBLIOGRAPHY|LAMPIRAN(-LAMPIRAN)?)$", re.I)
+JUDUL_LAMPIRAN = re.compile(r"^(?i:lampiran)\s+(\d+|[A-Z]|[IVXLC]+)(\s*[:.\-–]?\s+[A-Z].*)?$")
+JUDUL_LANJUT = re.compile(
+    r"^(BAB\s+[IVXLC\d]+|((\d+|[A-Z]|[IVXLC]+)[.)]?\s+)?(KATA PENGANTAR|ABSTRAK|ABSTRACT|PENDAHULUAN))\b", re.I)
+# Tanda bahwa baris pendek tanpa titik adalah kalimat, bukan judul.
+PREDIKAT = re.compile(r"\b(adalah|merupakan|tidak|dapat|akan|telah|sudah|sedang|harus|perlu|di[a-z]{3,}kan)\b")
 KETERANGAN = re.compile(r"^(Gambar|Tabel|Grafik|Diagram|Bagan|Lampiran|Sumber)\s*\d", re.I)
 NOMOR_HALAMAN = re.compile(r"^\s*(\d{1,4}|[ivxlcdm]{1,7})\s*$", re.I)
 
@@ -73,6 +79,13 @@ def bahasa_asing(teks):
     return kenal / len(kata) < 0.45
 
 
+def kalimat_tanpa_titik(t, kata):
+    """Kalimat pendek yang titiknya hilang. Sengaja ketat: judul yang lolos akan ditandai kurang titik."""
+    if len(kata) < 5 or not t[:1].isupper() or re.match(r"(\d+(\.\d+)*|[A-Za-z])[.)]\s", t):
+        return False
+    return sum(w[:1].isupper() for w in kata[1:]) <= 1 and PREDIKAT.search(t.lower()) is not None
+
+
 def layak_diperiksa(p):
     """Mengembalikan None jika paragraf layak diperiksa, atau alasan dilewati."""
     t = p.teks
@@ -89,7 +102,8 @@ def layak_diperiksa(p):
     if huruf < 0.6 * len(t.replace(" ", "")):
         return "tabel/angka"
     salam = len(kata) <= 4 and t.rstrip().endswith(",") and t[:1].isalpha()   # Dengan hormat, / Hormat saya,
-    if not salam and (len(kata) < 4 or (len(kata) < 10 and not t.rstrip().endswith(AKHIR_KALIMAT))):
+    if not salam and (len(kata) < 4 or (len(kata) < 10 and not t.rstrip().endswith(AKHIR_KALIMAT)
+                                        and not kalimat_tanpa_titik(t, kata))):
         return "judul"
     if t.isupper():
         return "judul"
@@ -98,15 +112,34 @@ def layak_diperiksa(p):
     return None
 
 
+def jenis_daftar(t):
+    """"depan" (daftar isi dkk.), "belakang" (daftar pustaka, lampiran), atau None jika bukan judulnya."""
+    if len(t.split()) > 6:
+        return None
+    t = t.rstrip(" .:")
+    if DAFTAR_DEPAN.match(t):
+        return "depan"
+    if DAFTAR_BELAKANG.match(t) or JUDUL_LAMPIRAN.match(t):
+        return "belakang"
+    return None
+
+
+def kalimat_isi(t):
+    return (len(t.split()) >= 10 and t.endswith((".", "?", "!")) and not KETERANGAN.match(t)
+            and not re.search(r"\.{4,}|…{2,}", t))
+
+
 def saring_bagian(paragraf):
-    """Membuang bagian daftar pustaka/daftar isi (dari judulnya sampai judul bab berikutnya)."""
-    hasil, lewati, dilewati = [], False, Counter()
+    """Membuang daftar isi (sampai kalimat isi pertama atau judul bab) dan daftar pustaka/lampiran
+    (sampai judul bab berikutnya)."""
+    hasil, lewati, dilewati = [], None, Counter()
     for p in paragraf:
         t = p.teks.strip()
-        if len(t.split()) <= 6 and JUDUL_LEWATI.match(t):
-            lewati = True
-        elif len(t.split()) <= 8 and JUDUL_LANJUT.match(t):
-            lewati = False
+        jenis = jenis_daftar(t)
+        if jenis:
+            lewati = jenis
+        elif (len(t.split()) <= 8 and JUDUL_LANJUT.match(t)) or (lewati == "depan" and kalimat_isi(t)):
+            lewati = None
         if lewati:
             dilewati["daftar pustaka/daftar isi"] += 1
             continue
@@ -259,7 +292,9 @@ def baca_dokumen(path, nama=None):
         return baca_docx(path)
     if nama.endswith((".txt", ".md", ".markdown")):
         raw = Path(path).read_bytes()
-        for enc in ("utf-8-sig", "utf-16", "cp1252"):
+        # UTF-16 hanya jika ada BOM; tanpa itu, teks ANSI berpanjang genap terbaca sebagai huruf acak.
+        bom16 = raw[:2] in (codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)
+        for enc in ("utf-16",) if bom16 else ("utf-8-sig", "cp1252"):
             try:
                 return baca_teks(raw.decode(enc))
             except UnicodeDecodeError:
@@ -278,6 +313,8 @@ SINGKATAN = {
     "m.pd", "s.pd", "s.kom", "m.kom", "s.h", "m.h", "s.e", "m.m", "s.t", "m.t", "s.si", "ph.d",
     "nim", "nip", "nidn", "npm", "nis", "telp", "hp", "fax", "lt", "rt", "rw", "gg", "sd", "dsn",
 }
+# Jika ditulis kapital semua, ini akronim yang bisa mengakhiri kalimat (dari AS. / siswa SD.).
+AKRONIM_AKHIR = {"as", "sd", "hp", "rt", "rw"}
 PEMISAH = re.compile(r"(?<=[.?!])([”\"')\]]*)\s+(?=[“\"'(\[]?[A-Z0-9])")
 
 
@@ -288,7 +325,9 @@ def pecah_kalimat(teks):
         kata_akhir = re.search(r"([\w.]+)\.$", sebelum)
         if kata_akhir:
             k = kata_akhir.group(1).lower()
-            if k in SINGKATAN or (len(k) == 1 and k.isalpha()) or re.fullmatch(r"(\w\.)+\w", k):
+            akronim = (k in AKRONIM_AKHIR and kata_akhir.group(1).isupper()
+                       and not teks[m.end()].isdigit())           # RT. 05 tetap singkatan
+            if (k in SINGKATAN and not akronim) or (len(k) == 1 and k.isalpha()) or re.fullmatch(r"(\w\.)+\w", k):
                 continue                                   # singkatan atau inisial nama
             if re.fullmatch(r"\d+", k) and len(sebelum.split()) <= 1:
                 continue                                   # penomoran "1."

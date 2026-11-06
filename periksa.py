@@ -20,7 +20,7 @@ import torch
 from transformers import AutoModelForTokenClassification, AutoTokenizer
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from kamus_baku import KAMUS_PERIKSA  # noqa: E402
+from kamus_baku import KAMUS_PERIKSA, kena_kamus  # noqa: E402
 
 MAX_LEN = 128
 SINGKATAN = {"dkk.", "dll.", "dsb.", "dst.", "hlm.", "tbk.", "swt.", "yth.", "sdr."}
@@ -100,7 +100,7 @@ class Pemeriksa:
                 label[w] = self.model.config.id2label[pred[pos]]
             prev = w
         for i, k in enumerate(kata):  # kamus kata tidak baku
-            if k.lower() in KAMUS_PERIKSA and not k.isupper():
+            if kena_kamus(k, i):
                 label[i] = "TIDAK_BAKU"
         hasil = []
         for i in sorted(label):

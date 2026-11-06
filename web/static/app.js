@@ -182,6 +182,31 @@ function renderAsli(kalimat, temuan) {
   return frag;
 }
 
+// kalimat benar dari temuan yang sedang ditampilkan saja (sama dengan rakit di koreksi.py)
+function susunBenar(kalimat, temuan) {
+  const semua = temuan.flatMap((t) => t.suntingan);
+  const kapital = new Set(semua.filter((s) => s.kapital).map((s) => s.awal));
+  const sunting = semua.filter((s) => !s.kapital).map((s) => (
+    kapital.has(s.awal) && s.akhir > s.awal ? { ...s, teks: s.teks.replace(/\p{L}/u, (c) => c.toUpperCase()) } : s
+  ));
+  const sudah = new Set(sunting.filter((s) => s.akhir > s.awal).map((s) => s.awal));
+  sunting.push(...semua.filter((s) => s.kapital && !sudah.has(s.awal)));
+  sunting.sort((a, b) => a.awal - b.awal || a.akhir - b.akhir);
+
+  let benar = "", pos = 0;
+  const sorot = [];
+  for (const s of sunting) {
+    if (s.awal < pos) continue;
+    benar += kalimat.slice(pos, s.awal);
+    if (s.teks) sorot.push([benar.length, benar.length + s.teks.length]);
+    benar += s.teks;
+    pos = s.akhir;
+  }
+  benar += kalimat.slice(pos);
+  const geser = benar.length - benar.trimStart().length; // jika token pertama dihapus
+  return { benar: benar.slice(geser), sorot: sorot.map(([a, b]) => [a - geser, b - geser]) };
+}
+
 // kalimat benar dengan sorotan pada bagian yang berubah
 function renderBenar(benar, sorot) {
   const frag = document.createDocumentFragment();
@@ -252,13 +277,14 @@ function renderIsi() {
       const pLok = node.querySelector(".lokasi");
       if (lok) pLok.textContent = lok; else pLok.remove();
       node.querySelector(".asli").append(renderAsli(k.kalimat, k.tampil));
-      node.querySelector(".benar").append(renderBenar(k.benar, k.sorot_benar));
+      const { benar, sorot } = susunBenar(k.kalimat, k.tampil);
+      node.querySelector(".benar").append(renderBenar(benar, sorot));
       const ul = node.querySelector(".perubahan");
       for (const t of [...k.tampil].sort((a, b) => a.awal - b.awal)) ul.append(renderPerubahan(t));
       const tombol = node.querySelector(".salin");
       tombol.addEventListener("click", async () => {
         try {
-          await navigator.clipboard.writeText(k.benar);
+          await navigator.clipboard.writeText(benar);
           tombol.textContent = "Tersalin";
         } catch {
           tombol.textContent = "Gagal menyalin";

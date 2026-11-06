@@ -252,6 +252,14 @@ pip install -r web/requirements.txt
 uvicorn web.app:app --reload      # http://127.0.0.1:8000
 ```
 
+## Tes
+
+```bash
+python -m unittest discover -s tests
+```
+
+Tes memakai label tiruan, jadi tidak membutuhkan model. Tes server dilewati jika pustaka web belum terpasang.
+
 ## Lisensi sumber
 
 - `kalimat_bersih.txt`, `tambahan_skripsi.txt`, dan kode: bebas dipakai.

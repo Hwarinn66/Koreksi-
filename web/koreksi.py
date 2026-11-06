@@ -14,7 +14,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
 from buat_dataset import SERANGKAI, TERPISAH  # noqa: E402
-from kamus_baku import KAMUS_PERIKSA, TIDAK_BAKU  # noqa: E402
+from kamus_baku import KAMUS_PERIKSA, TIDAK_BAKU, kena_kamus  # noqa: E402
 
 from leksikon import LEKSIKON  # noqa: E402
 
@@ -142,23 +142,30 @@ def saran_angka(t):
 
 # --------------------------------------------------------------------------- satu kalimat
 def susun_temuan(kalimat, token, label, frek_dok):
-    """Mengubah label model menjadi daftar suntingan dan temuan."""
+    """Mengubah label model menjadi daftar temuan.
+
+    Setiap temuan membawa suntingannya sendiri (posisi pada kalimat asli), supaya kalimat benar bisa
+    disusun hanya dari temuan yang dipilih. Suntingan "kapital" hanya menaikkan huruf awal kata.
+    """
     n = len(token)
-    edit = {}           # i -> ("ganti", teks) | ("sisip", tanda) | ("hapus",) | ("gabung", j, teks)
     temuan = []
     lewati = set()
 
-    def catat(i, lab, saran, peluang, j=None):
+    def catat(i, lab, saran, peluang, suntingan, j=None):
         a, b = token[i][1], token[j if j is not None else i][2]
         temuan.append({"awal": a, "akhir": b, "teks": kalimat[a:b], "label": lab,
                        "penjelasan": PENJELASAN.get(lab, lab), "saran": saran,
-                       "peluang": round(peluang, 3), "yakin": peluang >= BATAS_YAKIN})
+                       "peluang": round(peluang, 3), "yakin": peluang >= BATAS_YAKIN,
+                       "suntingan": suntingan})
+
+    def ganti(i, teks):
+        return [{"awal": token[i][1], "akhir": token[i][2], "teks": teks}]
 
     for i, (t, s, e) in enumerate(token):
         if i in lewati:
             continue
         lab, p = label[i]
-        if t.lower() in KAMUS_PERIKSA and not t.isupper():
+        if kena_kamus(t, i):
             lab, p = "TIDAK_BAKU", 1.0                      # kamus selalu menang
         if lab == "O":
             continue
@@ -170,50 +177,41 @@ def susun_temuan(kalimat, token, label, frek_dok):
             tengah = i > 0 and t[:1].isupper()
             if saran is None and (tengah or frek_dok[t] >= 3):
                 continue                                    # kemungkinan nama/istilah
-            if saran:
-                edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran) if saran else [])
 
         elif lab == "TIDAK_BAKU":
             saran = saran_tidak_baku(t)
-            if saran and saran != t:
-                edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran) if saran and saran != t else [])
 
         elif lab == "KAPITAL":
             bentuk = LEKSIKON.bentuk_tulis(t)
             saran = bentuk if bentuk and bentuk != t and bentuk.lower() == t.lower() else huruf_awal_kapital(t)
             if saran == t:
                 continue
-            edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran))
 
         elif lab == "HURUF_KECIL":
             if not t[:1].isupper() or i == 0:
                 continue
             saran = t[:1].lower() + t[1:]
-            edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran))
 
         elif lab in ("TAMBAH_KOMA", "TAMBAH_TITIK"):
             tanda = "," if lab == "TAMBAH_KOMA" else "."
             if i + 1 < n and token[i + 1][0] in (",", ".", ";", ":"):
                 continue
             if lab == "TAMBAH_TITIK" and t.lower() in TANPA_TITIK:
-                edit[i] = ("ganti", t + ".")
+                suntingan = ganti(i, t + ".")
             else:
-                edit[i] = ("sisip", tanda)
-            catat(i, lab, t + tanda, p)
+                suntingan = [{"awal": e, "akhir": e, "teks": tanda}]
+            catat(i, lab, t + tanda, p, suntingan)
 
-        elif lab == "HAPUS":
-            edit[i] = ("hapus",)
-            catat(i, lab, "", p)
+        elif lab == "HAPUS":                                # buang token beserta spasi sebelumnya
+            catat(i, lab, "", p, [{"awal": token[i - 1][2] if i else s, "akhir": e, "teks": ""}])
 
         elif lab == "PISAH":
             saran = saran_pisah(t)
-            if saran:
-                edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran) if saran else [])
 
         elif lab == "GABUNG":
             j = i                                           # GABUNG = gabung dengan token berikutnya
@@ -222,58 +220,42 @@ def susun_temuan(kalimat, token, label, frek_dok):
             if j == i:
                 continue
             saran = saran_gabung([token[k][0] for k in range(i, j + 1)])
-            edit[i] = ("gabung", j, saran)
             lewati.update(range(i + 1, j + 1))
-            catat(i, lab, saran, p, j)
+            catat(i, lab, saran, p, [{"awal": s, "akhir": token[j][2], "teks": saran}], j)
 
         elif lab == "FORMAT_ANGKA":
             saran = saran_angka(t)
             if saran is None:
                 continue
-            edit[i] = ("ganti", saran)
-            catat(i, lab, saran, p)
+            catat(i, lab, saran, p, ganti(i, saran))
 
         elif lab == "GANTI_TITIK":
             if t != ",":
                 continue
-            edit[i] = ("ganti", ".")
-            catat(i, lab, ".", p)
-            k = i + 1
-            if k < n and token[k][0][:1].islower() and k not in edit:
-                edit[k] = ("ganti", huruf_awal_kapital(token[k][0]))
-    return edit, temuan
+            suntingan = ganti(i, ".")
+            if i + 1 < n and token[i + 1][0][:1].islower():
+                awal = token[i + 1][1]
+                suntingan.append({"awal": awal, "akhir": awal + 1, "teks": kalimat[awal].upper(), "kapital": True})
+            catat(i, lab, ".", p, suntingan)
+    return temuan
 
 
-def rakit(kalimat, token, edit):
-    """Menyusun kalimat benar dari suntingan. Mengembalikan (teks, [(awal, akhir), ...] yang berubah)."""
-    keluar, sorot, akhir_sblm, i = "", [], 0, 0
-    while i < len(token):
-        t, s, e = token[i]
-        jarak = kalimat[akhir_sblm:s]
-        ed = edit.get(i)
-        if ed is None:
-            keluar += jarak + t
-        elif ed[0] == "hapus":
-            pass                                            # buang token beserta spasi sebelumnya
-        elif ed[0] == "ganti":
-            keluar += jarak
-            sorot.append((len(keluar), len(keluar) + len(ed[1]))); keluar += ed[1]
-        elif ed[0] == "sisip":
-            keluar += jarak + t
-            sorot.append((len(keluar), len(keluar) + len(ed[1]))); keluar += ed[1]
-        elif ed[0] == "gabung":
-            keluar += jarak
-            sorot.append((len(keluar), len(keluar) + len(ed[2]))); keluar += ed[2]
-            e = token[ed[1]][2]
-            i = ed[1]
-        akhir_sblm = e
-        i += 1
-    keluar += kalimat[akhir_sblm:]
-    # rapikan spasi di awal (jika token pertama dihapus) dan spasi ganda
-    geser = len(keluar) - len(keluar.lstrip())
-    keluar = keluar.lstrip()
-    sorot = [(a - geser, b - geser) for a, b in sorot]
-    return keluar, sorot
+def rakit(kalimat, temuan):
+    """Menyusun kalimat benar dari suntingan temuan. Versi browser: susunBenar di static/app.js."""
+    semua = [s for t in temuan for s in t["suntingan"]]
+    kapital = {s["awal"] for s in semua if s.get("kapital")}
+    sunting = [{**s, "teks": huruf_awal_kapital(s["teks"])} if s["awal"] in kapital and s["akhir"] > s["awal"] else s
+               for s in semua if not s.get("kapital")]
+    # Huruf kapital setelah titik baru tetap berlaku jika kata itu punya suntingan sendiri (analisa -> Analisis).
+    sudah = {s["awal"] for s in sunting if s["akhir"] > s["awal"]}
+    sunting += [s for s in semua if s.get("kapital") and s["awal"] not in sudah]
+    keluar, pos = "", 0
+    for s in sorted(sunting, key=lambda x: (x["awal"], x["akhir"])):
+        if s["awal"] < pos:
+            continue
+        keluar += kalimat[pos:s["awal"]] + s["teks"]
+        pos = s["akhir"]
+    return (keluar + kalimat[pos:]).lstrip()                # jika token pertama dihapus
 
 
 # --------------------------------------------------------------------------- dokumen
@@ -286,13 +268,12 @@ def periksa_dokumen(kalimat, pemeriksa, progres=None, batch=64):
         bagian = token[mulai:mulai + batch]
         label = pemeriksa.prediksi([[t for t, _, _ in tk] for tk in bagian])
         for k, tk, lab in zip(kalimat[mulai:mulai + batch], bagian, label):
-            edit, temuan = susun_temuan(k.teks, tk, lab, frek_dok)
+            temuan = susun_temuan(k.teks, tk, lab, frek_dok)
             if not temuan:
                 continue
-            benar, sorot = rakit(k.teks, tk, edit)
             hal = list(k.halaman) if isinstance(k.halaman, tuple) else k.halaman
             hasil.append({"halaman": hal, "paragraf": k.paragraf, "kalimat": k.teks,
-                          "benar": benar, "sorot_benar": sorot, "temuan": temuan})
+                          "benar": rakit(k.teks, temuan), "temuan": temuan})
         if progres:
             progres(min(mulai + batch, len(kalimat)), len(kalimat))
     return hasil

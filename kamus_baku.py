@@ -110,3 +110,10 @@ for _salah, _benar in TIDAK_BAKU.items():
 # Dipakai untuk pascaproses (pemeriksaan berbasis kamus). "tapi" dikeluarkan karena lazim di
 # kutipan/dialog, dan kata berejaan asing tidak dimasukkan (lihat ASING).
 KAMUS_PERIKSA = {k: v for k, v in {**INDONESIA, **TIDAK_BAKU_LAIN}.items() if k != v and k != "tapi"}
+
+
+def kena_kamus(kata, posisi):
+    """True jika kata pada posisi itu langsung ditandai TIDAK_BAKU. Singkatan (huruf besar semua) dan
+    kata berhuruf kapital di tengah kalimat dilewati karena bisa berupa nama diri (Muhammad Syah)."""
+    return (kata.lower() in KAMUS_PERIKSA and not kata.isupper()
+            and (posisi == 0 or not kata[0].isupper()))
