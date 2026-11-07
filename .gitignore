@@ -9,6 +9,7 @@ __pycache__/
 *.zip
 # model hasil training (terlalu besar untuk GitHub, simpan di Drive / Hugging Face)
 model_ejaan/
+model_konteks/
 *.safetensors
 # kutipan jurnal pihak lain dan turunannya (tidak dipublikasikan)
 data_uji_asli/jurnal*/

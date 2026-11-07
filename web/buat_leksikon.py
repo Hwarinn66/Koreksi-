@@ -4,9 +4,15 @@ Membuat web/data/leksikon.tsv: daftar kata baku beserta frekuensi dan bentuk tul
 
 Dipakai untuk saran ejaan (typo), memecah kata (dirumah -> di rumah), dan mengenali
 paragraf berbahasa asing. Sumber: kalimat bersih di data/*.txt (sudah sesuai EYD),
-kata dasar Sastrawi, dan bentuk baku dari kamus_baku.py.
+kata dasar Sastrawi, bentuk baku dari kamus_baku.py, dan frekuensi kata dari wordfreq.
 
-Pakai (dari folder repo): python web/buat_leksikon.py
+wordfreq berisi banyak nama, kata Inggris, dan salah ketik, jadi saringan kata barunya ketat (lihat
+kata_indonesia). Selebihnya wordfreq hanya memberi frekuensi. Kata yang lolos saringan tidak perlu
+semuanya ada di kamus: kata bentukan juga dirakit saat saran dicari.
+
+Pakai (dari folder repo):
+    pip install Sastrawi wordfreq
+    python web/buat_leksikon.py
 """
 import re
 import sys
@@ -15,8 +21,54 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
-from buat_dataset import BAKU_SEMUA, tokenisasi  # noqa: E402
+sys.path.insert(0, str(REPO / "web"))
+from buat_dataset import BAKU_SEMUA, TERPISAH, tokenisasi  # noqa: E402
 from kamus_baku import TIDAK_BAKU  # noqa: E402
+from leksikon import bentukan  # noqa: E402
+
+HURUF = "abcdefghijklmnopqrstuvwxyz"
+
+# Kata lazim yang bukan bentukan kata dasar Sastrawi. Kata tidak baku (gak, udah) sengaja tidak dimasukkan.
+KATA_TAMBAHAN = {"ya", "yah", "nah", "ah", "eh", "masing", "gara", "kupu", "kanak", "tips", "promo", "ilmuwan",
+                 "wartawan", "bangsawan", "kenangan", "kehendak", "herbal", "audisi", "memberitahu", "futsal",
+                 "luring", "daring"}
+# Ragam lisan dan kata kasar: tidak boleh menjadi saran, jadi tidak mendapat frekuensi dari wordfreq.
+TANPA_FREKUENSI = {"aja", "banget", "bikin", "kalo", "tau", "liat", "nih", "sih", "dong", "deh", "kok", "kayak", "gimana",
+                   "gitu", "gini", "doang", "nggak", "enggak", "ngga", "gak", "udah", "dapet", "pake", "bener", "temen",
+                   "maen", "memek", "memeknya", "kontol", "ngentot", "jembut", "pepek"}
+PECAH_TERPISAH = {a + b for a, b in TERPISAH}
+
+
+def skala_wordfreq(z):
+    """Frekuensi Zipf wordfreq -> hitungan, disamakan kira-kira dengan hitungan korpus (Zipf 2,5 = 1)."""
+    return round(10 ** (z - 2.5))
+
+
+def tetangga(k):
+    """Semua bentuk yang berbeda satu huruf dari k."""
+    for i in range(len(k) + 1):
+        for h in HURUF:
+            yield k[:i] + h + k[i:]
+        if i < len(k):
+            yield k[:i] + k[i + 1:]
+            for h in HURUF:
+                yield k[:i] + h + k[i + 1:]
+        if i < len(k) - 1:
+            yield k[:i] + k[i + 1] + k[i] + k[i + 2:]
+
+
+def kata_indonesia(k, dasar, zipf):
+    """Apakah kata baru dari wordfreq layak masuk kamus."""
+    if not k.isalpha() or len(k) < 7 or k in TANPA_FREKUENSI or k in PECAH_TERPISAH:
+        return False                    # kata pendek terlalu mudah cocok secara kebetulan (dani = dan + i)
+    if k.startswith(("di", "ke")):      # di + kata (dilantai, dibumi) lebih mungkin salah pisah; calon itu dirakit saat dicari
+        if k[2:] in dasar or not bentukan(k, dasar, akhiran=("kan", "i", "an")):
+            return False
+    elif not bentukan(k, dasar):
+        return False
+    # Jauh lebih jarang daripada kata yang beda satu huruf: hampir pasti salah ketik (memilik, sekaran).
+    return not any(zipf.get(t, 0) >= zipf[k] + 1 for t in tetangga(k))
+
 
 frek = Counter()
 bentuk = defaultdict(Counter)
@@ -44,8 +96,28 @@ try:
 except ImportError:
     print("[peringatan] Sastrawi tidak terpasang; kata dasar tidak ditambahkan")
 
-for b in BAKU_SEMUA:
+for b in (*BAKU_SEMUA, *KATA_TAMBAHAN):
     frek[b] += 1
+
+zipf = {}
+try:
+    import wordfreq
+    zipf = {k: wordfreq.zipf_frequency(k, "id") for k in wordfreq.top_n_list("id", 100_000, wordlist="small")}
+except ImportError:
+    print("[peringatan] wordfreq tidak terpasang; frekuensi hanya dari korpus sendiri")
+
+# Nama yang hanya muncul sekali dua kali di korpus (Bandar Udara Bou Sfer) tidak boleh menjadi saran.
+# Akronim tetap disimpan karena bentuk tulisnya dipakai untuk koreksi kapital (spss -> SPSS).
+for k in [k for k, n in frek.items() if n <= 2 and k not in dasar and not zipf.get(k)
+          and bentuk[k] and all(t[:1].isupper() and not t.isupper() for t in bentuk[k])]:
+    del frek[k]
+for k, z in zipf.items():
+    if k in frek:
+        if k not in TANPA_FREKUENSI:
+            frek[k] += skala_wordfreq(z)
+    elif kata_indonesia(k, dasar, zipf):
+        frek[k] = skala_wordfreq(z) or 1
+
 for salah in TIDAK_BAKU:          # bentuk tidak baku tidak boleh disarankan
     frek.pop(salah, None)
 

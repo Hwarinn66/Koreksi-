@@ -3,9 +3,10 @@ koreksi.py
 Memeriksa kalimat dengan model, lalu menyusun saran perbaikan dan versi benar setiap kalimat.
 
 Model hanya menandai jenis kesalahan per kata. Bentuk benarnya disusun di sini dengan aturan:
-kamus tidak baku, saran ejaan (SymSpell), pemecahan/penggabungan kata, huruf kapital, tanda baca,
-dan format angka.
+kamus tidak baku, saran ejaan (SymSpell, istilah asing, dan konteks kalimat), pemecahan/penggabungan
+kata, huruf kapital, tanda baca, dan format angka.
 """
+import math
 import re
 import sys
 from collections import Counter
@@ -16,7 +17,7 @@ sys.path.insert(0, str(REPO))
 from buat_dataset import SERANGKAI, TERPISAH  # noqa: E402
 from kamus_baku import KAMUS_PERIKSA, TIDAK_BAKU, kena_kamus  # noqa: E402
 
-from leksikon import LEKSIKON  # noqa: E402
+from leksikon import LEKSIKON, bentukan, jarak_dl  # noqa: E402
 
 PENJELASAN = {
     "TYPO": "Salah ketik",
@@ -44,6 +45,12 @@ KATA_ULANG_BERUBAH = {"sayur-mayur", "lauk-pauk", "ramah-tamah", "gerak-gerik", 
 # Angka setelah kata ini bukan desimal (Gambar 4.1, pukul 08.00).
 BUKAN_DESIMAL_SETELAH = {"gambar", "tabel", "grafik", "diagram", "bagan", "bab", "subbab", "persamaan", "rumus",
                          "lampiran", "bagian", "pasal", "versi", "pukul", "jam"}
+# Penilaian calon saran. Bobotnya dipilih pada dokumen pengembangan (lihat data_uji_asli/alat/uji_saran.py).
+BOBOT_JARAK = 4
+PENALTI_RAKITAN = 2
+MAKS_CALON = 15
+SELISIH_RAGU = 1.0          # calon pertama dan kedua hampir sama kuat: tetap disarankan, tetapi "perlu dicek"
+BUKAN_SALAH = object()      # kata ini sah dan tidak ada calon yang lebih cocok: tanda dari model keliru
 
 
 # --------------------------------------------------------------------------- token
@@ -86,12 +93,51 @@ def saran_ejaan(kata):
     return samakan_kapital(s[0], kata) if s else None
 
 
-def saran_tidak_baku(kata):
+def saran_konteks(kata, kata_kalimat, i, konteks, harus_diganti=False):
+    """Memilih saran ejaan menurut kalimatnya. Mengembalikan (saran, yakin).
+
+    saran = BUKAN_SALAH: kata ini sah dan tidak ada calon yang lebih cocok.
+    saran = None: kata tidak dikenal, tetapi tidak ada calon yang cukup kuat untuk disarankan.
+    harus_diganti: model sudah menilai bentuk ini tidak baku, jadi calon terbaik tetap disarankan.
+    """
+    asing = LEKSIKON.bentuk_asing(kata)
+    if asing:
+        return samakan_kapital(asing, kata), True
+    k = kata.lower()
+    sah = LEKSIKON.kenal(k) or bentukan(k, LEKSIKON.dasar, min_inti=5)
+    calon = LEKSIKON.calon(kata)
+    pilih = LEKSIKON.urutkan(k, calon)[:MAKS_CALON]
+    skor = konteks.skor(kata_kalimat, i, pilih + [k]) if pilih else {}
+    # Kata rakitan yang tidak ada di kamus tidak mewarisi frekuensi kata dasarnya (info + an bukan kata lazim).
+    nilai = {c: skor[c] - BOBOT_JARAK * calon[c][0] + (math.log10(calon[c][1] + 1) if LEKSIKON.kenal(c) else -PENALTI_RAKITAN)
+             for c in pilih if c in skor}
+    if not nilai:
+        return (BUKAN_SALAH if sah else None), True
+    urut = sorted(nilai, key=nilai.get, reverse=True)
+    terbaik = urut[0]
+    skor_asli = skor.get(k, -30.0)
+    keunggulan = nilai[terbaik] - (skor_asli + math.log10(LEKSIKON.frek.get(k, 0) + 1))
+    if keunggulan < 0:
+        if sah:
+            return BUKAN_SALAH, True
+        # Istilah bidang sering dinilai rendah oleh model, jadi kata panjang yang hampir sama, atau
+        # istilah asing yang sama bunyinya (jarak 0,5), tetap dipercaya.
+        beda = jarak_dl(k, terbaik) / len(k)
+        if not (harus_diganti or calon[terbaik][0] == 0.5 or (len(k) >= 7 and beda <= 0.2)
+                or (len(k) >= 7 and beda <= 0.3 and skor[terbaik] >= skor_asli + 1)):
+            return None, True
+    ragu = keunggulan < 0 or (len(urut) > 1 and nilai[terbaik] - nilai[urut[1]] < SELISIH_RAGU)
+    return samakan_kapital(terbaik, kata), not ragu
+
+
+def saran_tidak_baku(kata, kata_kalimat=None, i=None, konteks=None):
     k = kata.lower()
     baku = KAMUS_PERIKSA.get(k) or TIDAK_BAKU.get(k)
     if baku:
-        return samakan_kapital(baku, kata)
-    return saran_ejaan(kata)
+        return samakan_kapital(baku, kata), True
+    if konteks:
+        return saran_konteks(kata, kata_kalimat, i, konteks, harus_diganti=True)
+    return saran_ejaan(kata), True
 
 
 def saran_pisah(kata):
@@ -159,21 +205,23 @@ def saran_angka(t, sebelum=()):
 
 
 # --------------------------------------------------------------------------- satu kalimat
-def susun_temuan(kalimat, token, label, frek_dok):
+def susun_temuan(kalimat, token, label, frek_dok, konteks=None):
     """Mengubah label model menjadi daftar temuan.
 
     Setiap temuan membawa suntingannya sendiri (posisi pada kalimat asli), supaya kalimat benar bisa
     disusun hanya dari temuan yang dipilih. Suntingan "kapital" hanya menaikkan huruf awal kata.
+    konteks: objek konteks.Konteks untuk memilih saran ejaan menurut kalimatnya (boleh None).
     """
     n = len(token)
     temuan = []
     lewati = set()
+    kata_kalimat = [x[0] for x in token]
 
-    def catat(i, lab, saran, peluang, suntingan, j=None):
+    def catat(i, lab, saran, peluang, suntingan, j=None, yakin=True):
         a, b = token[i][1], token[j if j is not None else i][2]
         temuan.append({"awal": a, "akhir": b, "teks": kalimat[a:b], "label": lab,
                        "penjelasan": PENJELASAN.get(lab, lab), "saran": saran,
-                       "peluang": round(peluang, 3), "yakin": peluang >= BATAS_YAKIN,
+                       "peluang": round(peluang, 3), "yakin": yakin and peluang >= BATAS_YAKIN,
                        "suntingan": suntingan})
 
     def ganti(i, teks):
@@ -191,15 +239,19 @@ def susun_temuan(kalimat, token, label, frek_dok):
         if lab == "TYPO":
             if not re.search(r"[^\W\d_]", t) or any(c.isdigit() for c in t) or (t.isupper() and len(t) > 1):
                 continue                                    # angka, singkatan
-            saran = saran_ejaan(t)
+            saran, yakin = saran_konteks(t, kata_kalimat, i, konteks) if konteks else (saran_ejaan(t), True)
+            if saran is BUKAN_SALAH:
+                continue
             tengah = i > 0 and t[:1].isupper()
             if saran is None and (tengah or frek_dok[t] >= 3):
                 continue                                    # kemungkinan nama/istilah
-            catat(i, lab, saran, p, ganti(i, saran) if saran else [])
+            catat(i, lab, saran, p, ganti(i, saran) if saran else [], yakin=yakin)
 
         elif lab == "TIDAK_BAKU":
-            saran = saran_tidak_baku(t)
-            catat(i, lab, saran, p, ganti(i, saran) if saran and saran != t else [])
+            saran, yakin = saran_tidak_baku(t, kata_kalimat, i, konteks)
+            if saran is BUKAN_SALAH:
+                continue
+            catat(i, lab, saran, p, ganti(i, saran) if saran and saran != t else [], yakin=yakin)
 
         elif lab == "KAPITAL":
             bentuk = LEKSIKON.bentuk_tulis(t)
@@ -277,7 +329,7 @@ def rakit(kalimat, temuan):
 
 
 # --------------------------------------------------------------------------- dokumen
-def periksa_dokumen(kalimat, pemeriksa, progres=None, batch=64):
+def periksa_dokumen(kalimat, pemeriksa, progres=None, batch=64, konteks=None):
     """kalimat: daftar ekstrak.Kalimat. Mengembalikan daftar hasil per kalimat yang berkesalahan."""
     token = [tokenisasi(k.teks) for k in kalimat]
     frek_dok = Counter(t for tk in token for t, _, _ in tk)
@@ -286,7 +338,7 @@ def periksa_dokumen(kalimat, pemeriksa, progres=None, batch=64):
         bagian = token[mulai:mulai + batch]
         label = pemeriksa.prediksi([[t for t, _, _ in tk] for tk in bagian])
         for k, tk, lab in zip(kalimat[mulai:mulai + batch], bagian, label):
-            temuan = susun_temuan(k.teks, tk, lab, frek_dok)
+            temuan = susun_temuan(k.teks, tk, lab, frek_dok, konteks)
             if not temuan:
                 continue
             hal = list(k.halaman) if isinstance(k.halaman, tuple) else k.halaman

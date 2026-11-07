@@ -87,7 +87,7 @@ agar konsisten. Kata yang ada di `kamus_baku.py` (mis. *menunjukan, presentase*)
 | `semua_tinjau.csv` | semua kalimat untuk dicek di Excel (kolom terakhir isi Y/T) |
 | `statistik_asli.json` | angka di atas |
 | `skripsiXX/`, `jurnalXX/` | berkas per dokumen, termasuk `koreksi.txt` (sumber koreksi) |
-| `alat/` | `ekstrak.py`, `susun_koreksi.py`, `audit.py`, `gabung_asli.py` |
+| `alat/` | `ekstrak.py`, `susun_koreksi.py`, `audit.py`, `gabung_asli.py`, `uji_saran.py` (mengukur saran ejaan pada typo asli) |
 
 ## Aturan koreksi
 

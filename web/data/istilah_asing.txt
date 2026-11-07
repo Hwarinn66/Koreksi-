@@ -1,0 +1,95 @@
+# Istilah asing yang lazim dipakai apa adanya dalam naskah bahasa Indonesia, per bidang.
+# Dipakai untuk saran ejaan (sofwer -> software) dan penulisan imbuhan (mengupload -> meng-upload).
+# Tambahkan kata baru di bidang yang sesuai, huruf kecil, dipisah spasi. Tidak perlu membuat ulang leksikon.
+
+# Teknologi informasi
+software hardware firmware freeware shareware middleware malware spyware ransomware adware
+database dataset datasheet metadata server client host hosting localhost domain subdomain
+user username password passcode login logout signin signup register account admin administrator
+website webpage web homepage landing webserver webinar weblog blog blogger vlog vlogger
+browser chrome firefox internet intranet extranet online offline realtime real-time
+email e-mail mail mailbox inbox outbox attachment upload download update upgrade downgrade
+install uninstall installer installation setup backup restore recovery reset restart reboot
+setting settings default interface frontend front-end backend back-end fullstack full-stack
+framework library repository source code coding encoding decoding programmer programming
+developer development debugging debug compile compiler runtime script scripting query queries
+input output print printer scan scanner scanning monitor keyboard mouse touchscreen
+laptop notebook desktop smartphone handphone iphone gadget device tablet smartwatch wearable
+router switch hub bandwidth network networking wireless wifi wi-fi bluetooth ethernet
+cloud storage memory cache cookie session token encryption decryption firewall spam phishing
+hacker hacking cyber cybersecurity security privacy authentication authorization
+dashboard chart layout template theme widget plugin plug-in button menu navbar sidebar popup
+pop-up dropdown checkbox textbox slider header footer thumbnail icon font wireframe mockup
+form field table column row record primary foreign key index entity attribute relationship
+class object method function variable array string integer boolean float null
+flowchart usecase use-case activity sequence blackbox black-box whitebox white-box
+testing tester debugger deployment deploy prototype prototyping waterfall agile scrum sprint
+kanban iteration maintenance requirement requirements stakeholder usability user-friendly
+tracking tracker tracing trace monitoring routing mapping scheduling barcode qrcode qr-code
+rfid sensor arduino raspberry microcontroller iot chatbot bot automation
+machine learning deep training trainer validation accuracy precision recall neural
+clustering classification classifier regression feature preprocessing stemming stopword
+tokenizing tokenization embedding sentiment big mining warehouse warehousing analytics
+screencast screenshot screen capture streaming stream podcast video audio multimedia
+copy paste delete share submit follow follower followers following unfollow
+hashtag caption feed story stories reels like likes comment comments subscribe subscriber
+viral influencer endorse endorser endorsement content creator social media
+platform e-wallet e-money e-book ebook e-learning e-commerce ecommerce e-government
+mobile android ios windows linux mac operating open-source opensource
+virtual augmented reality metaverse blockchain cryptocurrency bitcoin fintech edutech
+game gamer gaming gameplay marketplace startup start-up
+
+# Bisnis, manajemen, dan pemasaran
+marketing telemarketing branding brand rebranding endorsement advertising advertisement
+customer consumer supplier vendor reseller retailer retail wholesaler
+distributor dropship dropshipper dropshipping delivery shipping shipment logistics logistic
+inventory stock stockout purchase purchasing procurement order ordering invoice receipt
+payment billing cashless cashier checkout voucher cashback discount promo promotion sales
+salesman sale franchise franchisee outlet display merchandise merchandising packaging
+leadership leader manager management reward punishment turnover engagement performance
+benchmark benchmarking outsourcing shareholder profit revenue income cash flow cashflow
+budget budgeting forecast forecasting loyalty awareness trust satisfaction service quality
+retention workflow supply chain value lean kaizen overhead overtime offshore onshore
+business entrepreneur entrepreneurship owner founder partner partnership networking
+recruitment job desk jobdesk deadline meeting briefing report reporting
+human resource resources corporate governance compliance audit auditing auditor
+transfer top-up cod crm erp scm kpi
+
+# Ekonomi dan keuangan
+leverage liquidity solvency earning earnings dividend payout saving savings loan
+overvalued undervalued capital market portfolio hedging trading trader broker insurance
+mudharabah murabahah musyarakah ijarah wakalah muzakki mustahik baitulmal baitul maal
+planning tax avoidance evasion fraud whistleblowing whistleblower
+
+# Pendidikan, sosial, dan komunikasi
+blended flipped classroom mindset soft hard skill skills softskill hardskill lifeskill
+coaching coach mentoring mentor workshop focus group discussion interview interviewer
+sampling purposive snowball accidental random pretest posttest pre-test post-test
+treatment mixed case study survey questionnaire gender stereotype bullying cyberbullying
+lifestyle trend public relation relations image self-esteem self-efficacy efficacy
+self-control self-regulation self-concept self-confidence well-being wellbeing
+reader reading writing speaking listening storytelling teaching learner feedback review
+rating ranking scoring scaffolding brainstorming problem-solving problem solving
+pleasure knowledge literacy role-playing role-play game-based project-based
+fieldwork field-research library-research in-depth depth grounded theory phenomenology
+
+# Penelitian dan statistik
+outlier dummy bootstrap bootstrapping cronbach alpha r-square p-value correlation
+multicollinearity heteroscedasticity heteroskedasticity autocorrelation normality
+moderating mediating moderator mediator independent dependent goodness fit cross-sectional
+longitudinal literature conceptual systematic meta-analysis research researcher design
+pilot baseline follow-up check-up cut-off cutoff eye-catching state-of-the-art
+
+# Kesehatan
+stunting wasting screening burnout coping hygiene check antenatal postnatal postpartum
+preeclampsia telemedicine caregiver quality-of-life
+
+# Hukum
+judicial restorative justice due process legal standing overmacht force majeure
+onrechtmatige daad recht rechtsstaat rule ultra vires pacta sunt servanda erga omnes
+ex-officio de-facto de-jure a-quo inkracht hard-law soft-law class-action
+
+# Teknik dan industri
+overhaul downtime breakdown blueprint control assurance safety overload troubleshooting
+assembly manufacturing machining forklift conveyor pallet picking packing
+receiving putaway dispatch loading unloading stock-opname

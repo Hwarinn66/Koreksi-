@@ -10,6 +10,7 @@ Jalankan (dari folder repo):
 Variabel lingkungan:
     MODEL_DIR   folder model hasil training (bawaan: model_ejaan/ di folder repo)
     MAKS_MB     batas ukuran berkas unggahan dalam MB (bawaan: 25)
+    MODEL_KONTEKS   folder model konteks untuk saran ejaan (bawaan: model_konteks/ di folder repo)
 """
 import os
 import shutil
@@ -33,6 +34,7 @@ REPO = WEB.parent
 sys.path.insert(0, str(WEB))
 sys.path.insert(0, str(REPO))
 
+import konteks  # noqa: E402
 from ekstrak import baca_teks, ekstrak, ke_kalimat, saring_bagian  # noqa: E402
 from koreksi import PENJELASAN, periksa_dokumen  # noqa: E402
 
@@ -47,6 +49,7 @@ async def lifespan(_app):
     def muat():
         try:
             model()
+            konteks.muat()
         except Exception as e:  # noqa: BLE001
             print("[peringatan]", e)
     threading.Thread(target=muat, daemon=True).start()
@@ -139,7 +142,7 @@ def proses(job_id, path, nama, teks):
                  pesan=f"Memeriksa kalimat {selesai} dari {total}…")
 
         ubah(job_id, status="memeriksa", progres=0.0, pesan=f"Memeriksa {len(kalimat)} kalimat…")
-        hasil = periksa_dokumen(kalimat, pemeriksa, progres)
+        hasil = periksa_dokumen(kalimat, pemeriksa, progres, konteks=konteks.muat())
         laporan = kelompokkan(hasil, info, len(kalimat))
         laporan.update({"nama_berkas": nama, "info": info})
         ubah(job_id, status="selesai", progres=1.0, pesan="Selesai", hasil=laporan)
@@ -162,6 +165,7 @@ def beranda():
 def status():
     ada = (MODEL_DIR / "config.json").exists()
     return {"model_tersedia": ada, "model_dimuat": _model["objek"] is not None,
+            "konteks_tersedia": (konteks.FOLDER_MODEL / "config.json").exists(),
             "format": FORMAT, "maks_mb": MAKS_MB,
             "pesan": None if ada else f"Model belum ada di {MODEL_DIR}."}
 

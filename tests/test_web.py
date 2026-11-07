@@ -1,5 +1,7 @@
 """Tes mesin koreksi dan pembaca dokumen web. Jalankan: python -m unittest discover -s tests"""
+import contextlib
 import importlib.util
+import io
 import sys
 import tempfile
 import threading
@@ -16,6 +18,7 @@ sys.path.insert(0, str(REPO / "web"))
 
 import ekstrak as ek  # noqa: E402
 import koreksi as ko  # noqa: E402
+import leksikon as lk  # noqa: E402
 from kamus_baku import kena_kamus  # noqa: E402
 
 
@@ -268,6 +271,169 @@ class SaranEjaan(unittest.TestCase):
         for salah, benar in (("penelitain", "penelitian"), ("perbedaanya", "perbedaannya"), ("dianalis", "dianalisis"),
                              ("mahasiwa", "mahasiswa"), ("Penelitain", "Penelitian")):
             self.assertEqual(ko.saran_ejaan(salah), benar)
+
+    def test_istilah_asing_yang_ditulis_mengikuti_ucapan(self):
+        for salah, benar in (("sofwer", "software"), ("traking", "tracking"), ("Sofwer", "Software"),
+                             ("databes", "database"), ("websait", "website"), ("donlod", "download")):
+            self.assertEqual(ko.saran_ejaan(salah), benar)
+
+    def test_nama_tempat_di_korpus_bukan_saran(self):
+        self.assertNotIn("sfer", ko.LEKSIKON.frek)
+
+    def test_akronim_tetap_ada_untuk_koreksi_kapital(self):
+        self.assertEqual(ko.LEKSIKON.bentuk_tulis("spss"), "SPSS")
+
+    def test_salah_ketik_dan_nama_dari_wordfreq_tidak_masuk_kamus(self):
+        for k in ("maslah", "meraka", "dangan", "lainya", "memilik", "seneng", "dani", "susan", "disini", "memeknya"):
+            self.assertNotIn(k, ko.LEKSIKON.frek, k)
+
+    def test_kata_panjang_sampai_beda_tiga_huruf(self):
+        self.assertEqual(ko.saran_ejaan("wanprestie"), "wanprestasi")
+        self.assertNotIn("wanprestasi", ko.LEKSIKON.calon("wanprestasi"))
+
+    def test_kata_yang_dikenal_tidak_dicocokkan_dengan_istilah_asing(self):
+        self.assertNotIn("e-learning", ko.LEKSIKON.calon("luring"))
+
+    def test_akhiran_i_tidak_menempel_pada_kata_berujung_i(self):
+        self.assertNotIn("memverifikasii", ko.LEKSIKON.calon("menverifikasi"))
+
+
+class KunciBunyi(unittest.TestCase):
+    def test_kata_yang_sama_bunyinya(self):
+        for a, b in (("sofwer", "software"), ("traking", "tracking"), ("donlod", "download"), ("apdet", "update"),
+                     ("onlen", "online"), ("interfes", "interface"), ("rauting", "routing"), ("websait", "website")):
+            self.assertEqual(lk.kunci_bunyi(a), lk.kunci_bunyi(b), (a, b))
+
+    def test_kata_yang_berbeda_bunyinya(self):
+        self.assertNotEqual(lk.kunci_bunyi("training"), lk.kunci_bunyi("tracking"))
+
+
+class Bentukan(unittest.TestCase):
+    DASAR = {"tuntun", "kontribusi", "hidup", "tampil", "tingkat", "verifikasi", "kerja", "buat"}
+
+    def test_bentukan_sah(self):
+        for k in ("menuntun", "kontribusinya", "hidupku", "menampilkan", "peningkatan", "memverifikasi", "bekerja",
+                  "membuat", "dibuat"):
+            self.assertTrue(lk.bentukan(k, self.DASAR), k)
+
+    def test_pasangan_imbuhan_yang_tidak_ada(self):
+        for k in ("menampilan", "peningkatkan", "dibuatan"):
+            self.assertFalse(lk.bentukan(k, self.DASAR), k)
+
+    def test_awalan_tidak_sesuai_huruf_kata_dasar(self):
+        self.assertFalse(lk.bentukan("menverifikasi", self.DASAR))
+
+
+class IstilahAsing(unittest.TestCase):
+    def test_berkasnya_rapi(self):
+        for g in ko.LEKSIKON.asing:
+            self.assertEqual(g, g.lower(), g)
+            self.assertRegex(g, r"^[a-z0-9-]+$")
+
+    def test_kata_dasar_indonesia_tidak_diberi_tanda_hubung(self):
+        self.assertIn("monitor", ko.LEKSIKON.asing)
+        self.assertIsNone(ko.LEKSIKON.bentuk_asing("dimonitor"))
+
+
+class KonteksTiruan:
+    """Pengganti konteks.Konteks: skor ditentukan oleh tes; kata yang tidak disebut dinilai rendah."""
+
+    def __init__(self, skor, bawaan=-12.0):
+        self.nilai, self.bawaan, self.panggilan = skor, bawaan, []
+
+    def skor(self, kata, i, calon):
+        self.panggilan.append((list(kata), i, list(calon)))
+        return {c: self.nilai.get(c, self.bawaan) for c in calon}
+
+
+@unittest.skipUnless(importlib.util.find_spec("symspellpy"), "symspellpy belum terpasang")
+class SaranKonteks(unittest.TestCase):
+    def test_kalimat_menentukan_pilihan(self):
+        kalimat = ["Hal", "itu", "sudah", "jalas", "sekali"]
+        self.assertEqual(ko.saran_konteks("jalas", kalimat, 3, KonteksTiruan({"jelas": -1.0, "jalan": -9.0}))[0], "jelas")
+        self.assertEqual(ko.saran_konteks("jalas", kalimat, 3, KonteksTiruan({"jelas": -9.0, "jalan": -1.0}))[0], "jalan")
+
+    def test_model_menerima_kalimat_dan_posisinya(self):
+        k = KonteksTiruan({"jelas": -1.0})
+        ko.saran_konteks("jalas", ["sudah", "jalas"], 1, k)
+        kata, i, calon = k.panggilan[0]
+        self.assertEqual((kata, i), (["sudah", "jalas"], 1))
+        self.assertIn("jalas", calon)                       # kata aslinya ikut dinilai
+        self.assertLessEqual(len(calon), ko.MAKS_CALON + 1)
+
+    def test_kata_sah_tidak_diganti_tanpa_calon_yang_lebih_cocok(self):
+        k = KonteksTiruan({"adapun": -1.0})
+        self.assertIs(ko.saran_konteks("adapun", ["adapun", "tujuan"], 0, k)[0], ko.BUKAN_SALAH)
+
+    def test_kata_sah_diganti_jika_kalimat_jelas_menolaknya(self):
+        k = KonteksTiruan({"bias": -15.0, "bisa": -0.5})
+        self.assertEqual(ko.saran_konteks("bias", ["dia", "bias", "datang"], 1, k), ("bisa", True))
+
+    def test_bentukan_berakar_pendek_bukan_kata_sah(self):
+        k = KonteksTiruan({"seneng": -2.0, "senang": -3.0}, bawaan=-12.0)
+        self.assertIsNone(ko.saran_konteks("seneng", ["saya", "seneng"], 1, k)[0])
+
+    def test_kata_tidak_baku_tetap_diberi_saran_terbaik(self):
+        k = KonteksTiruan({"seneng": -2.0, "senang": -3.0}, bawaan=-12.0)
+        temuan = ko.susun_temuan("saya seneng", ko.tokenisasi("saya seneng"), [("O", 1.0), ("TIDAK_BAKU", 0.99)], Counter(), k)
+        self.assertEqual((temuan[0]["saran"], temuan[0]["yakin"]), ("senang", False))
+
+    def test_kata_cukup_panjang_yang_lebih_cocok_tetap_disarankan(self):
+        k = KonteksTiruan({"efiensi": -9.9, "efisiensi": -7.5}, bawaan=-15.0)
+        self.assertEqual(ko.saran_konteks("efiensi", ["tepat", "dan", "efiensi"], 2, k)[0], "efisiensi")
+
+    def test_kata_tak_dikenal_tanpa_calon_kuat_tidak_diberi_saran(self):
+        k = KonteksTiruan({"kaprodi": -1.0}, bawaan=-15.0)
+        self.assertIsNone(ko.saran_konteks("kaprodi", ["ketua", "kaprodi"], 1, k)[0])
+
+    def test_kata_panjang_yang_hampir_sama_tetap_disarankan_tetapi_perlu_dicek(self):
+        k = KonteksTiruan({"berdistribsi": -1.0}, bawaan=-12.0)
+        saran, yakin = ko.saran_konteks("berdistribsi", ["data", "berdistribsi", "normal"], 1, k)
+        self.assertEqual(saran, "berdistribusi")
+        self.assertFalse(yakin)
+
+    def test_dua_calon_sama_kuat_perlu_dicek(self):
+        k = KonteksTiruan({"jelas": -1.0, "jalan": -1.0}, bawaan=-12.0)
+        saran, yakin = ko.saran_konteks("jalas", ["sudah", "jalas"], 1, k)
+        self.assertIn(saran, ("jelas", "jalan"))
+        self.assertFalse(yakin)
+
+    def test_huruf_kapital_dipertahankan(self):
+        k = KonteksTiruan({"software": -1.0})
+        self.assertEqual(ko.saran_konteks("Sofwer", ["Sofwer", "baru"], 0, k)[0], "Software")
+
+    def test_istilah_berimbuhan_langsung_diberi_tanda_hubung(self):
+        k = KonteksTiruan({})
+        self.assertEqual(ko.saran_konteks("mengupload", ["mengupload", "berkas"], 0, k), ("meng-upload", True))
+        self.assertEqual(k.panggilan, [])
+
+    def test_alur_temuan(self):
+        kalimat = "Tafsir maknawi dan sofwer baru"
+        token = ko.tokenisasi(kalimat)
+        label = [("O", 1.0), ("TYPO", 0.99), ("O", 1.0), ("TYPO", 0.99), ("O", 1.0)]
+        k = KonteksTiruan({"maknawi": -1.0, "software": -1.0})
+        temuan = ko.susun_temuan(kalimat, token, label, Counter(), k)
+        self.assertEqual([(t["teks"], t["saran"], t["yakin"]) for t in temuan], [("sofwer", "software", True)])
+        self.assertEqual(ko.rakit(kalimat, temuan), "Tafsir maknawi dan software baru")
+
+    def test_tanpa_model_konteks_tetap_jalan(self):
+        kalimat = "Memakai sofwer baru"
+        temuan = ko.susun_temuan(kalimat, ko.tokenisasi(kalimat), [("O", 1.0), ("TYPO", 0.99), ("O", 1.0)], Counter())
+        self.assertEqual(temuan[0]["saran"], "software")
+
+
+class MuatKonteks(unittest.TestCase):
+    def test_folder_tidak_ada_berarti_tanpa_konteks(self):
+        import konteks
+        lama = konteks.FOLDER_MODEL, dict(konteks._konteks)
+        try:
+            konteks.FOLDER_MODEL = Path(tempfile.mkdtemp()) / "tidak_ada"
+            konteks._konteks.update(objek=None, selesai=False)
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertIsNone(konteks.muat())
+        finally:
+            konteks.FOLDER_MODEL = lama[0]
+            konteks._konteks.update(lama[1])
 
 
 @unittest.skipUnless(importlib.util.find_spec("pymupdf"), "pymupdf belum terpasang")
